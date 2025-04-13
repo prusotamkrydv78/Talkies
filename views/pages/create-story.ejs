@@ -169,108 +169,163 @@
     // Get DOM elements
     const storyMedia = document.getElementById('storyMedia');
     const storyPreview = document.getElementById('storyPreview');
-    const previewOverlay = document.getElementById('previewOverlay');
-    const previewText = document.getElementById('previewText');
-    const publishButton = document.getElementById('publishStory');
-    const userInitialsElement = document.getElementById('userInitials');
-    const userNameElement = document.getElementById('userName');
+    const chooseFileBtn = document.getElementById('chooseFileBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    let selectedFile = null;
     
-    // Get current user and update UI
+    // Load user data from localStorage
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
     if (currentUser) {
-      // Update user info in the UI
-      if (userInitialsElement) {
-        // Get initials from name
+      // Populate user info
+      const userInitials = document.getElementById('userInitials');
+      const userName = document.getElementById('userName');
+      
+      if (userInitials && userName) {
+        // Set user initials
         const initials = currentUser.name
           .split(' ')
-          .map(n => n[0])
+          .map(name => name[0])
           .join('')
           .toUpperCase();
-        userInitialsElement.textContent = initials;
-      }
-      
-      if (userNameElement) {
-        userNameElement.textContent = currentUser.name;
-      }
-      
-      // Set user preferences if available
-      if (currentUser.preferences) {
-        const privacySelect = document.getElementById('privacySelect');
-        if (privacySelect && currentUser.preferences.defaultPrivacy) {
-          privacySelect.value = currentUser.preferences.defaultPrivacy;
-        }
+        userInitials.textContent = initials;
         
-        // Set default story options if available
-        const allowRepliesCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(1)');
-        const closeFriendsOnlyCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(2)');
-        const hideViewCountCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(3)');
-        
-        if (allowRepliesCheckbox && currentUser.preferences.allowReplies !== undefined) {
-          allowRepliesCheckbox.checked = currentUser.preferences.allowReplies;
-        }
-        
-        if (closeFriendsOnlyCheckbox && currentUser.preferences.closeFriendsOnly !== undefined) {
-          closeFriendsOnlyCheckbox.checked = currentUser.preferences.closeFriendsOnly;
-        }
-        
-        if (hideViewCountCheckbox && currentUser.preferences.hideViewCount !== undefined) {
-          hideViewCountCheckbox.checked = currentUser.preferences.hideViewCount;
-        }
+        // Set user name
+        userName.textContent = currentUser.name;
       }
     } else {
       // Redirect to login if not logged in
       window.location.href = '/auth/login';
+    }
+    
+    // Make sure the file input is properly initialized
+    if (!storyMedia) {
+      console.error('Story media input element not found');
       return;
     }
     
-    let selectedFile = null;
+    // Clear any previous file selection
+    storyMedia.value = '';
     
+    // Update file upload handling with improved event binding
+    if (chooseFileBtn) {
+      chooseFileBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Choose file button clicked');
+        
+        // Trigger file input click directly
+        if (storyMedia) {
+          storyMedia.click();
+        } else {
+          console.error('Story media input not found');
+        }
+      });
+    }
+    
+    // Add click handler to the upload area as well
+    if (uploadArea) {
+      uploadArea.addEventListener('click', function(e) {
+        // Don't trigger if clicking on the button (let the button handler work)
+        if (e.target !== chooseFileBtn && !chooseFileBtn.contains(e.target)) {
+          console.log('Upload area clicked');
+          if (storyMedia) {
+            storyMedia.click();
+          }
+        }
+      });
+    }
+
+    // Improved file change handler
     if (storyMedia) {
       storyMedia.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
+        console.log('File input change event triggered');
+        const file = this.files && this.files[0];
+        
+        if (!file) {
+          console.log('No file selected');
+          return;
+        }
+        
+        console.log('File selected:', file.name, file.type, file.size);
+        
+        // Validate file type
+        if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+          alert('Please select an image or video file');
+          this.value = ''; // Clear the input
+          return;
+        }
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          alert('File size exceeds 10MB limit');
+          this.value = ''; // Clear the input
+          return;
+        }
         
         selectedFile = file;
         const reader = new FileReader();
         
         reader.onload = function(event) {
+          if (!storyPreview) {
+            console.error('Story preview element not found');
+            return;
+          }
+          
+          const previewOverlay = document.getElementById('previewOverlay');
+          const previewText = document.getElementById('previewText');
+          
           if (file.type.startsWith('image/')) {
             storyPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover">`;
-            previewOverlay.classList.add('opacity-100');
-            previewText.classList.add('opacity-100');
           } else if (file.type.startsWith('video/')) {
             storyPreview.innerHTML = `
               <video src="${event.target.result}" class="w-full h-full object-cover" autoplay muted loop></video>
             `;
-            previewOverlay.classList.add('opacity-100');
-            previewText.classList.add('opacity-100');
           }
+          
+          if (previewOverlay) previewOverlay.classList.add('opacity-100');
+          if (previewText) previewText.classList.add('opacity-100');
+          
+          // Hide the upload area
+          if (uploadArea) uploadArea.classList.add('hidden');
+          
+          // Store the selected file in a global variable for later use
+          window.selectedStoryFile = file;
+          
+          console.log('Preview updated successfully');
         };
         
+        reader.onerror = function(error) {
+          console.error('Error reading file:', error);
+          alert('Error reading the selected file. Please try again.');
+        };
+        
+        console.log('Starting to read file as data URL');
         reader.readAsDataURL(file);
       });
     }
-    
-    publishButton.addEventListener('click', async function() {
+
+    // Update publish button handling
+    document.getElementById('publishStory').addEventListener('click', async function() {
+      // Get the selected file from the global variable or from the input
+      const selectedFile = window.selectedStoryFile || 
+                          (document.getElementById('storyMedia').files && 
+                           document.getElementById('storyMedia').files[0]);
+      
       if (!selectedFile) {
         alert('Please select a media file for your story');
         return;
       }
       
       try {
-        // Get story options
-        const privacySelect = document.getElementById('privacySelect');
-        const allowRepliesCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(1)');
-        const closeFriendsOnlyCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(2)');
-        const hideViewCountCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(3)');
-        
-        const privacy = privacySelect ? privacySelect.value : 'Public';
-        const allowRepliesValue = allowRepliesCheckbox ? allowRepliesCheckbox.checked : true;
-        const closeFriendsOnlyValue = closeFriendsOnlyCheckbox ? closeFriendsOnlyCheckbox.checked : false;
-        const hideViewCountValue = hideViewCountCheckbox ? hideViewCountCheckbox.checked : false;
+        // Show loading state
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Publishing...';
         
         // Get caption
-        const caption = document.getElementById('storyCaption').value;
+        const caption = document.getElementById('storyCaption').value || '';
+        
+        console.log('Uploading file to server...', selectedFile);
         
         // Upload the file
         const mediaUrl = await window.FileUploadService.saveFile(selectedFile, 'stories');
@@ -278,17 +333,30 @@
           throw new Error('Failed to upload media');
         }
         
+        console.log('File uploaded successfully, URL:', mediaUrl);
+        
         // Create story with the file path
         const now = new Date();
         const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
         
-        const response = await fetch('http://localhost:3001/stories', {
+        // Get privacy and settings values
+        const privacy = document.getElementById('privacySelect').value;
+
+        // Get checkboxes by their parent containers to ensure we get the right ones
+        const checkboxes = document.querySelectorAll('.flex.items-center.justify-between input[type="checkbox"]');
+        const allowReplies = checkboxes[0] ? checkboxes[0].checked : true;
+        const closeFriendsOnly = checkboxes[1] ? checkboxes[1].checked : false;
+        const hideViewCount = checkboxes[2] ? checkboxes[2].checked : false;
+
+        console.log('Creating story with media URL:', mediaUrl);
+        
+        const response = await fetch('/stories', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: currentUser.id,
+            userId: currentUser.id || '1', // Use actual user ID from currentUser
             media: {
               type: selectedFile.type.startsWith('image/') ? 'image' : 'video',
               url: mediaUrl
@@ -296,9 +364,9 @@
             caption: caption,
             privacy: privacy,
             settings: {
-              allowReplies: allowRepliesValue,
-              closeFriendsOnly: closeFriendsOnlyValue,
-              hideViewCount: hideViewCountValue
+              allowReplies: allowReplies,
+              closeFriendsOnly: closeFriendsOnly,
+              hideViewCount: hideViewCount
             },
             views: [],
             createdAt: now.toISOString(),
@@ -307,46 +375,19 @@
         });
         
         if (!response.ok) {
-          throw new Error('Failed to create story');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create story');
         }
         
-        // Save user preferences if they've changed
-        if (currentUser.preferences) {
-          const preferencesChanged = 
-            currentUser.preferences.defaultPrivacy !== privacy ||
-            currentUser.preferences.allowReplies !== allowRepliesValue ||
-            currentUser.preferences.closeFriendsOnly !== closeFriendsOnlyValue ||
-            currentUser.preferences.hideViewCount !== hideViewCountValue;
-            
-          if (preferencesChanged) {
-            currentUser.preferences = {
-              ...currentUser.preferences,
-              defaultPrivacy: privacy,
-              allowReplies: allowRepliesValue,
-              closeFriendsOnly: closeFriendsOnlyValue,
-              hideViewCount: hideViewCountValue
-            };
-            
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            
-            // Update user preferences on server
-            await fetch(`http://localhost:3001/users/${currentUser.id}`, {
-              method: 'PATCH',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                preferences: currentUser.preferences
-              })
-            });
-          }
-        }
-        
-        // Redirect to home page
-        window.location.href = '/';
+        // Redirect to stories page
+        window.location.href = '/stories';
       } catch (error) {
         console.error('Error publishing story:', error);
-        alert('Failed to publish story. Please try again.');
+        alert(`Error publishing story: ${error.message}`);
+        
+        // Reset button state
+        this.disabled = false;
+        this.innerHTML = 'Share Story';
       }
     });
   });
