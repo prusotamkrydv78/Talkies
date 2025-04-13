@@ -1,6 +1,5 @@
 {
   "users": [
-
     {
       "id": "1",
       "username": "johndoe",
@@ -12,7 +11,8 @@
       "followers": [
         2,
         3,
-        4
+        4,
+        "d027"
       ],
       "following": [
         2,
@@ -32,7 +32,8 @@
       "bio": "Digital artist and photographer",
       "followers": [
         1,
-        3
+        3,
+        "d027"
       ],
       "following": [
         1,
@@ -52,7 +53,8 @@
       "bio": "Travel blogger and adventure seeker",
       "followers": [
         1,
-        2
+        2,
+        "d027"
       ],
       "following": [
         1,
@@ -98,8 +100,18 @@
       "password": "prusotam",
       "bio": "Full-stack developer and tech enthusiast. Love to create innovative solutions.",
       "avatar": "https://ui-avatars.com/api/?name=Prusotam%20Yadav&background=4F46E5&color=fff",
-      "followers": [1, 2, 3],
-      "following": [1, 2],
+      "followers": [
+        1,
+        2,
+        3
+      ],
+      "following": [
+        1,
+        2,
+        "1",
+        "2",
+        "3"
+      ],
       "createdAt": "2023-04-15T08:30:00Z",
       "notifications": 5,
       "messages": 3
@@ -175,9 +187,10 @@
       ],
       "likes": [
         "2",
-        "3"
+        "3",
+        "d027"
       ],
-      "commentsCount": 3,
+      "commentsCount": 4,
       "sharesCount": 1,
       "createdAt": "2023-04-11T08:30:00Z"
     },
@@ -196,7 +209,7 @@
         3,
         "d027"
       ],
-      "commentsCount": 2,
+      "commentsCount": 6,
       "sharesCount": 1,
       "createdAt": "2023-04-10T09:30:00Z"
     },
@@ -213,7 +226,8 @@
       "likes": [
         1,
         3,
-        4
+        4,
+        "d027"
       ],
       "commentsCount": 3,
       "sharesCount": 2,
@@ -363,7 +377,8 @@
       "content": "Looks amazing! Great job on the design.",
       "createdAt": "2023-04-10T10:15:00Z",
       "likes": [
-        1
+        1,
+        "d027"
       ]
     },
     {
@@ -374,7 +389,8 @@
       "createdAt": "2023-04-10T11:30:00Z",
       "likes": [
         1,
-        2
+        2,
+        "d027"
       ]
     },
     {
@@ -481,6 +497,48 @@
         4,
         1
       ]
+    },
+    {
+      "id": "c1744542634189",
+      "postId": "1",
+      "userId": "d027",
+      "content": "hlo",
+      "createdAt": "2025-04-13T11:10:34.189Z",
+      "likes": []
+    },
+    {
+      "id": "c1744542659805",
+      "postId": "p004",
+      "userId": "d027",
+      "content": "wow",
+      "createdAt": "2025-04-13T11:10:59.805Z",
+      "likes": []
+    },
+    {
+      "id": "c1744543144979",
+      "postId": "1",
+      "userId": "d027",
+      "content": "wow",
+      "createdAt": "2025-04-13T11:19:04.979Z",
+      "likes": []
+    },
+    {
+      "id": "r1744543261679",
+      "postId": "1",
+      "userId": "d027",
+      "parentId": "1",
+      "content": "nice",
+      "createdAt": "2025-04-13T11:21:01.679Z",
+      "likes": []
+    },
+    {
+      "id": "r1744543262028",
+      "postId": "1",
+      "userId": "d027",
+      "parentId": "1",
+      "content": "nice",
+      "createdAt": "2025-04-13T11:21:02.028Z",
+      "likes": []
     }
   ],
   "stories": [

@@ -1,91 +1,116 @@
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-  <!-- Left Column - Trending & Suggestions (Desktop Only) -->
-  <div class="hidden lg:block lg:col-span-3">
-    <div class="sticky top-20 space-y-6">
-      <!-- User Stats Card -->
-      <div class="card">
-        <div class="flex items-center space-x-3 mb-5">
-          <img src="https://i.pravatar.cc/150?img=11" alt="Profile" class="avatar h-14 w-14 border-2 border-primary-100">
-          <div>
-            <h3 class="font-semibold text-dark-900">John Doe</h3>
-            <p class="text-dark-500 text-sm">@johndoe</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2 text-center">
-          <div class="bg-dark-50 rounded-lg py-3">
-            <div class="font-bold text-dark-900">248</div>
-            <div class="text-dark-500 text-xs">Posts</div>
-          </div>
-
-          <div class="bg-dark-50 rounded-lg py-3">
-            <div class="font-bold text-dark-900">12.4K</div>
-            <div class="text-dark-500 text-xs">Followers</div>
-          </div>
-
-          <div class="bg-dark-50 rounded-lg py-3">
-            <div class="font-bold text-dark-900">843</div>
-            <div class="text-dark-500 text-xs">Following</div>
-          </div>
+<div class="flex flex-col md:flex-row md:space-x-6">
+  <!-- Left Sidebar -->
+  <div class="hidden md:block md:w-80 lg:w-[14rem] space-y-6">
+    <!-- User Stats Card -->
+    <div class="card">
+      <div class="flex items-center space-x-3 mb-5">
+        <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="John Doe" class="w-14 h-14 rounded-full border-2 border-primary-100">
+        <div>
+          <h3 class="font-semibold text-dark-900">John Doe</h3>
+          <p class="text-dark-500 text-sm">@johndoe</p>
         </div>
       </div>
 
-      <!-- Trending Topics -->
-      <div class="card">
-        <h3 class="font-semibold text-dark-900 mb-4 flex items-center">
-          <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mr-2">
-            <i class="fas fa-fire"></i>
-          </div>
-          Trending Topics
-        </h3>
-
-        <div class="space-y-3">
-          <a href="#" class="block hover:bg-dark-50 p-3 rounded-xl transition-colors">
-            <div class="text-xs text-dark-500 mb-1">Technology</div>
-            <div class="font-medium text-dark-900">#AIRevolution</div>
-            <div class="text-xs text-dark-500 mt-1">24.5K posts</div>
-          </a>
-
-          <a href="#" class="block hover:bg-dark-50 p-3 rounded-xl transition-colors">
-            <div class="text-xs text-dark-500 mb-1">Sports</div>
-            <div class="font-medium text-dark-900">#OlympicGames</div>
-            <div class="text-xs text-dark-500 mt-1">18.2K posts</div>
-          </a>
-
-          <a href="#" class="block hover:bg-dark-50 p-3 rounded-xl transition-colors">
-            <div class="text-xs text-dark-500 mb-1">Entertainment</div>
-            <div class="font-medium text-dark-900">#MovieAwards</div>
-            <div class="text-xs text-dark-500 mt-1">12.7K posts</div>
-          </a>
-
-          <a href="#" class="block hover:bg-dark-50 p-3 rounded-xl transition-colors">
-            <div class="text-xs text-dark-500 mb-1">Science</div>
-            <div class="font-medium text-dark-900">#SpaceExploration</div>
-            <div class="text-xs text-dark-500 mt-1">9.3K posts</div>
-          </a>
+      <div class="grid grid-cols-3 gap-2 mb-5">
+        <div class="bg-dark-50 rounded-xl p-3 text-center">
+          <p class="text-dark-500 text-xs">Posts</p>
+          <p class="font-bold text-dark-900 text-lg">24</p>
         </div>
+        <div class="bg-dark-50 rounded-xl p-3 text-center">
+          <p class="text-dark-500 text-xs">Followers</p>
+          <p class="font-bold text-dark-900 text-lg">2.5K</p>
+        </div>
+        <div class="bg-dark-50 rounded-xl p-3 text-center">
+          <p class="text-dark-500 text-xs">Following</p>
+          <p class="font-bold text-dark-900 text-lg">348</p>
+        </div>
+      </div>
+
+      <div class="flex space-x-2">
+        <a href="/profile" class="btn-secondary flex-1">View Profile</a>
+        <a href="/settings" class="btn-outline flex-1">Edit Profile</a>
+      </div>
+    </div>
+
+    <!-- Trending Topics -->
+    <div class="card">
+      <h3 class="font-bold text-dark-800 mb-4">Trending Topics</h3>
+      <div class="space-y-4">
+        <a href="/hashtag/technology" class="flex items-center justify-between hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div>
+            <p class="font-medium text-dark-800">#Technology</p>
+            <p class="text-dark-500 text-xs">24.5K posts</p>
+          </div>
+          <i class="fas fa-chevron-right text-dark-300"></i>
+        </a>
+        <a href="/hashtag/design" class="flex items-center justify-between hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div>
+            <p class="font-medium text-dark-800">#Design</p>
+            <p class="text-dark-500 text-xs">18.2K posts</p>
+          </div>
+          <i class="fas fa-chevron-right text-dark-300"></i>
+        </a>
+        <a href="/hashtag/photography" class="flex items-center justify-between hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div>
+            <p class="font-medium text-dark-800">#Photography</p>
+            <p class="text-dark-500 text-xs">12.7K posts</p>
+          </div>
+          <i class="fas fa-chevron-right text-dark-300"></i>
+        </a>
+        <a href="/hashtag/travel" class="flex items-center justify-between hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div>
+            <p class="font-medium text-dark-800">#Travel</p>
+            <p class="text-dark-500 text-xs">10.3K posts</p>
+          </div>
+          <i class="fas fa-chevron-right text-dark-300"></i>
+        </a>
+        <a href="/hashtag/food" class="flex items-center justify-between hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div>
+            <p class="font-medium text-dark-800">#Food</p>
+            <p class="text-dark-500 text-xs">9.8K posts</p>
+          </div>
+          <i class="fas fa-chevron-right text-dark-300"></i>
+        </a>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="lg:col-span-6">
-    <!-- Stories Section -->
-    <div class="mb-10">
-      <div class="flex items-center justify-between mb-6">
-        <h3 class="font-semibold text-dark-900 flex items-center">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mr-3">
-            <i class="fas fa-book-open"></i>
-          </div>
-          <span class="text-lg">Stories</span>
-        </h3>
-        <a href="/stories" class="text-primary-500 hover:text-primary-600 font-medium flex items-center">
-          <span>View All</span>
-          <i class="fas fa-chevron-right ml-1 text-xs"></i>
+  <div class="flex-1 max-w-3xl">
+    <!-- Create Post -->
+    <div class="bg-white rounded-2xl shadow-sm mb-8">
+      <div class="p-4 flex items-center space-x-4">
+        <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="John Doe" class="w-10 h-10 rounded-full">
+        <a href="/create" class="block w-full bg-dark-50 text-dark-500 rounded-full py-2.5 px-4 hover:bg-dark-100 transition-colors">
+          What's on your mind?
         </a>
       </div>
+      <div class="px-4 pb-4 flex space-x-2">
+        <button class="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-dark-50 rounded-xl transition-colors text-dark-600">
+          <i class="fas fa-image text-green-500"></i>
+          <span>Photo</span>
+        </button>
+        <button class="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-dark-50 rounded-xl transition-colors text-dark-600">
+          <i class="fas fa-video text-red-500"></i>
+          <span>Video</span>
+        </button>
+        <button class="flex-1 flex items-center justify-center space-x-2 py-2 hover:bg-dark-50 rounded-xl transition-colors text-dark-600">
+          <i class="fas fa-smile text-yellow-500"></i>
+          <span>Feeling</span>
+        </button>
+      </div>
+    </div>
 
-      <div class="flex space-x-6 overflow-x-auto pb-4 pt-2 px-2 -mx-2 custom-scrollbar cursor-grab">
+    <!-- Stories -->
+    <div class="mb-8">
+      <h3 class="font-semibold text-dark-900 flex items-center mb-5">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mr-3">
+          <i class="fas fa-book-open"></i>
+        </div>
+        <span class="text-lg">Stories</span>
+      </h3>
+
+      <div class="flex space-x-6 overflow-x-auto pb-4 pt-2 px-2 -mx-2 custom-scrollbar cursor-grab stories-container">
         <!-- Add Story -->
         <a href="/create-story" class="flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer">
           <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden flex flex-col items-center justify-center shadow-md h-48 md:h-64">
@@ -96,83 +121,12 @@
           </div>
           <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
         </a>
-
-        <% for (let i = 1; i <= 10; i++) { %>
-          <a href="/view-story" class="relative group cursor-pointer flex-shrink-0 w-[180px] md:w-[220px] block">
-            <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-md h-48 md:h-64">
-              <img src="https://picsum.photos/400/600?random=<%= i + 10 %>" alt="Story" class="w-full h-full object-cover">
-              <div class="absolute rounded-2xl inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div class="absolute top-3 left-3 right-3 flex items-center">
-                <div class="w-10 h-10 rounded-full border-2 border-primary-500 overflow-hidden">
-                  <img src="https://ui-avatars.com/api/?name=User+<%= i %>&background=<%= ['0D8ABC', '8B5CF6', '10B981', 'F59E0B', 'EF4444', '6366F1'][i % 6] %>&color=fff" alt="User" class="w-full h-full object-cover">
-                </div>
-                <div class="ml-2">
-                  <p class="text-white text-sm font-medium">User <%= i %></p>
-                  <p class="text-white/70 text-xs"><%= i %> hour<%= i !== 1 ? 's' : '' %> ago</p>
-                </div>
-              </div>
-              <div class="absolute bottom-3 left-0 right-0 flex justify-center rounded-2xl">
-                <div class="bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full">
-                  <p class="text-white text-xs font-medium">#story<%= i %></p>
-                </div>
-              </div>
-            </div>
-          </a>
-        <% } %>
-      </div>
-    </div>
-
-    <!-- Create Post -->
-    <div class="bg-white rounded-2xl shadow-sm mb-8 overflow-hidden">
-      <div class="p-5 border-b border-dark-100">
-        <div class="flex items-center space-x-3">
-          <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="Profile" class="avatar h-12 w-12 border-2 border-primary-100">
-          <div class="flex-1">
-            <h3 class="font-semibold text-dark-900">Create Post</h3>
-            <p class="text-dark-500 text-sm">Share what's on your mind</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="p-5">
-        <a href="/create" class="block w-full bg-dark-50 hover:bg-dark-100 transition-colors rounded-xl p-4 mb-4 text-dark-500 text-left">
-          What's on your mind, John?
-        </a>
-
-        <div class="flex justify-between items-center">
-          <div class="flex space-x-2">
-            <a href="/create" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-50 transition-colors">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-yellow-500 flex items-center justify-center text-white">
-                <i class="fas fa-images"></i>
-              </div>
-              <span class="text-dark-600 text-sm font-medium">Media</span>
-            </a>
-
-            <a href="/create" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-50 transition-colors">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-teal-500 flex items-center justify-center text-white">
-                <i class="fas fa-map-marker-alt"></i>
-              </div>
-              <span class="text-dark-600 text-sm font-medium">Location</span>
-            </a>
-
-            <a href="/create" class="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-50 transition-colors">
-              <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white">
-                <i class="fas fa-smile"></i>
-              </div>
-              <span class="text-dark-600 text-sm font-medium">Feeling</span>
-            </a>
-          </div>
-
-          <a href="/create" class="btn btn-primary">
-            <i class="fas fa-paper-plane mr-2"></i>
-            Post
-          </a>
-        </div>
+        <!-- Stories will be loaded dynamically -->
       </div>
     </div>
 
     <!-- Posts Feed -->
-    <div class="space-y-8">
+    <div class="space-y-8 posts-container">
       <h3 class="font-semibold text-dark-900 flex items-center mb-5">
         <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mr-3">
           <i class="fas fa-stream"></i>
@@ -180,368 +134,107 @@
         <span class="text-lg">Your Feed</span>
       </h3>
 
-      <!-- Post 1 -->
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <!-- Post Header -->
-        <div class="p-5">
-          <div class="flex justify-between items-start">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=8B5CF6&color=fff" alt="Profile" class="avatar h-12 w-12 border-2 border-primary-100">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-              </div>
-              <div>
-                <div class="flex items-center">
-                  <h4 class="font-semibold text-dark-900">Sarah Johnson</h4>
-                  <div class="w-1.5 h-1.5 rounded-full bg-dark-300 mx-2"></div>
-                  <button class="text-primary-500 text-sm font-medium hover:text-primary-600">Follow</button>
-                </div>
-                <p class="text-dark-500 text-xs flex items-center">
-                  <span>2 hours ago</span>
-                  <span class="mx-1">•</span>
-                  <i class="fas fa-globe-americas text-xs mr-1"></i>
-                  <span>Public</span>
-                </p>
-              </div>
-            </div>
-
-            <div class="relative group">
-              <button class="w-9 h-9 rounded-full text-dark-500 hover:bg-dark-100 flex items-center justify-center">
-                <i class="fas fa-ellipsis-h"></i>
-              </button>
-
-              <!-- Dropdown Menu (hidden by default) -->
-              <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg py-2 hidden group-hover:block z-10">
-                <a href="#" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
-                  <i class="fas fa-bookmark w-5 mr-3"></i>
-                  <span>Save Post</span>
-                </a>
-                <a href="#" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
-                  <i class="fas fa-bell-slash w-5 mr-3"></i>
-                  <span>Mute Sarah</span>
-                </a>
-                <a href="#" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
-                  <i class="fas fa-flag w-5 mr-3"></i>
-                  <span>Report Post</span>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Post Content -->
-          <div class="mt-4">
-            <p class="text-dark-800 leading-relaxed">Just finished my morning hike! The view from the top was absolutely breathtaking. Nature always has a way of putting things into perspective. 🏞️</p>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <a href="#" class="text-primary-500 text-sm font-medium hover:text-primary-600 bg-primary-50 px-3 py-1 rounded-full">#MorningHike</a>
-              <a href="#" class="text-primary-500 text-sm font-medium hover:text-primary-600 bg-primary-50 px-3 py-1 rounded-full">#NatureLover</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Image -->
-        <div class="mt-2">
-          <img src="https://picsum.photos/1000/600?random=1" alt="Post Image" class="w-full h-auto object-cover">
-        </div>
-
-        <!-- Post Stats -->
-        <div class="px-5 py-3 border-b border-dark-100">
-          <div class="flex justify-between items-center text-sm">
-            <div class="flex items-center space-x-2">
-              <div class="flex -space-x-1">
-                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white">
-                  <i class="fas fa-heart text-xs"></i>
-                </div>
-                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center text-white">
-                  <i class="fas fa-thumbs-up text-xs"></i>
-                </div>
-              </div>
-              <span class="text-dark-500 hover:underline cursor-pointer">248 likes</span>
-            </div>
-
-            <div class="text-dark-500 flex space-x-4">
-              <span class="hover:underline cursor-pointer">42 comments</span>
-              <span class="hover:underline cursor-pointer">16 shares</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Actions -->
-        <div class="px-5 py-2 border-b border-dark-100">
-          <div class="flex justify-between">
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-heart text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Like</span>
-            </button>
-
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-comment text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Comment</span>
-            </button>
-
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-share text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Share</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Comments Section -->
-        <div class="p-5">
-          <!-- Comment -->
-          <div class="flex space-x-3 mb-4">
-            <img src="https://ui-avatars.com/api/?name=Michael+Chen&background=10B981&color=fff" alt="Profile" class="avatar h-10 w-10 border-2 border-primary-100">
-            <div class="flex-1">
-              <div class="bg-dark-50 rounded-2xl px-4 py-3">
-                <div class="font-semibold text-dark-900">Michael Chen</div>
-                <p class="text-dark-800">Wow, that view is incredible! Which trail is this?</p>
-              </div>
-              <div class="flex items-center space-x-3 mt-1 ml-4 text-xs text-dark-500">
-                <button class="font-medium hover:text-primary-500 transition-colors">Like</button>
-                <button class="font-medium hover:text-primary-500 transition-colors">Reply</button>
-                <span>15m</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Comment Input -->
-          <div class="flex space-x-3">
-            <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="Profile" class="avatar h-10 w-10 border-2 border-primary-100">
-            <div class="flex-1 relative">
-              <input type="text" placeholder="Write a comment..." class="w-full bg-dark-50 border-none rounded-full py-2.5 pl-4 pr-12 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
-              <div class="absolute right-3 top-2.5 flex space-x-1">
-                <button class="text-dark-400 hover:text-dark-600 transition-colors">
-                  <i class="fas fa-smile"></i>
-                </button>
-                <button class="text-dark-400 hover:text-dark-600 transition-colors">
-                  <i class="fas fa-camera"></i>
-                </button>
-                <button class="text-primary-500 hover:text-primary-600 transition-colors">
-                  <i class="fas fa-paper-plane"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Post 2 (Simplified) -->
-      <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <!-- Post Header -->
-        <div class="p-5">
-          <div class="flex justify-between items-start">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <img src="https://ui-avatars.com/api/?name=Alex+Rodriguez&background=F59E0B&color=fff" alt="Profile" class="avatar h-12 w-12 border-2 border-primary-100">
-              </div>
-              <div>
-                <div class="flex items-center">
-                  <h4 class="font-semibold text-dark-900">Alex Rodriguez</h4>
-                  <div class="w-1.5 h-1.5 rounded-full bg-dark-300 mx-2"></div>
-                  <button class="text-primary-500 text-sm font-medium hover:text-primary-600">Follow</button>
-                </div>
-                <p class="text-dark-500 text-xs">Yesterday at 7:30 PM</p>
-              </div>
-            </div>
-
-            <div class="relative group">
-              <button class="w-9 h-9 rounded-full text-dark-500 hover:bg-dark-100 flex items-center justify-center">
-                <i class="fas fa-ellipsis-h"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Post Content -->
-          <div class="mt-4">
-            <p class="text-dark-800 leading-relaxed">Just got my hands on the latest tech gadget! Can't wait to test all the features. Anyone else tried it yet?</p>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <a href="#" class="text-primary-500 text-sm font-medium hover:text-primary-600 bg-primary-50 px-3 py-1 rounded-full">#TechEnthusiast</a>
-              <a href="#" class="text-primary-500 text-sm font-medium hover:text-primary-600 bg-primary-50 px-3 py-1 rounded-full">#NewGadget</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Image Grid -->
-        <div class="grid grid-cols-2 gap-1 mt-2">
-          <img src="https://picsum.photos/500/500?random=2" alt="Post Image" class="w-full h-48 object-cover">
-          <img src="https://picsum.photos/500/500?random=3" alt="Post Image" class="w-full h-48 object-cover">
-        </div>
-
-        <!-- Post Stats -->
-        <div class="px-5 py-3 border-b border-dark-100">
-          <div class="flex justify-between items-center text-sm">
-            <div class="flex items-center space-x-2">
-              <div class="flex -space-x-1">
-                <div class="w-7 h-7 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white">
-                  <i class="fas fa-heart text-xs"></i>
-                </div>
-              </div>
-              <span class="text-dark-500 hover:underline cursor-pointer">156 likes</span>
-            </div>
-
-            <div class="text-dark-500 flex space-x-4">
-              <span class="hover:underline cursor-pointer">28 comments</span>
-              <span class="hover:underline cursor-pointer">7 shares</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Post Actions -->
-        <div class="px-5 py-2 border-b border-dark-100">
-          <div class="flex justify-between">
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-heart text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Like</span>
-            </button>
-
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-comment text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Comment</span>
-            </button>
-
-            <button class="flex items-center justify-center space-x-2 py-2 px-4 rounded-xl hover:bg-dark-50 transition-colors flex-1">
-              <i class="fas fa-share text-dark-500"></i>
-              <span class="text-dark-600 font-medium">Share</span>
-            </button>
-          </div>
-        </div>
-      </div>
+      <!-- Posts will be loaded dynamically -->
     </div>
   </div>
 
   <!-- Right Sidebar -->
-  <div class="hidden lg:block lg:col-span-3">
-    <div class="sticky top-20 space-y-6">
-      <!-- Suggested for You -->
-      <div class="card">
-        <h3 class="font-semibold text-dark-900 mb-4 flex items-center">
-          <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mr-2">
-            <i class="fas fa-user-plus"></i>
-          </div>
-          Suggested for You
-        </h3>
+  <div class="hidden lg:block lg:w-[14rem] space-y-6">
+    <!-- Suggestions -->
+    <div class="card suggestions-container">
+      <!-- Suggestions will be loaded dynamically -->
+    </div>
 
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <img src="https://i.pravatar.cc/150?img=50" alt="Profile" class="avatar h-10 w-10 border-2 border-primary-100">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-              </div>
-              <div>
-                <h4 class="font-medium text-dark-900">David Wilson</h4>
-                <p class="text-dark-500 text-xs">Photographer</p>
-              </div>
-            </div>
-
-            <button class="btn btn-primary text-xs py-1.5 px-4">Follow</button>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <img src="https://i.pravatar.cc/150?img=51" alt="Profile" class="avatar h-10 w-10 border-2 border-primary-100">
-              </div>
-              <div>
-                <h4 class="font-medium text-dark-900">Sophia Lee</h4>
-                <p class="text-dark-500 text-xs">UX Designer</p>
-              </div>
-            </div>
-
-            <button class="btn btn-primary text-xs py-1.5 px-4">Follow</button>
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-              <div class="relative">
-                <img src="https://i.pravatar.cc/150?img=52" alt="Profile" class="avatar h-10 w-10 border-2 border-primary-100">
-                <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-              </div>
-              <div>
-                <h4 class="font-medium text-dark-900">James Taylor</h4>
-                <p class="text-dark-500 text-xs">Software Engineer</p>
-              </div>
-            </div>
-
-            <button class="btn btn-primary text-xs py-1.5 px-4">Follow</button>
-          </div>
-        </div>
-
-        <a href="#" class="text-primary-500 text-sm block text-center mt-4 hover:underline font-medium">See More</a>
+    <!-- Events -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-dark-800">Upcoming Events</h3>
+        <a href="/events" class="text-primary-500 text-sm font-medium hover:text-primary-600 transition-colors">See All</a>
       </div>
 
-      <!-- Upcoming Events -->
-      <div class="card">
-        <h3 class="font-semibold text-dark-900 mb-4 flex items-center">
-          <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mr-2">
-            <i class="fas fa-calendar-alt"></i>
+      <div class="space-y-4">
+        <a href="/event/1" class="block hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div class="flex space-x-3">
+            <div class="w-14 h-14 bg-primary-100 rounded-lg flex flex-col items-center justify-center text-primary-500">
+              <span class="font-bold text-sm">JUN</span>
+              <span class="font-bold text-lg">15</span>
+            </div>
+            <div>
+              <h4 class="font-semibold text-dark-800">Tech Conference 2023</h4>
+              <p class="text-dark-500 text-xs flex items-center mt-1">
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                <span>San Francisco, CA</span>
+              </p>
+              <p class="text-dark-500 text-xs flex items-center mt-1">
+                <i class="fas fa-users mr-1"></i>
+                <span>120 attending</span>
+              </p>
+            </div>
           </div>
-          Upcoming Events
-        </h3>
+        </a>
 
-        <div class="space-y-4">
-          <a href="#" class="block hover:bg-dark-50 rounded-xl p-3 transition-colors">
-            <div class="flex items-start space-x-3">
-              <div class="bg-primary-100 text-primary-700 rounded-xl p-2 text-center min-w-[48px]">
-                <div class="text-xs font-bold">APR</div>
-                <div class="text-lg font-bold">15</div>
-              </div>
-
-              <div>
-                <h4 class="font-medium text-dark-900">Tech Conference 2025</h4>
-                <p class="text-dark-500 text-sm">San Francisco, CA</p>
-                <div class="flex items-center text-xs text-dark-500 mt-1">
-                  <span>10:00 AM - 6:00 PM</span>
-                  <span class="mx-1">•</span>
-                  <span>42 attending</span>
-                </div>
-              </div>
+        <a href="/event/2" class="block hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div class="flex space-x-3">
+            <div class="w-14 h-14 bg-secondary-100 rounded-lg flex flex-col items-center justify-center text-secondary-500">
+              <span class="font-bold text-sm">JUL</span>
+              <span class="font-bold text-lg">22</span>
             </div>
-          </a>
-
-          <a href="#" class="block hover:bg-dark-50 rounded-xl p-3 transition-colors">
-            <div class="flex items-start space-x-3">
-              <div class="bg-secondary-100 text-secondary-700 rounded-xl p-2 text-center min-w-[48px]">
-                <div class="text-xs font-bold">APR</div>
-                <div class="text-lg font-bold">22</div>
-              </div>
-
-              <div>
-                <h4 class="font-medium text-dark-900">Photography Workshop</h4>
-                <p class="text-dark-500 text-sm">Online Event</p>
-                <div class="flex items-center text-xs text-dark-500 mt-1">
-                  <span>2:00 PM - 4:00 PM</span>
-                  <span class="mx-1">•</span>
-                  <span>18 attending</span>
-                </div>
-              </div>
+            <div>
+              <h4 class="font-semibold text-dark-800">Design Workshop</h4>
+              <p class="text-dark-500 text-xs flex items-center mt-1">
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                <span>Online</span>
+              </p>
+              <p class="text-dark-500 text-xs flex items-center mt-1">
+                <i class="fas fa-users mr-1"></i>
+                <span>85 attending</span>
+              </p>
             </div>
-          </a>
-        </div>
+          </div>
+        </a>
+      </div>
+    </div>
 
-        <a href="#" class="text-primary-500 text-sm block text-center mt-4 hover:underline font-medium">See All Events</a>
+    <!-- Online Friends -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-dark-800">Online Friends</h3>
+        <a href="/messages" class="text-primary-500 text-sm font-medium hover:text-primary-600 transition-colors">See All</a>
       </div>
 
-      <!-- Active Friends -->
-      <div class="card">
-        <h3 class="font-semibold text-dark-900 mb-4 flex items-center">
-          <div class="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mr-2">
-            <i class="fas fa-circle text-xs text-green-500"></i>
+      <div class="space-y-4">
+        <a href="/messages/1" class="flex items-center space-x-3 hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div class="relative">
+            <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Sarah Johnson" class="w-10 h-10 rounded-full">
+            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
           </div>
-          Active Friends
-        </h3>
+          <div>
+            <h4 class="font-semibold text-dark-800">Sarah Johnson</h4>
+            <p class="text-dark-500 text-xs">Active now</p>
+          </div>
+        </a>
 
-        <div class="flex flex-wrap gap-3">
-          <% for (let i = 1; i <= 8; i++) { %>
-            <div class="relative group">
-              <img src="https://i.pravatar.cc/150?img=<%= i + 40 %>" alt="Friend" class="avatar h-12 w-12 border-2 border-primary-100">
-              <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
-              <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                <i class="fas fa-comment text-white"></i>
-              </div>
-              <div class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-dark-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">User <%= i %></div>
-            </div>
-          <% } %>
-        </div>
+        <a href="/messages/2" class="flex items-center space-x-3 hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div class="relative">
+            <img src="https://ui-avatars.com/api/?name=Alex+Thompson&background=8B5CF6&color=fff" alt="Alex Thompson" class="w-10 h-10 rounded-full">
+            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-dark-800">Alex Thompson</h4>
+            <p class="text-dark-500 text-xs">Active now</p>
+          </div>
+        </a>
+
+        <a href="/messages/3" class="flex items-center space-x-3 hover:bg-dark-50 p-2 rounded-lg transition-colors">
+          <div class="relative">
+            <img src="https://ui-avatars.com/api/?name=Emma+Wilson&background=10B981&color=fff" alt="Emma Wilson" class="w-10 h-10 rounded-full">
+            <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+          </div>
+          <div>
+            <h4 class="font-semibold text-dark-800">Emma Wilson</h4>
+            <p class="text-dark-500 text-xs">Active now</p>
+          </div>
+        </a>
       </div>
     </div>
   </div>

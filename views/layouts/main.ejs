@@ -6,6 +6,8 @@
   <title>Pulse - Share Your World</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/stories.css">
+  <link rel="stylesheet" href="/css/animations.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -75,7 +77,7 @@
       <%- include('../partials/topbar') %>
 
       <!-- Main Content -->
-      <main class="<%= path === '/messages' ? '' : 'px-4 py-6 md:px-8 max-w-6xl mx-auto' %>">
+      <main class="<%= path === '/messages' ? '' : 'px-2 py-6 md:px-4 max-w-6xl mx-auto' %>">
         <%- typeof body === 'function' ? body() : body %>
       </main>
 
@@ -90,6 +92,7 @@
   <script src="/js/main.js"></script>
   <script src="/js/updateSidebar.js"></script>
   <script src="/js/updateHomeAndHeader.js"></script>
+  <script src="/js/dynamicContent.js"></script>
 
   <!-- JSON Server API Services -->
   <script src="/js/authService.js"></script>
