@@ -7,11 +7,24 @@ document.addEventListener('DOMContentLoaded', function() {
   const currentUser = JSON.parse(localStorage.getItem('currentUser'));
   
   if (currentUser) {
-    // Update home page
-    updateHomePage(currentUser);
-    
-    // Update top header
-    updateTopHeader(currentUser);
+    try {
+      // Update home page
+      updateHomePage(currentUser);
+      
+      // Update top header
+      updateTopHeader(currentUser);
+      
+      // Set up periodic refresh of user data
+      setInterval(() => {
+        try {
+          refreshUserData(currentUser.id);
+        } catch (err) {
+          console.error('Error refreshing user data:', err);
+        }
+      }, 30000); // Refresh every 30 seconds
+    } catch (err) {
+      console.error('Error updating page with user data:', err);
+    }
   }
 });
 
@@ -20,14 +33,18 @@ document.addEventListener('DOMContentLoaded', function() {
  * @param {Object} user - The logged-in user object
  */
 function updateHomePage(user) {
-  // Update user stats card
-  updateUserStatsCard(user);
-  
-  // Update create post section
-  updateCreatePostSection(user);
-  
-  // Update posts feed
-  updatePostsFeed(user);
+  try {
+    // Update user stats card
+    updateUserStatsCard(user);
+    
+    // Update create post section
+    updateCreatePostSection(user);
+    
+    // Update posts feed
+    updatePostsFeed(user);
+  } catch (error) {
+    console.error('Error updating home page:', error);
+  }
 }
 
 /**
@@ -65,22 +82,30 @@ function updateUserStatsCard(user) {
     if (statsContainer) {
       const statsItems = statsContainer.querySelectorAll('.bg-dark-50');
       
-      // Posts count (we don't have this data, so we'll leave it as is)
+      // Posts count - fetch from API for real-time data
+      fetchUserPostsCount(user.id).then(count => {
+        if (statsItems[0]) {
+          const postsCount = statsItems[0].querySelector('.font-bold');
+          if (postsCount) {
+            postsCount.textContent = formatNumber(count);
+          }
+        }
+      });
       
       // Followers count
-      if (statsItems[1] && user.followers) {
+      if (statsItems[1]) {
         const followersCount = statsItems[1].querySelector('.font-bold');
         if (followersCount) {
-          const count = user.followers.length;
+          const count = user.followers ? user.followers.length : 0;
           followersCount.textContent = formatNumber(count);
         }
       }
       
       // Following count
-      if (statsItems[2] && user.following) {
+      if (statsItems[2]) {
         const followingCount = statsItems[2].querySelector('.font-bold');
         if (followingCount) {
-          const count = user.following.length;
+          const count = user.following ? user.following.length : 0;
           followingCount.textContent = formatNumber(count);
         }
       }
@@ -220,6 +245,22 @@ function addLogoutFunctionality() {
 }
 
 /**
+ * Fetch user posts count from API
+ * @param {string} userId - The user ID
+ * @returns {Promise<number>} - Number of posts
+ */
+async function fetchUserPostsCount(userId) {
+  try {
+    const response = await fetch(`http://localhost:3001/posts?userId=${userId}`);
+    const posts = await response.json();
+    return posts.length;
+  } catch (error) {
+    console.error('Error fetching posts count:', error);
+    return 0;
+  }
+}
+
+/**
  * Format number for display (e.g., 1200 -> 1.2K)
  * @param {number} num - The number to format
  * @returns {string} - Formatted number
@@ -232,4 +273,26 @@ function formatNumber(num) {
     return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
   }
   return num.toString();
+}
+
+/**
+ * Refresh user data from the server
+ * @param {string} userId - The user ID to refresh
+ */
+async function refreshUserData(userId) {
+  try {
+    const response = await fetch(`http://localhost:3001/users/${userId}`);
+    if (response.ok) {
+      const userData = await response.json();
+      
+      // Update localStorage
+      localStorage.setItem('currentUser', JSON.stringify(userData));
+      
+      // Update UI
+      updateHomePage(userData);
+      updateTopHeader(userData);
+    }
+  } catch (error) {
+    console.error('Error refreshing user data:', error);
+  }
 }

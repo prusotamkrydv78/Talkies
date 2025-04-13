@@ -83,6 +83,48 @@ const PostService = {
     }
   },
   
+  // Create a new post with media
+  createPostWithMedia: async function(postData, mediaFile) {
+    try {
+      // First upload the media file if provided
+      let mediaUrl = null;
+      if (mediaFile) {
+        mediaUrl = await FileUploadService.saveFile(mediaFile, 'posts');
+        if (!mediaUrl) {
+          throw new Error('Failed to upload media');
+        }
+      }
+      
+      // Prepare media array for the post
+      const media = mediaUrl ? [{ type: mediaFile.type.startsWith('image/') ? 'image' : 'video', url: mediaUrl }] : [];
+      
+      // Create the post with the media URL
+      const response = await fetch(`${this.apiUrl}/posts`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...postData,
+          media: media,
+          likes: [],
+          commentsCount: 0,
+          sharesCount: 0,
+          createdAt: new Date().toISOString()
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to create post');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating post:', error);
+      return null;
+    }
+  },
+  
   // Update a post
   updatePost: async function(postId, postData) {
     try {

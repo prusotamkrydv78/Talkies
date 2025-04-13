@@ -8,19 +8,21 @@
   <!-- Create Story Form -->
   <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
     <div class="p-6">
-      <!-- User Info -->
+      <!-- User Info - Will be populated dynamically -->
       <div class="flex items-center space-x-3 mb-6">
-        <div class="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
-          JD
+        <div id="userInitials" class="w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+          <!-- User initials will be inserted here -->
         </div>
         <div>
-          <h3 class="font-semibold text-dark-900">John Doe</h3>
+          <h3 id="userName" class="font-semibold text-dark-900">
+            <!-- User name will be inserted here -->
+          </h3>
           <div class="flex items-center text-dark-500 text-sm">
             <i class="fas fa-globe-americas mr-1.5"></i>
-            <select class="bg-transparent border-none focus:ring-0 p-0 pr-6 text-dark-500">
-              <option>Public</option>
-              <option>Friends Only</option>
-              <option>Close Friends</option>
+            <select id="privacySelect" class="bg-transparent border-none focus:ring-0 p-0 pr-6 text-dark-500">
+              <option value="Public">Public</option>
+              <option value="Friends Only">Friends Only</option>
+              <option value="Close Friends">Close Friends</option>
             </select>
             <i class="fas fa-chevron-down ml-1 text-xs"></i>
           </div>
@@ -44,7 +46,7 @@
       </div>
 
       <!-- Upload Area -->
-      <div class="border-2 border-dashed border-dark-200 rounded-xl p-8 mb-6 text-center">
+      <div class="border-2 border-dashed border-dark-200 rounded-xl p-8 mb-6 text-center" id="uploadArea">
         <div class="mb-4">
           <i class="fas fa-cloud-upload-alt text-4xl text-dark-400"></i>
         </div>
@@ -52,7 +54,7 @@
         <p class="text-dark-500 text-sm mb-4">Support for images and videos (max 15 seconds)</p>
         <input type="file" id="storyMedia" accept="image/*,video/*" class="hidden">
         <button 
-          onclick="document.getElementById('storyMedia').click()" 
+          id="chooseFileBtn"
           class="bg-primary-500 text-white px-6 py-2.5 rounded-full hover:bg-primary-600 transition-colors shadow-sm"
         >
           Choose File
@@ -130,57 +132,222 @@
     <a href="/" class="px-6 py-2.5 border border-dark-200 text-dark-700 rounded-full hover:bg-dark-50 transition-colors">
       Cancel
     </a>
-    <button class="px-6 py-2.5 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors shadow-sm">
+    <button id="publishStory" class="px-6 py-2.5 bg-primary-500 text-white rounded-full hover:bg-primary-600 transition-colors shadow-sm">
       Share Story
     </button>
   </div>
 </div>
 
+<script src="/js/fileUploadService.js"></script>
 <script>
+  function updatePreview() {
+    const captionInput = document.getElementById('storyCaption');
+    const previewCaption = document.getElementById('previewCaption');
+    const captionLength = document.getElementById('captionLength');
+    
+    if (captionInput && previewCaption && captionLength) {
+      previewCaption.textContent = captionInput.value;
+      captionLength.textContent = captionInput.value.length;
+      
+      // Show overlay and text if there's content
+      const previewOverlay = document.getElementById('previewOverlay');
+      const previewText = document.getElementById('previewText');
+      
+      if (previewOverlay && previewText) {
+        if (captionInput.value.trim().length > 0) {
+          previewOverlay.classList.add('opacity-100');
+          previewText.classList.add('opacity-100');
+        } else if (!document.getElementById('storyMedia').files[0]) {
+          previewOverlay.classList.remove('opacity-100');
+          previewText.classList.remove('opacity-100');
+        }
+      }
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
     const storyMedia = document.getElementById('storyMedia');
     const storyPreview = document.getElementById('storyPreview');
     const previewOverlay = document.getElementById('previewOverlay');
     const previewText = document.getElementById('previewText');
-    const storyCaption = document.getElementById('storyCaption');
-    const previewCaption = document.getElementById('previewCaption');
-    const captionLength = document.getElementById('captionLength');
+    const publishButton = document.getElementById('publishStory');
+    const userInitialsElement = document.getElementById('userInitials');
+    const userNameElement = document.getElementById('userName');
     
-    storyMedia.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
+    // Get current user and update UI
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+      // Update user info in the UI
+      if (userInitialsElement) {
+        // Get initials from name
+        const initials = currentUser.name
+          .split(' ')
+          .map(n => n[0])
+          .join('')
+          .toUpperCase();
+        userInitialsElement.textContent = initials;
+      }
       
-      const reader = new FileReader();
+      if (userNameElement) {
+        userNameElement.textContent = currentUser.name;
+      }
       
-      reader.onload = function(event) {
-        if (file.type.startsWith('image/')) {
-          storyPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover">`;
-          previewOverlay.classList.add('opacity-100');
-          previewText.classList.add('opacity-100');
-        } else if (file.type.startsWith('video/')) {
-          storyPreview.innerHTML = `
-            <video src="${event.target.result}" class="w-full h-full object-cover" autoplay muted loop></video>
-          `;
-          previewOverlay.classList.add('opacity-100');
-          previewText.classList.add('opacity-100');
+      // Set user preferences if available
+      if (currentUser.preferences) {
+        const privacySelect = document.getElementById('privacySelect');
+        if (privacySelect && currentUser.preferences.defaultPrivacy) {
+          privacySelect.value = currentUser.preferences.defaultPrivacy;
         }
-      };
-      
-      reader.readAsDataURL(file);
-    });
+        
+        // Set default story options if available
+        const allowRepliesCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(1)');
+        const closeFriendsOnlyCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(2)');
+        const hideViewCountCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(3)');
+        
+        if (allowRepliesCheckbox && currentUser.preferences.allowReplies !== undefined) {
+          allowRepliesCheckbox.checked = currentUser.preferences.allowReplies;
+        }
+        
+        if (closeFriendsOnlyCheckbox && currentUser.preferences.closeFriendsOnly !== undefined) {
+          closeFriendsOnlyCheckbox.checked = currentUser.preferences.closeFriendsOnly;
+        }
+        
+        if (hideViewCountCheckbox && currentUser.preferences.hideViewCount !== undefined) {
+          hideViewCountCheckbox.checked = currentUser.preferences.hideViewCount;
+        }
+      }
+    } else {
+      // Redirect to login if not logged in
+      window.location.href = '/auth/login';
+      return;
+    }
     
-    storyCaption.addEventListener('input', function() {
-      captionLength.textContent = this.value.length;
-      previewCaption.textContent = this.value;
+    let selectedFile = null;
+    
+    if (storyMedia) {
+      storyMedia.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        selectedFile = file;
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          if (file.type.startsWith('image/')) {
+            storyPreview.innerHTML = `<img src="${event.target.result}" class="w-full h-full object-cover">`;
+            previewOverlay.classList.add('opacity-100');
+            previewText.classList.add('opacity-100');
+          } else if (file.type.startsWith('video/')) {
+            storyPreview.innerHTML = `
+              <video src="${event.target.result}" class="w-full h-full object-cover" autoplay muted loop></video>
+            `;
+            previewOverlay.classList.add('opacity-100');
+            previewText.classList.add('opacity-100');
+          }
+        };
+        
+        reader.readAsDataURL(file);
+      });
+    }
+    
+    publishButton.addEventListener('click', async function() {
+      if (!selectedFile) {
+        alert('Please select a media file for your story');
+        return;
+      }
+      
+      try {
+        // Get story options
+        const privacySelect = document.getElementById('privacySelect');
+        const allowRepliesCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(1)');
+        const closeFriendsOnlyCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(2)');
+        const hideViewCountCheckbox = document.querySelector('input[type="checkbox"]:nth-of-type(3)');
+        
+        const privacy = privacySelect ? privacySelect.value : 'Public';
+        const allowRepliesValue = allowRepliesCheckbox ? allowRepliesCheckbox.checked : true;
+        const closeFriendsOnlyValue = closeFriendsOnlyCheckbox ? closeFriendsOnlyCheckbox.checked : false;
+        const hideViewCountValue = hideViewCountCheckbox ? hideViewCountCheckbox.checked : false;
+        
+        // Get caption
+        const caption = document.getElementById('storyCaption').value;
+        
+        // Upload the file
+        const mediaUrl = await window.FileUploadService.saveFile(selectedFile, 'stories');
+        if (!mediaUrl) {
+          throw new Error('Failed to upload media');
+        }
+        
+        // Create story with the file path
+        const now = new Date();
+        const expiresAt = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString();
+        
+        const response = await fetch('http://localhost:3001/stories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: currentUser.id,
+            media: {
+              type: selectedFile.type.startsWith('image/') ? 'image' : 'video',
+              url: mediaUrl
+            },
+            caption: caption,
+            privacy: privacy,
+            settings: {
+              allowReplies: allowRepliesValue,
+              closeFriendsOnly: closeFriendsOnlyValue,
+              hideViewCount: hideViewCountValue
+            },
+            views: [],
+            createdAt: now.toISOString(),
+            expiresAt: expiresAt
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to create story');
+        }
+        
+        // Save user preferences if they've changed
+        if (currentUser.preferences) {
+          const preferencesChanged = 
+            currentUser.preferences.defaultPrivacy !== privacy ||
+            currentUser.preferences.allowReplies !== allowRepliesValue ||
+            currentUser.preferences.closeFriendsOnly !== closeFriendsOnlyValue ||
+            currentUser.preferences.hideViewCount !== hideViewCountValue;
+            
+          if (preferencesChanged) {
+            currentUser.preferences = {
+              ...currentUser.preferences,
+              defaultPrivacy: privacy,
+              allowReplies: allowRepliesValue,
+              closeFriendsOnly: closeFriendsOnlyValue,
+              hideViewCount: hideViewCountValue
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update user preferences on server
+            await fetch(`http://localhost:3001/users/${currentUser.id}`, {
+              method: 'PATCH',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                preferences: currentUser.preferences
+              })
+            });
+          }
+        }
+        
+        // Redirect to home page
+        window.location.href = '/';
+      } catch (error) {
+        console.error('Error publishing story:', error);
+        alert('Failed to publish story. Please try again.');
+      }
     });
   });
-  
-  function updatePreview() {
-    const storyCaption = document.getElementById('storyCaption');
-    const previewCaption = document.getElementById('previewCaption');
-    const captionLength = document.getElementById('captionLength');
-    
-    captionLength.textContent = storyCaption.value.length;
-    previewCaption.textContent = storyCaption.value;
-  }
 </script>
