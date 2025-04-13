@@ -3,12 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Toggle user dropdown
     const userMenuButton = document.getElementById('user-menu-button');
     const userDropdown = document.getElementById('user-dropdown');
-    
+
     if (userMenuButton && userDropdown) {
-        userMenuButton.addEventListener('click', function() {
+        userMenuButton.addEventListener('click', function(e) {
+            e.stopPropagation();
             userDropdown.classList.toggle('hidden');
         });
-        
+
         // Close dropdown when clicking outside
         document.addEventListener('click', function(event) {
             if (!userMenuButton.contains(event.target) && !userDropdown.contains(event.target)) {
@@ -16,30 +17,88 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Mobile menu toggle
+
+    // Mobile sidebar toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    if (mobileMenuButton && mobileMenu) {
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const closeSidebarButton = document.getElementById('close-sidebar-button');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const body = document.body;
+
+    if (mobileMenuButton && mobileSidebar && mobileMenuBackdrop) {
+        // Toggle mobile sidebar
+        const toggleMobileSidebar = (show) => {
+            if (show === undefined) {
+                // Toggle current state
+                show = mobileSidebar.classList.contains('-translate-x-full');
+            }
+
+            if (show) {
+                // Show sidebar
+                mobileSidebar.classList.remove('-translate-x-full');
+                mobileSidebar.classList.add('translate-x-0');
+                mobileMenuBackdrop.classList.remove('hidden');
+                body.classList.add('overflow-hidden'); // Prevent scrolling
+
+                // Add animation
+                mobileMenuBackdrop.classList.add('animate-fade-in');
+                setTimeout(() => {
+                    mobileMenuBackdrop.classList.remove('animate-fade-in');
+                }, 300);
+            } else {
+                // Hide sidebar
+                mobileSidebar.classList.remove('translate-x-0');
+                mobileSidebar.classList.add('-translate-x-full');
+                mobileMenuBackdrop.classList.add('hidden');
+                body.classList.remove('overflow-hidden'); // Allow scrolling
+            }
+        };
+
+        // Toggle sidebar on button click
         mobileMenuButton.addEventListener('click', function() {
-            mobileMenu.classList.toggle('hidden');
+            toggleMobileSidebar(true);
+        });
+
+        // Close sidebar when clicking close button
+        if (closeSidebarButton) {
+            closeSidebarButton.addEventListener('click', function() {
+                toggleMobileSidebar(false);
+            });
+        }
+
+        // Close sidebar when clicking on backdrop
+        mobileMenuBackdrop.addEventListener('click', function() {
+            toggleMobileSidebar(false);
+        });
+
+        // Close mobile sidebar when window is resized to desktop size
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) { // md breakpoint
+                toggleMobileSidebar(false);
+            }
+        });
+
+        // Close sidebar on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileSidebar.classList.contains('translate-x-0')) {
+                toggleMobileSidebar(false);
+            }
         });
     }
-    
+
     // Dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
-    
+
     if (darkModeToggle) {
         // Check for saved theme preference or use system preference
         const savedTheme = localStorage.getItem('theme');
         const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
+
         if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
             document.documentElement.classList.add('dark');
             darkModeToggle.checked = true;
         }
-        
+
         darkModeToggle.addEventListener('change', function() {
             if (this.checked) {
                 document.documentElement.classList.add('dark');
@@ -50,21 +109,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
+    // Add animation classes for mobile menu
+    const addAnimationClasses = () => {
+        // Add slide-in animation class to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-slide-in {
+                animation: slideIn 0.3s ease-out forwards;
+            }
+        `;
+        document.head.appendChild(style);
+    };
+
+    addAnimationClasses();
+
     // Post interactions
     const likeButtons = document.querySelectorAll('.like-button');
-    
+
     likeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const icon = this.querySelector('i');
             const likeCount = this.closest('.post').querySelector('.like-count');
-            
+
             if (icon.classList.contains('far')) {
                 // Like
                 icon.classList.remove('far');
                 icon.classList.add('fas');
                 icon.classList.add('text-red-500');
-                
+
                 if (likeCount) {
                     const count = parseInt(likeCount.textContent) + 1;
                     likeCount.textContent = count;
@@ -74,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 icon.classList.remove('fas');
                 icon.classList.remove('text-red-500');
                 icon.classList.add('far');
-                
+
                 if (likeCount) {
                     const count = parseInt(likeCount.textContent) - 1;
                     likeCount.textContent = count;
@@ -82,10 +159,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Comment toggle
     const commentButtons = document.querySelectorAll('.comment-button');
-    
+
     commentButtons.forEach(button => {
         button.addEventListener('click', function() {
             const commentsSection = this.closest('.post').querySelector('.comments-section');
@@ -94,25 +171,25 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Story navigation
     const storyPrev = document.getElementById('story-prev');
     const storyNext = document.getElementById('story-next');
     const storyContainer = document.querySelector('.stories-container');
-    
+
     if (storyPrev && storyNext && storyContainer) {
         storyPrev.addEventListener('click', function() {
             storyContainer.scrollBy({ left: -200, behavior: 'smooth' });
         });
-        
+
         storyNext.addEventListener('click', function() {
             storyContainer.scrollBy({ left: 200, behavior: 'smooth' });
         });
     }
-    
+
     // Notification read toggle
     const markAsReadButtons = document.querySelectorAll('.mark-as-read');
-    
+
     markAsReadButtons.forEach(button => {
         button.addEventListener('click', function(e) {
             e.preventDefault();
@@ -124,12 +201,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Chat message input
     const chatInput = document.getElementById('chat-input');
     const sendButton = document.getElementById('send-message');
     const messagesContainer = document.getElementById('messages-container');
-    
+
     if (chatInput && sendButton && messagesContainer) {
         sendButton.addEventListener('click', sendMessage);
         chatInput.addEventListener('keypress', function(e) {
@@ -137,12 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendMessage();
             }
         });
-        
+
         function sendMessage() {
             const message = chatInput.value.trim();
             if (message) {
                 const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                
+
                 const messageElement = document.createElement('div');
                 messageElement.className = 'flex justify-end';
                 messageElement.innerHTML = `
@@ -158,22 +235,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>
                 `;
-                
+
                 messagesContainer.appendChild(messageElement);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                 chatInput.value = '';
             }
         }
     }
-    
+
     // Video call controls
     const videoControls = document.querySelectorAll('.video-control');
-    
+
     videoControls.forEach(control => {
         control.addEventListener('click', function() {
             this.classList.toggle('bg-dark-700');
             this.classList.toggle('bg-primary-500');
-            
+
             const icon = this.querySelector('i');
             if (this.classList.contains('mic-control')) {
                 icon.classList.toggle('fa-microphone');
@@ -184,31 +261,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Profile tabs
     const profileTabs = document.querySelectorAll('.profile-tab');
     const profileSections = document.querySelectorAll('.profile-section');
-    
+
     if (profileTabs.length && profileSections.length) {
         profileTabs.forEach(tab => {
             tab.addEventListener('click', function(e) {
                 e.preventDefault();
-                
+
                 // Remove active class from all tabs
                 profileTabs.forEach(t => {
                     t.classList.remove('text-primary-500', 'border-b-2', 'border-primary-500');
                     t.classList.add('text-gray-500', 'dark:text-gray-400', 'hover:text-primary-500', 'dark:hover:text-primary-400');
                 });
-                
+
                 // Add active class to clicked tab
                 this.classList.remove('text-gray-500', 'dark:text-gray-400', 'hover:text-primary-500', 'dark:hover:text-primary-400');
                 this.classList.add('text-primary-500', 'border-b-2', 'border-primary-500');
-                
+
                 // Hide all sections
                 profileSections.forEach(section => {
                     section.classList.add('hidden');
                 });
-                
+
                 // Show corresponding section
                 const target = this.getAttribute('href').substring(1);
                 document.getElementById(target).classList.remove('hidden');

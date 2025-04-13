@@ -1,0 +1,141 @@
+
+
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-dark-700 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-dark-900 dark:text-white">Notifications</h2>
+            <div class="flex items-center space-x-2">
+                <button class="text-primary-500 hover:text-primary-600 text-sm font-medium">Mark all as read</button>
+                <div class="relative">
+                    <button class="text-dark-600 dark:text-gray-300 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-dark-700">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Filters -->
+        <div class="flex border-b border-gray-200 dark:border-dark-700">
+            <button class="flex-1 py-3 px-4 text-center text-primary-500 border-b-2 border-primary-500 font-medium">All</button>
+            <button class="flex-1 py-3 px-4 text-center text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Unread</button>
+            <button class="flex-1 py-3 px-4 text-center text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Mentions</button>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="divide-y divide-gray-200 dark:divide-dark-700">
+            <% notifications.forEach((notification, index) => { %>
+                <div class="p-4 hover:bg-gray-50 dark:hover:bg-dark-700 transition duration-150 <%= index < 2 ? 'bg-primary-50 dark:bg-primary-900/10' : '' %>">
+                    <div class="flex items-start space-x-3">
+                        <div class="relative">
+                            <img src="<%= notification.avatar %>" alt="<%= notification.user %>" class="w-10 h-10 rounded-full object-cover border-2 border-primary-300">
+                            <% if (notification.type === 'like') { %>
+                                <div class="absolute -bottom-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-white dark:border-dark-800">
+                                    <i class="fas fa-heart text-xs"></i>
+                                </div>
+                            <% } else if (notification.type === 'comment') { %>
+                                <div class="absolute -bottom-1 -right-1 bg-primary-500 text-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-white dark:border-dark-800">
+                                    <i class="fas fa-comment text-xs"></i>
+                                </div>
+                            <% } else if (notification.type === 'follow') { %>
+                                <div class="absolute -bottom-1 -right-1 bg-secondary-500 text-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-white dark:border-dark-800">
+                                    <i class="fas fa-user-plus text-xs"></i>
+                                </div>
+                            <% } else if (notification.type === 'mention') { %>
+                                <div class="absolute -bottom-1 -right-1 bg-accent-500 text-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-white dark:border-dark-800">
+                                    <i class="fas fa-at text-xs"></i>
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <div class="flex-1">
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <p class="text-dark-800 dark:text-gray-200">
+                                        <span class="font-semibold"><%= notification.user %></span>
+                                        <%= notification.content %>
+                                    </p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1"><%= notification.time %></p>
+                                </div>
+
+                                <% if (index < 2) { %>
+                                    <div class="w-2 h-2 rounded-full bg-primary-500 mt-2"></div>
+                                <% } %>
+                            </div>
+
+                            <% if (notification.type === 'like' || notification.type === 'comment') { %>
+                                <div class="mt-2 bg-gray-100 dark:bg-dark-700 rounded-lg p-2 flex items-center space-x-2">
+                                    <img src="https://source.unsplash.com/random/100x100?nature" alt="Post image" class="w-10 h-10 rounded object-cover">
+                                    <p class="text-sm text-gray-600 dark:text-gray-300 truncate">Your post: "What a beautiful day for a hike..."</p>
+                                </div>
+                            <% } %>
+
+                            <% if (notification.type === 'follow') { %>
+                                <div class="mt-2 flex items-center space-x-2">
+                                    <button class="bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium py-1 px-3 rounded-full">Follow Back</button>
+                                    <button class="bg-gray-200 dark:bg-dark-700 hover:bg-gray-300 dark:hover:bg-dark-600 text-dark-800 dark:text-gray-200 text-sm font-medium py-1 px-3 rounded-full">Dismiss</button>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+
+            <!-- More Notifications -->
+            <div class="p-4 hover:bg-gray-50 dark:hover:bg-dark-700 transition duration-150">
+                <div class="flex items-start space-x-3">
+                    <div class="relative">
+                        <img src="https://i.pravatar.cc/150?img=15" alt="David Wilson" class="w-10 h-10 rounded-full object-cover border-2 border-primary-300">
+                        <div class="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center border-2 border-white dark:border-dark-800">
+                            <i class="fas fa-share text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between">
+                            <p class="text-dark-800 dark:text-gray-200">
+                                <span class="font-semibold">David Wilson</span>
+                                shared your post
+                            </p>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">1 day ago</p>
+
+                        <div class="mt-2 bg-gray-100 dark:bg-dark-700 rounded-lg p-2 flex items-center space-x-2">
+                            <img src="https://source.unsplash.com/random/100x100?technology" alt="Post image" class="w-10 h-10 rounded object-cover">
+                            <p class="text-sm text-gray-600 dark:text-gray-300 truncate">Your post: "Check out this new tech gadget I just got..."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 hover:bg-gray-50 dark:hover:bg-dark-700 transition duration-150">
+                <div class="flex items-start space-x-3">
+                    <div class="relative">
+                        <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center border-2 border-primary-300">
+                            <i class="fas fa-calendar text-primary-500"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex-1">
+                        <div class="flex items-start justify-between">
+                            <p class="text-dark-800 dark:text-gray-200">
+                                <span class="font-semibold">Event Reminder</span>:
+                                Virtual Meetup starts in 1 hour
+                            </p>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">2 days ago</p>
+
+                        <div class="mt-2 flex items-center space-x-2">
+                            <button class="bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium py-1 px-3 rounded-full">Join Now</button>
+                            <button class="bg-gray-200 dark:bg-dark-700 hover:bg-gray-300 dark:hover:bg-dark-600 text-dark-800 dark:text-gray-200 text-sm font-medium py-1 px-3 rounded-full">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load More -->
+        <div class="p-4 text-center">
+            <button class="text-primary-500 hover:text-primary-600 font-medium">Load More</button>
+        </div>
+    </div>
+</div>

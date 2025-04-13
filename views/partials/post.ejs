@@ -1,0 +1,126 @@
+<div class="bg-white/80 backdrop-blur-md rounded-3xl shadow-glass overflow-hidden mb-8 border border-surface-200/50 hover:shadow-glow transition-shadow duration-300">
+    <!-- Post Header -->
+    <div class="p-6 flex items-center space-x-4">
+        <div class="relative">
+            <div class="absolute inset-0 rounded-full bg-primary-500 blur-sm opacity-20"></div>
+            <img src="<%= post.author.avatar %>" alt="<%= post.author.name %>" class="relative w-12 h-12 rounded-full object-cover border-2 border-primary-500/20">
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h4 class="font-semibold text-surface-800"><%= post.author.name %></h4>
+                    <p class="text-xs text-surface-500">@<%= post.author.username %> • <%= post.timeAgo %></p>
+                </div>
+                <button class="text-surface-400 hover:text-surface-600 p-2 rounded-full hover:bg-surface-100/70 transition duration-200 group">
+                    <i class="fas fa-ellipsis-h group-hover:scale-110 transition-transform duration-200"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="px-6 pb-4">
+        <p class="text-surface-800 mb-5 leading-relaxed"><%= post.content %></p>
+
+        <% if (post.image) { %>
+            <div class="rounded-2xl overflow-hidden mb-5 shadow-soft">
+                <img src="<%= post.image %>" alt="Post image" class="w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500">
+            </div>
+        <% } %>
+
+        <% if (post.video) { %>
+            <div class="rounded-2xl overflow-hidden mb-5 aspect-w-16 aspect-h-9 shadow-soft">
+                <video src="<%= post.video %>" controls class="w-full h-full object-cover"></video>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Post Stats -->
+    <div class="px-6 py-3 border-t border-surface-200/50 flex items-center justify-between text-sm text-surface-500">
+        <div class="flex items-center space-x-1">
+            <div class="flex -space-x-2">
+                <div class="w-6 h-6 rounded-full bg-gradient-to-r from-primary-500 to-primary-600 flex items-center justify-center text-white text-xs shadow-sm">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="w-6 h-6 rounded-full bg-gradient-to-r from-accent-500 to-accent-600 flex items-center justify-center text-white text-xs shadow-sm">
+                    <i class="fas fa-thumbs-up"></i>
+                </div>
+            </div>
+            <span class="ml-2"><%= post.likes %> likes</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span><%= post.comments %> comments</span>
+            <span><%= post.shares %> shares</span>
+        </div>
+    </div>
+
+    <!-- Post Actions -->
+    <div class="px-6 py-3 border-t border-surface-200/50 flex items-center justify-between">
+        <button class="flex items-center space-x-2 text-surface-600 hover:text-primary-600 p-2 rounded-xl hover:bg-surface-100/70 transition duration-200 group">
+            <div class="relative w-8 h-8 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full bg-primary-500 opacity-0 group-hover:opacity-10 group-hover:blur-sm transition-all duration-200"></div>
+                <i class="far fa-heart text-lg group-hover:scale-110 transition-transform duration-200"></i>
+            </div>
+            <span>Like</span>
+        </button>
+        <button class="flex items-center space-x-2 text-surface-600 hover:text-primary-600 p-2 rounded-xl hover:bg-surface-100/70 transition duration-200 group">
+            <div class="relative w-8 h-8 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full bg-primary-500 opacity-0 group-hover:opacity-10 group-hover:blur-sm transition-all duration-200"></div>
+                <i class="far fa-comment text-lg group-hover:scale-110 transition-transform duration-200"></i>
+            </div>
+            <span>Comment</span>
+        </button>
+        <button class="flex items-center space-x-2 text-surface-600 hover:text-primary-600 p-2 rounded-xl hover:bg-surface-100/70 transition duration-200 group">
+            <div class="relative w-8 h-8 flex items-center justify-center">
+                <div class="absolute inset-0 rounded-full bg-primary-500 opacity-0 group-hover:opacity-10 group-hover:blur-sm transition-all duration-200"></div>
+                <i class="far fa-share-square text-lg group-hover:scale-110 transition-transform duration-200"></i>
+            </div>
+            <span>Share</span>
+        </button>
+    </div>
+
+    <!-- Comments Section (Collapsed by default) -->
+    <div class="hidden px-6 py-4 border-t border-surface-200/50 bg-surface-50/50">
+        <!-- Comment Input -->
+        <div class="flex items-center space-x-3 mb-5">
+            <div class="relative">
+                <div class="absolute inset-0 rounded-full bg-primary-500 blur-sm opacity-10"></div>
+                <img src="<%= user.avatar %>" alt="<%= user.name %>" class="relative w-10 h-10 rounded-full object-cover border border-primary-500/20">
+            </div>
+            <div class="flex-1 relative">
+                <input type="text" class="w-full py-2.5 px-4 bg-white/80 border border-surface-200/50 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/30 shadow-soft" placeholder="Write a comment...">
+                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 flex items-center space-x-2">
+                    <button class="text-surface-400 hover:text-primary-500 transition duration-200">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <button class="text-surface-400 hover:text-primary-500 transition duration-200">
+                        <i class="far fa-image"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments List -->
+        <div class="space-y-5">
+            <% post.commentsList.forEach(comment => { %>
+                <div class="flex space-x-3">
+                    <div class="relative">
+                        <div class="absolute inset-0 rounded-full bg-primary-500 blur-sm opacity-10"></div>
+                        <img src="<%= comment.author.avatar %>" alt="<%= comment.author.name %>" class="relative w-10 h-10 rounded-full object-cover border border-primary-500/20 flex-shrink-0">
+                    </div>
+                    <div>
+                        <div class="bg-white/80 backdrop-blur-xs rounded-2xl px-4 py-3 shadow-soft border border-surface-200/30">
+                            <h5 class="font-medium text-surface-800"><%= comment.author.name %></h5>
+                            <p class="text-surface-700"><%= comment.content %></p>
+                        </div>
+                        <div class="flex items-center space-x-4 mt-1.5 ml-2 text-xs text-surface-500">
+                            <button class="hover:text-primary-600 transition duration-200">Like</button>
+                            <button class="hover:text-primary-600 transition duration-200">Reply</button>
+                            <span><%= comment.timeAgo %></span>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</div>

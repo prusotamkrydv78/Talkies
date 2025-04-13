@@ -1,0 +1,226 @@
+
+
+<%
+// Sample data for posts
+const posts = [
+    {
+        id: 1,
+        author: { name: user.name, username: user.username, avatar: user.avatar },
+        content: 'Just finished my morning hike! The view was absolutely breathtaking. Nature always has a way of putting things into perspective. #MorningHike #NatureLover',
+        image: 'https://source.unsplash.com/random/800x600?hiking',
+        video: null,
+        timeAgo: '2 days ago',
+        likes: 42,
+        comments: 8,
+        shares: 3,
+        commentsList: [
+            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks amazing! Where is this?', timeAgo: '2 days ago' },
+            { author: { name: 'Sarah Williams', avatar: 'https://i.pravatar.cc/150?img=20' }, content: 'I need to go there! 😍', timeAgo: '2 days ago' }
+        ]
+    },
+    {
+        id: 2,
+        author: { name: user.name, username: user.username, avatar: user.avatar },
+        content: 'Working on a new project! Can\'t wait to share it with everyone. #Coding #NewProject',
+        image: 'https://source.unsplash.com/random/800x600?coding',
+        video: null,
+        timeAgo: '1 week ago',
+        likes: 76,
+        comments: 12,
+        shares: 5,
+        commentsList: [
+            { author: { name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=5' }, content: 'Can\'t wait to see it!', timeAgo: '1 week ago' },
+            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks interesting!', timeAgo: '1 week ago' }
+        ]
+    }
+];
+
+// Sample data for photos
+const photos = [
+    'https://source.unsplash.com/random/300x300?nature',
+    'https://source.unsplash.com/random/300x300?city',
+    'https://source.unsplash.com/random/300x300?people',
+    'https://source.unsplash.com/random/300x300?technology',
+    'https://source.unsplash.com/random/300x300?food',
+    'https://source.unsplash.com/random/300x300?travel'
+];
+
+// Sample data for friends
+const friends = [
+    { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' },
+    { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' },
+    { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' },
+    { name: 'Alex Brown', username: 'alexbrown', avatar: 'https://i.pravatar.cc/150?img=33' },
+    { name: 'Emily Davis', username: 'emilydavis', avatar: 'https://i.pravatar.cc/150?img=25' },
+    { name: 'David Wilson', username: 'davidwilson', avatar: 'https://i.pravatar.cc/150?img=15' }
+];
+%>
+
+<div class="max-w-4xl mx-auto">
+    <!-- Profile Header -->
+    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden mb-6">
+        <!-- Cover Photo -->
+        <div class="h-48 md:h-64 bg-gradient-to-r from-primary-400 to-secondary-500 relative">
+            <img src="https://source.unsplash.com/random/1200x400?landscape" alt="Cover photo" class="w-full h-full object-cover">
+
+            <!-- Profile Picture -->
+            <div class="absolute -bottom-16 left-6 p-1 rounded-full bg-white dark:bg-dark-800">
+                <div class="p-1 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500">
+                    <img src="<%= user.avatar %>" alt="<%= user.name %>" class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-dark-800">
+                </div>
+            </div>
+
+            <!-- Edit Profile Button -->
+            <div class="absolute bottom-4 right-4">
+                <button class="bg-white dark:bg-dark-800 text-dark-900 dark:text-white hover:bg-gray-100 dark:hover:bg-dark-700 font-medium py-2 px-4 rounded-lg flex items-center space-x-2 shadow-md">
+                    <i class="fas fa-pencil-alt"></i>
+                    <span>Edit Profile</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Info -->
+        <div class="pt-20 pb-6 px-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-dark-900 dark:text-white"><%= user.name %></h1>
+                    <p class="text-gray-500 dark:text-gray-400">@<%= user.username %></p>
+                    <p class="mt-2 text-dark-800 dark:text-gray-200"><%= user.bio %></p>
+                </div>
+
+                <div class="flex items-center space-x-4 mt-4 md:mt-0">
+                    <div class="text-center">
+                        <p class="font-bold text-dark-900 dark:text-white"><%= user.posts %></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Posts</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-bold text-dark-900 dark:text-white"><%= user.followers %></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Followers</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-bold text-dark-900 dark:text-white"><%= user.following %></p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Following</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Navigation -->
+            <div class="border-t border-gray-200 dark:border-dark-700 pt-4 mt-4">
+                <nav class="flex space-x-4">
+                    <a href="#posts" class="px-3 py-2 text-primary-500 border-b-2 border-primary-500 font-medium">Posts</a>
+                    <a href="#photos" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Photos</a>
+                    <a href="#friends" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Friends</a>
+                    <a href="#about" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">About</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left Sidebar -->
+        <div class="md:col-span-1 space-y-6">
+            <!-- About -->
+            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
+                <div class="p-4 border-b border-gray-200 dark:border-dark-700">
+                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">About</h3>
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-briefcase text-gray-500 dark:text-gray-400 w-5"></i>
+                        <p class="text-dark-800 dark:text-gray-200">Digital Creator at Creative Studios</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-graduation-cap text-gray-500 dark:text-gray-400 w-5"></i>
+                        <p class="text-dark-800 dark:text-gray-200">Studied at Design University</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-home text-gray-500 dark:text-gray-400 w-5"></i>
+                        <p class="text-dark-800 dark:text-gray-200">Lives in New York, USA</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-map-marker-alt text-gray-500 dark:text-gray-400 w-5"></i>
+                        <p class="text-dark-800 dark:text-gray-200">From San Francisco, USA</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <i class="fas fa-heart text-gray-500 dark:text-gray-400 w-5"></i>
+                        <p class="text-dark-800 dark:text-gray-200">Single</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
+                <div class="p-4 border-b border-gray-200 dark:border-dark-700 flex justify-between items-center">
+                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">Photos</h3>
+                    <a href="#" class="text-primary-500 hover:text-primary-600 text-sm font-medium">See All</a>
+                </div>
+                <div class="p-4">
+                    <div class="grid grid-cols-3 gap-2">
+                        <% photos.forEach(photo => { %>
+                            <div class="aspect-square rounded-lg overflow-hidden">
+                                <img src="<%= photo %>" alt="Photo" class="w-full h-full object-cover">
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends -->
+            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
+                <div class="p-4 border-b border-gray-200 dark:border-dark-700 flex justify-between items-center">
+                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">Friends</h3>
+                    <a href="#" class="text-primary-500 hover:text-primary-600 text-sm font-medium">See All</a>
+                </div>
+                <div class="p-4">
+                    <div class="grid grid-cols-3 gap-3">
+                        <% friends.forEach(friend => { %>
+                            <div class="text-center">
+                                <div class="aspect-square rounded-lg overflow-hidden mb-1">
+                                    <img src="<%= friend.avatar %>" alt="<%= friend.name %>" class="w-full h-full object-cover">
+                                </div>
+                                <p class="text-dark-800 dark:text-gray-200 text-sm truncate"><%= friend.name.split(' ')[0] %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="md:col-span-2">
+            <!-- Create Post -->
+            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden mb-6">
+                <div class="p-4">
+                    <div class="flex items-center space-x-3">
+                        <img src="<%= user.avatar %>" alt="<%= user.name %>" class="w-10 h-10 rounded-full object-cover border-2 border-primary-300">
+                        <div class="flex-1 bg-gray-100 dark:bg-dark-700 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-dark-600 transition duration-200">
+                            <p class="text-gray-500 dark:text-gray-400">What's on your mind, <%= user.name.split(' ')[0] %>?</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-dark-700">
+                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
+                            <i class="fas fa-image text-accent-500"></i>
+                            <span>Photo</span>
+                        </button>
+                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
+                            <i class="fas fa-video text-secondary-500"></i>
+                            <span>Video</span>
+                        </button>
+                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
+                            <i class="far fa-smile text-primary-500"></i>
+                            <span>Feeling</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts -->
+            <div class="space-y-6">
+                <% posts.forEach(post => { %>
+                    <%- include('../partials/post', { post, user }) %>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</div>
