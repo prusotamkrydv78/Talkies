@@ -1,0 +1,141 @@
+
+
+<%
+// Sample data for stories
+const stories = [
+    { id: 1, user: { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' }, image: 'https://source.unsplash.com/random/300x500?nature', viewed: false },
+    { id: 2, user: { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' }, image: 'https://source.unsplash.com/random/300x500?city', viewed: true },
+    { id: 3, user: { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' }, image: 'https://source.unsplash.com/random/300x500?people', viewed: false },
+    { id: 4, user: { name: 'Alex Brown', username: 'alexbrown', avatar: 'https://i.pravatar.cc/150?img=33' }, image: 'https://source.unsplash.com/random/300x500?travel', viewed: true },
+    { id: 5, user: { name: 'Emily Davis', username: 'emilydavis', avatar: 'https://i.pravatar.cc/150?img=25' }, image: 'https://source.unsplash.com/random/300x500?food', viewed: false }
+];
+
+// Sample data for posts
+const posts = [
+    {
+        id: 1,
+        author: { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' },
+        content: 'Just finished my morning hike! The view was absolutely breathtaking. Nature always has a way of putting things into perspective. #MorningHike #NatureLover',
+        image: 'https://source.unsplash.com/random/800x600?hiking',
+        video: null,
+        timeAgo: '15 minutes ago',
+        likes: 42,
+        comments: 8,
+        shares: 3,
+        commentsList: [
+            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks amazing! Where is this?', timeAgo: '10 minutes ago' },
+            { author: { name: 'Sarah Williams', avatar: 'https://i.pravatar.cc/150?img=20' }, content: 'I need to go there! 😍', timeAgo: '5 minutes ago' }
+        ]
+    },
+    {
+        id: 2,
+        author: { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' },
+        content: 'Just launched my new tech project! After months of hard work, it\'s finally live. Check it out and let me know what you think! #TechLaunch #Coding',
+        image: null,
+        video: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+        timeAgo: '2 hours ago',
+        likes: 128,
+        comments: 24,
+        shares: 15,
+        commentsList: [
+            { author: { name: 'Alex Brown', avatar: 'https://i.pravatar.cc/150?img=33' }, content: 'This is incredible! Great job!', timeAgo: '1 hour ago' },
+            { author: { name: 'Emily Davis', avatar: 'https://i.pravatar.cc/150?img=25' }, content: 'I\'ve been waiting for something like this!', timeAgo: '45 minutes ago' }
+        ]
+    },
+    {
+        id: 3,
+        author: { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' },
+        content: 'Made this delicious pasta dish for dinner tonight. The secret is in the homemade sauce! #FoodLover #HomeCooking',
+        image: 'https://source.unsplash.com/random/800x600?pasta',
+        video: null,
+        timeAgo: '5 hours ago',
+        likes: 76,
+        comments: 12,
+        shares: 5,
+        commentsList: [
+            { author: { name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=5' }, content: 'Looks delicious! Can you share the recipe?', timeAgo: '4 hours ago' },
+            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'I\'m getting hungry just looking at this!', timeAgo: '3 hours ago' }
+        ]
+    }
+];
+%>
+
+<div class="max-w-2xl mx-auto">
+    <!-- Create Post -->
+    <div class="bg-white rounded-2xl shadow-soft overflow-hidden mb-8">
+        <div class="p-5">
+            <div class="flex items-center space-x-3">
+                <img src="<%= user.avatar %>" alt="<%= user.name %>" class="w-10 h-10 rounded-full object-cover">
+                <div class="flex-1 bg-gray-100 rounded-xl px-4 py-3 cursor-pointer hover:bg-gray-50 transition duration-150">
+                    <p class="text-gray-500">What's on your mind, <%= user.name.split(' ')[0] %>?</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mt-5 pt-4 border-t border-gray-100">
+                <button class="flex items-center space-x-2 text-gray-600 hover:text-primary-600 p-2 rounded-xl hover:bg-gray-50 transition duration-150">
+                    <i class="fas fa-image text-accent-500"></i>
+                    <span>Photo</span>
+                </button>
+                <button class="flex items-center space-x-2 text-gray-600 hover:text-primary-600 p-2 rounded-xl hover:bg-gray-50 transition duration-150">
+                    <i class="fas fa-video text-secondary-500"></i>
+                    <span>Video</span>
+                </button>
+                <button class="flex items-center space-x-2 text-gray-600 hover:text-primary-600 p-2 rounded-xl hover:bg-gray-50 transition duration-150">
+                    <i class="far fa-smile text-primary-500"></i>
+                    <span>Feeling</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stories -->
+    <div class="bg-white rounded-2xl shadow-soft overflow-hidden mb-8 p-5">
+        <div class="flex items-center justify-between mb-5">
+            <h3 class="font-medium text-lg text-gray-900">Stories</h3>
+            <button class="text-primary-600 hover:text-primary-700 text-sm font-medium">See All</button>
+        </div>
+
+        <div class="flex space-x-4 overflow-x-auto pb-2 scrollbar-hide">
+            <!-- Create Story -->
+            <div class="relative group cursor-pointer flex-shrink-0 transition duration-150 hover:opacity-90">
+                <div class="w-24 h-36 rounded-2xl overflow-hidden bg-gray-50 flex flex-col items-center justify-center border border-gray-200">
+                    <div class="w-9 h-9 rounded-full bg-primary-500 flex items-center justify-center mb-2">
+                        <i class="fas fa-plus text-white"></i>
+                    </div>
+                    <p class="text-gray-800 text-xs font-medium">Create Story</p>
+                </div>
+            </div>
+
+            <!-- Stories List -->
+            <% stories.forEach(story => { %>
+                <div class="flex-shrink-0">
+                    <%- include('../partials/story', { story }) %>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Posts -->
+    <div class="space-y-8">
+        <% posts.forEach(post => { %>
+            <%- include('../partials/post', { post, user }) %>
+        <% }); %>
+    </div>
+</div>
+
+<script>
+    // Toggle user dropdown
+    document.getElementById('user-menu-button')?.addEventListener('click', function() {
+        const dropdown = document.getElementById('user-dropdown');
+        dropdown.classList.toggle('hidden');
+    });
+
+    // Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+        const dropdown = document.getElementById('user-dropdown');
+        const button = document.getElementById('user-menu-button');
+        if (dropdown && !dropdown.contains(e.target) && !button.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
+</script>
