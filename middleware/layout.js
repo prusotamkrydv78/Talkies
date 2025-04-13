@@ -19,6 +19,9 @@ export default function(req, res, next) {
     // Determine which layout to use
     const layoutName = options.layout === 'auth' ? 'layouts/auth' : 'layouts/main';
 
+    // Add a flag to indicate if this is a profile page
+    options.isProfilePage = req.path.startsWith('/profile');
+
     // Render the view first
     originalRender.call(res, view, options, (err, renderedView) => {
       if (err) return callback ? callback(err) : next(err);

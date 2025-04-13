@@ -46,7 +46,7 @@ async function loadProfileData(username, currentUser) {
     updateProfileStats(profileUser);
 
     // Always load the current user's posts, regardless of which profile we're viewing
-    // loadUserPosts(currentUser);
+    loadUserPosts(currentUser);
 
     // Load user photos
     loadUserPhotos(profileUser.id);
@@ -296,198 +296,198 @@ async function updateProfileStats(user) {
  * Load current user's posts for the profile page
  * @param {Object} currentUser - The logged-in user
  */
-// async function loadUserPosts(currentUser) {
-//   try {
-//     // Get posts container
-//     const postsContainer = document.querySelector('.posts-container');
+async function loadUserPosts(currentUser) {
+  try {
+    // Get posts container
+    const postsContainer = document.querySelector('.posts-container');
 
-//     if (!postsContainer) return;
+    if (!postsContainer) return;
 
-//     // Clear container
-//     postsContainer.innerHTML = '';
+    // Clear container
+    postsContainer.innerHTML = '';
 
-//     // Update the section title to show "Your Posts"
-//     const sectionTitle = document.querySelector('.mt-6 .flex.items-center h3');
-//     if (sectionTitle) {
-//       sectionTitle.textContent = 'Your Posts';
-//     }
+    // Update the section title to show "Your Posts"
+    const sectionTitle = document.querySelector('.mt-6 .flex.items-center h3');
+    if (sectionTitle) {
+      sectionTitle.textContent = 'Your Posts';
+    }
 
-//     // FINAL FIX: Directly hardcode the filtering to only show posts by the current user
-//     // This approach bypasses any API or type conversion issues
+    // FINAL FIX: Directly hardcode the filtering to only show posts by the current user
+    // This approach bypasses any API or type conversion issues
 
-//     // Fetch ALL posts
-//     const allPostsResponse = await fetch(`http://localhost:3001/posts?_sort=createdAt&_order=desc`);
-//     const allPosts = await allPostsResponse.json();
+    // Fetch ALL posts
+    const allPostsResponse = await fetch(`http://localhost:3001/posts?_sort=createdAt&_order=desc`);
+    const allPosts = await allPostsResponse.json();
 
-//     // Get the current user ID as a string for comparison
-//     const currentUserId = currentUser.id.toString();
+    // Get the current user ID as a string for comparison
+    const currentUserId = currentUser.id.toString();
 
-//     // Filter posts to only include those by the current user
-//     // This is a strict equality check that ensures we only get the current user's posts
-//     const posts = allPosts.filter(post => {
-//       return post.userId && post.userId.toString() === currentUserId;
-//     });
-//     console.log(posts)
+    // Filter posts to only include those by the current user
+    // This is a strict equality check that ensures we only get the current user's posts
+    const posts = allPosts.filter(post => {
+      return post.userId && post.userId.toString() === currentUserId;
+    });
+    console.log(posts)
 
-//     if (posts.length === 0) {
-//       // No posts - always show the current user's message since we're only showing their posts
-//       postsContainer.innerHTML = `
-//         <div class="bg-white rounded-xl shadow-sm p-6 text-center">
-//           <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-//             <i class="fas fa-file-alt text-gray-400 text-2xl"></i>
-//           </div>
-//           <h3 class="font-semibold text-lg mb-2">No Posts Yet</h3>
-//           <p class="text-gray-500">You haven't posted anything yet.</p>
-//           <button id="create-first-post" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
-//             <i class="fas fa-plus mr-2"></i>Create Your First Post
-//           </button>
-//         </div>
-//       `;
+    if (posts.length === 0) {
+      // No posts - always show the current user's message since we're only showing their posts
+      postsContainer.innerHTML = `
+        <div class="bg-white rounded-xl shadow-sm p-6 text-center">
+          <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-file-alt text-gray-400 text-2xl"></i>
+          </div>
+          <h3 class="font-semibold text-lg mb-2">No Posts Yet</h3>
+          <p class="text-gray-500">You haven't posted anything yet.</p>
+          <button id="create-first-post" class="mt-4 bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg transition-colors">
+            <i class="fas fa-plus mr-2"></i>Create Your First Post
+          </button>
+        </div>
+      `;
 
-//       // Add event listener to the create post button
-//       setTimeout(() => {
-//         const createPostButton = document.getElementById('create-first-post');
-//         if (createPostButton) {
-//           createPostButton.addEventListener('click', () => {
-//             window.location.href = '/create';
-//           });
-//         }
-//       }, 100);
-//       return;
-//     }
+      // Add event listener to the create post button
+      setTimeout(() => {
+        const createPostButton = document.getElementById('create-first-post');
+        if (createPostButton) {
+          createPostButton.addEventListener('click', () => {
+            window.location.href = '/create';
+          });
+        }
+      }, 100);
+      return;
+    }
 
-//     // Process each post
-//     for (const post of posts) {
-//       // Create post element
-//       const postElement = document.createElement('div');
-//       postElement.className = 'bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow mb-6';
+    // Process each post
+    for (const post of posts) {
+      // Create post element
+      const postElement = document.createElement('div');
+      postElement.className = 'bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow mb-6';
 
-//       // Calculate time ago
-//       const timeAgo = getTimeAgo(post.createdAt);
+      // Calculate time ago
+      const timeAgo = getTimeAgo(post.createdAt);
 
-//       // Check if current user has liked the post
-//       const isLiked = post.likes && post.likes.includes(currentUser.id);
+      // Check if current user has liked the post
+      const isLiked = post.likes && post.likes.includes(currentUser.id);
 
-//       // Get post media
-//       let mediaHTML = '';
-//       if (post.media && post.media.length > 0) {
-//         if (post.media.length === 1) {
-//           // Single image - with reduced height and object-cover
-//           mediaHTML = `
-//             <div class="rounded-xl overflow-hidden mb-4 max-h-80">
-//               <img src="${post.media[0].url}" alt="Post image" class="w-full h-64 object-cover">
-//             </div>
-//           `;
-//         } else {
-//           // Multiple images - with reduced height
-//           mediaHTML = `
-//             <div class="grid grid-cols-2 gap-2 rounded-xl overflow-hidden mb-4">
-//           `;
+      // Get post media
+      let mediaHTML = '';
+      if (post.media && post.media.length > 0) {
+        if (post.media.length === 1) {
+          // Single image - with reduced height and object-cover
+          mediaHTML = `
+            <div class="rounded-xl overflow-hidden mb-4 max-h-80">
+              <img src="${post.media[0].url}" alt="Post image" class="w-full h-64 object-cover">
+            </div>
+          `;
+        } else {
+          // Multiple images - with reduced height
+          mediaHTML = `
+            <div class="grid grid-cols-2 gap-2 rounded-xl overflow-hidden mb-4">
+          `;
 
-//           const displayMedia = post.media.slice(0, 4);
-//           const remainingCount = post.media.length - 4;
+          const displayMedia = post.media.slice(0, 4);
+          const remainingCount = post.media.length - 4;
 
-//           displayMedia.forEach((media, index) => {
-//             if (index === 3 && remainingCount > 0) {
-//               // Last visible image with overlay
-//               mediaHTML += `
-//                 <div class="relative">
-//                   <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
-//                   <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold">
-//                     +${remainingCount} more
-//                   </div>
-//                 </div>
-//               `;
-//             } else {
-//               // Regular image - reduced height
-//               mediaHTML += `
-//                 <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
-//               `;
-//             }
-//           });
+          displayMedia.forEach((media, index) => {
+            if (index === 3 && remainingCount > 0) {
+              // Last visible image with overlay
+              mediaHTML += `
+                <div class="relative">
+                  <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
+                  <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold">
+                    +${remainingCount} more
+                  </div>
+                </div>
+              `;
+            } else {
+              // Regular image - reduced height
+              mediaHTML += `
+                <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
+              `;
+            }
+          });
 
-//           mediaHTML += `</div>`;
-//         }
-//       }
+          mediaHTML += `</div>`;
+        }
+      }
 
-//       // Get user data for the post
-//       const userResponse = await fetch(`http://localhost:3001/users/${post.userId}`);
-//       const postUser = await userResponse.json();
+      // Get user data for the post
+      const userResponse = await fetch(`http://localhost:3001/users/${post.userId}`);
+      const postUser = await userResponse.json();
 
-//       // Post HTML
-//       postElement.innerHTML = `
-//         <div class="flex justify-between items-start mb-4">
-//           <div class="flex items-center space-x-3">
-//             <img src="${postUser.avatar}" alt="${postUser.name}" class="w-10 h-10 rounded-full">
-//             <div>
-//               <h4 class="font-semibold">${postUser.name}</h4>
-//               <p class="text-gray-500 text-sm">${timeAgo}</p>
-//             </div>
-//           </div>
+      // Post HTML
+      postElement.innerHTML = `
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center space-x-3">
+            <img src="${postUser.avatar}" alt="${postUser.name}" class="w-10 h-10 rounded-full">
+            <div>
+              <h4 class="font-semibold">${postUser.name}</h4>
+              <p class="text-gray-500 text-sm">${timeAgo}</p>
+            </div>
+          </div>
 
-//           <button class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors">
-//             <i class="fas fa-ellipsis-h"></i>
-//           </button>
-//         </div>
+          <button class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
 
-//         <div class="mb-4">
-//           <p class="mb-3">${formatPostContent(post.content)}</p>
-//           ${mediaHTML}
-//         </div>
+        <div class="mb-4">
+          <p class="mb-3">${formatPostContent(post.content)}</p>
+          ${mediaHTML}
+        </div>
 
-//         <div class="flex justify-between items-center mb-4 text-sm">
-//           <div class="flex items-center space-x-2">
-//             <div class="flex -space-x-1">
-//               <div class="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center text-white shadow-sm">
-//                 <i class="fas fa-thumbs-up text-xs"></i>
-//               </div>
-//             </div>
-//             <span class="text-gray-500">${formatNumber(post.likes ? post.likes.length : 0)} likes</span>
-//           </div>
+        <div class="flex justify-between items-center mb-4 text-sm">
+          <div class="flex items-center space-x-2">
+            <div class="flex -space-x-1">
+              <div class="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-thumbs-up text-xs"></i>
+              </div>
+            </div>
+            <span class="text-gray-500">${formatNumber(post.likes ? post.likes.length : 0)} likes</span>
+          </div>
 
-//           <div class="text-gray-500 flex items-center space-x-3">
-//             <div class="flex items-center">
-//               <i class="far fa-comment text-gray-400 mr-1.5"></i>
-//               <span>${formatNumber(post.commentsCount || 0)}</span>
-//             </div>
-//             <div class="flex items-center">
-//               <i class="fas fa-share text-gray-400 mr-1.5"></i>
-//               <span>${formatNumber(post.sharesCount || 0)}</span>
-//             </div>
-//           </div>
-//         </div>
+          <div class="text-gray-500 flex items-center space-x-3">
+            <div class="flex items-center">
+              <i class="far fa-comment text-gray-400 mr-1.5"></i>
+              <span>${formatNumber(post.commentsCount || 0)}</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-share text-gray-400 mr-1.5"></i>
+              <span>${formatNumber(post.sharesCount || 0)}</span>
+            </div>
+          </div>
+        </div>
 
-//         <div class="border-t border-gray-100 pt-3 flex justify-between">
-//           <button class="like-button flex items-center ${isLiked ? 'text-primary-500' : 'text-gray-500'} hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors" data-post-id="${post.id}">
-//             <i class="fas fa-thumbs-up mr-2"></i>
-//             <span>Like</span>
-//           </button>
+        <div class="border-t border-gray-100 pt-3 flex justify-between">
+          <button class="like-button flex items-center ${isLiked ? 'text-primary-500' : 'text-gray-500'} hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors" data-post-id="${post.id}">
+            <i class="fas fa-thumbs-up mr-2"></i>
+            <span>Like</span>
+          </button>
 
-//           <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-//             <i class="far fa-comment mr-2"></i>
-//             <span>Comment</span>
-//           </button>
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="far fa-comment mr-2"></i>
+            <span>Comment</span>
+          </button>
 
-//           <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-//             <i class="fas fa-share mr-2"></i>
-//             <span>Share</span>
-//           </button>
-//         </div>
-//       `;
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="fas fa-share mr-2"></i>
+            <span>Share</span>
+          </button>
+        </div>
+      `;
 
-//       // Add event listeners
-//       const likeButton = postElement.querySelector('.like-button');
-//       if (likeButton) {
-//         likeButton.addEventListener('click', () => toggleLikePost(post.id, currentUser.id, likeButton));
-//       }
+      // Add event listeners
+      const likeButton = postElement.querySelector('.like-button');
+      if (likeButton) {
+        likeButton.addEventListener('click', () => toggleLikePost(post.id, currentUser.id, likeButton));
+      }
 
-//       // Add to container
-//       postsContainer.appendChild(postElement);
-//     }
-//   } catch (error) {
-//     console.error('Error loading user posts:', error);
-//   }
-// }
+      // Add to container
+      postsContainer.appendChild(postElement);
+    }
+  } catch (error) {
+    console.error('Error loading user posts:', error);
+  }
+}
 
 /**
  * Load user photos

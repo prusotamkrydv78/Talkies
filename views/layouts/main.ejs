@@ -90,10 +90,19 @@
 
   <!-- Scripts -->
   <script src="/js/main.js"></script>
+  <!-- Common scripts -->
   <script src="/js/updateSidebar.js"></script>
   <script src="/js/updateHomeAndHeader.js"></script>
-  <script src="/js/dynamicContent.js"></script>
-  <script src="/js/profilePage.js"></script>
+
+  <!-- Conditional loading of dynamicContent.js -->
+  <% if (!isProfilePage) { %>
+    <script src="/js/dynamicContent.js"></script>
+  <% } %>
+
+  <!-- Page-specific scripts -->
+  <% if (isProfilePage) { %>
+    <script src="/js/profilePage.js"></script>
+  <% } %>
   <script src="/js/explorePage.js"></script>
 
   <!-- JSON Server API Services -->
