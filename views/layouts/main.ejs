@@ -88,5 +88,16 @@
 
   <!-- Scripts -->
   <script src="/js/main.js"></script>
+
+  <% if (path === '/messages') { %>
+    <!-- Socket.io -->
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <!-- WebRTC -->
+    <script src="/js/messaging.js"></script>
+    <script src="/js/webrtc.js"></script>
+  <% } %>
+
+  <!-- Notifications -->
+  <script src="/js/notifications.js"></script>
 </body>
 </html>
