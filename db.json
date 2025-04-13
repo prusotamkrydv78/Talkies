@@ -103,14 +103,16 @@
       "followers": [
         1,
         2,
-        3
+        3,
+        "d027"
       ],
       "following": [
         1,
         2,
         "1",
         "2",
-        "3"
+        "3",
+        "d027"
       ],
       "createdAt": "2023-04-15T08:30:00Z",
       "notifications": 5,
@@ -246,7 +248,8 @@
       "likes": [
         1,
         2,
-        5
+        5,
+        "d027"
       ],
       "commentsCount": 4,
       "sharesCount": 3,
@@ -718,5 +721,78 @@
       "updatedAt": "2023-04-13T15:05:00Z"
     }
   ],
-  "sessions": []
+  "sessions": [],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Trending",
+      "icon": "fas fa-fire"
+    },
+    {
+      "id": "2",
+      "name": "Photos",
+      "icon": "fas fa-image"
+    },
+    {
+      "id": "3",
+      "name": "Videos",
+      "icon": "fas fa-video"
+    },
+    {
+      "id": "4",
+      "name": "Music",
+      "icon": "fas fa-music"
+    },
+    {
+      "id": "5",
+      "name": "Food",
+      "icon": "fas fa-utensils"
+    },
+    {
+      "id": "6",
+      "name": "Art",
+      "icon": "fas fa-palette"
+    },
+    {
+      "id": "7",
+      "name": "Fitness",
+      "icon": "fas fa-dumbbell"
+    },
+    {
+      "id": "8",
+      "name": "Technology",
+      "icon": "fas fa-laptop-code"
+    },
+    {
+      "id": "9",
+      "name": "Travel",
+      "icon": "fas fa-plane"
+    }
+  ],
+  "topics": [
+    {
+      "id": "1",
+      "name": "AIRevolution",
+      "category": "Technology",
+      "color": "blue",
+      "icon": "fas fa-microchip",
+      "postCount": 0
+    },
+    {
+      "id": "2",
+      "name": "OlympicGames",
+      "category": "Sports",
+      "color": "purple",
+      "icon": "fas fa-medal",
+      "postCount": 0
+    },
+    {
+      "id": "3",
+      "name": "MovieAwards",
+      "category": "Entertainment",
+      "color": "pink",
+      "icon": "fas fa-film",
+      "postCount": 0
+    }
+  ]
 }
