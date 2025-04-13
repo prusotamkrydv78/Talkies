@@ -73,11 +73,13 @@ app.get('/view-story', (req, res) => {
 app.get('/stories', (req, res) => {
   res.render('pages/stories');
 });
-app.get("/login",(req,res)=>{
-  res.render("login")
+app.get("/auth/login",(req,res)=>{
+  res.render("pages/login",{
+    layout:"auth"
+  })
 })
-app.get("/register",(req,res)=>{
-  res.render("register")
+app.get("/auth/register",(req,res)=>{
+  res.render("pages/register",{layout:"auth"})
 })
 
 // Start the server

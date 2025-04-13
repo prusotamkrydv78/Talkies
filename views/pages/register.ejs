@@ -1,21 +1,25 @@
- 
 <div class="text-center mb-4">
   <h1 class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">Create Account</h1>
   <p class="text-dark-500 mt-1 text-sm">Join our community today</p>
 </div>
 
-<form class="space-y-4 overflow-hidden" action="/auth/register" method="post">
+<!-- Error Alert -->
+<div class="auth-error hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4" role="alert">
+  <span class="block sm:inline"></span>
+</div>
+
+<form id="register-form" class="space-y-4 overflow-hidden">
   <!-- Full Name Input -->
   <div>
-    <label for="fullName" class="block text-sm font-medium text-dark-700 mb-1">Full Name</label>
+    <label for="name" class="block text-sm font-medium text-dark-700 mb-1">Full Name</label>
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-dark-400">
         <i class="fas fa-user"></i>
       </div>
       <input
         type="text"
-        id="fullName"
-        name="fullName"
+        id="name"
+        name="name"
         class="w-full pl-10 pr-4 py-2.5 border border-dark-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         placeholder="Enter your full name"
         required
@@ -25,15 +29,15 @@
 
   <!-- Username Input -->
   <div>
-    <label for="userName" class="block text-sm font-medium text-dark-700 mb-1">Username</label>
+    <label for="username" class="block text-sm font-medium text-dark-700 mb-1">Username</label>
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-dark-400">
         <i class="fas fa-at"></i>
       </div>
       <input
         type="text"
-        id="userName"
-        name="userName"
+        id="username"
+        name="username"
         class="w-full pl-10 pr-4 py-2.5 border border-dark-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         placeholder="Choose a username"
         required
@@ -87,15 +91,15 @@
 
   <!-- Confirm Password Input -->
   <div>
-    <label for="confirmPassword" class="block text-sm font-medium text-dark-700 mb-1">Confirm Password</label>
+    <label for="confirm-password" class="block text-sm font-medium text-dark-700 mb-1">Confirm Password</label>
     <div class="relative">
       <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-dark-400">
         <i class="fas fa-lock"></i>
       </div>
       <input
         type="password"
-        id="confirmPassword"
-        name="confirmPassword"
+        id="confirm-password"
+        name="confirm-password"
         class="w-full pl-10 pr-10 py-2.5 border border-dark-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
         placeholder="Confirm your password"
         required
@@ -103,7 +107,7 @@
       <button
         type="button"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-dark-400 hover:text-dark-600"
-        onclick="togglePasswordVisibility('confirmPassword', 'toggleConfirmPassword')"
+        onclick="togglePasswordVisibility('confirm-password', 'toggleConfirmPassword')"
       >
         <i class="fas fa-eye" id="toggleConfirmPassword"></i>
       </button>
@@ -177,6 +181,72 @@
 </form>
 
 <script>
+  // Define a simple inline authentication service
+  const InlineAuthService = {
+    // API URL
+    apiUrl: 'http://localhost:3001',
+
+    // Register a new user
+    register: async function(userData) {
+      try {
+        // Check if username already exists
+        const usernameCheck = await fetch(`${this.apiUrl}/users?username=${userData.username}`);
+        const usernameExists = await usernameCheck.json();
+
+        if (usernameExists.length > 0) {
+          return { success: false, message: 'Username already exists' };
+        }
+
+        // Check if email already exists
+        const emailCheck = await fetch(`${this.apiUrl}/users?email=${userData.email}`);
+        const emailExists = await emailCheck.json();
+
+        if (emailExists.length > 0) {
+          return { success: false, message: 'Email already exists' };
+        }
+
+        // Create new user
+        const response = await fetch(`${this.apiUrl}/users`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ...userData,
+            avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(userData.name)}&background=0D8ABC&color=fff`,
+            followers: [],
+            following: [],
+            createdAt: new Date().toISOString(),
+            notifications: 0,
+            messages: 0
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to register user');
+        }
+
+        const newUser = await response.json();
+
+        // Save user data to local storage (without password)
+        const { password, ...userWithoutPassword } = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
+        localStorage.setItem('authToken', this.generateToken());
+
+        return { success: true, user: newUser };
+      } catch (error) {
+        console.error('Registration error:', error);
+        return { success: false, message: 'An error occurred during registration' };
+      }
+    },
+
+    // Generate a simple token
+    generateToken: function() {
+      return Math.random().toString(36).substring(2, 15) +
+             Math.random().toString(36).substring(2, 15);
+    }
+  };
+
   function togglePasswordVisibility(inputId, toggleId) {
     const passwordInput = document.getElementById(inputId);
     const toggleIcon = document.getElementById(toggleId);
@@ -189,6 +259,84 @@
       passwordInput.type = 'password';
       toggleIcon.classList.remove('fa-eye-slash');
       toggleIcon.classList.add('fa-eye');
+    }
+  }
+
+  // Handle register form submission
+  document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('register-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      // Get form data
+      const name = document.getElementById('name').value;
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const termsChecked = document.getElementById('terms').checked;
+
+      // Validate form data
+      if (!name || !username || !email || !password || !confirmPassword) {
+        showAuthError('Please fill in all fields');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showAuthError('Passwords do not match');
+        return;
+      }
+
+      if (!termsChecked) {
+        showAuthError('You must agree to the Terms of Service and Privacy Policy');
+        return;
+      }
+
+      // Show loading state
+      const submitButton = document.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = 'Creating account...';
+
+      try {
+        // Register user using the inline service
+        const result = await InlineAuthService.register({
+          name,
+          username,
+          email,
+          password,
+          bio: ''
+        });
+
+        if (result.success) {
+          // Registration successful
+          window.location.href = '/';
+        } else {
+          // Registration failed
+          showAuthError(result.message);
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
+      } catch (error) {
+        console.error('Error registering:', error);
+        showAuthError('An error occurred during registration');
+        submitButton.disabled = false;
+        submitButton.textContent = originalButtonText;
+      }
+    });
+  });
+
+  // Show auth error
+  function showAuthError(message) {
+    const errorAlert = document.querySelector('.auth-error');
+
+    if (errorAlert) {
+      errorAlert.textContent = message;
+      errorAlert.classList.remove('hidden');
+
+      // Hide error after 5 seconds
+      setTimeout(() => {
+        errorAlert.classList.add('hidden');
+      }, 5000);
     }
   }
 </script>
