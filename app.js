@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -7,12 +8,18 @@ const port = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+// Set up EJS layouts
+app.use(expressLayouts);
+app.set('layout', 'layouts/main');
+app.set('layout extractScripts', true);
+app.set('layout extractStyles', true);
+
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.get('/', (req, res) => {
-  res.render('pages/home', { 
+  res.render('pages/home', {
     title: 'Talkie - Home',
     user: {
       name: 'John Doe',
@@ -25,7 +32,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  res.render('pages/profile', { 
+  res.render('pages/profile', {
     title: 'Talkie - Profile',
     user: {
       name: 'John Doe',
@@ -42,7 +49,7 @@ app.get('/profile', (req, res) => {
 });
 
 app.get('/chat', (req, res) => {
-  res.render('pages/chat', { 
+  res.render('pages/chat', {
     title: 'Talkie - Chat',
     user: {
       name: 'John Doe',
@@ -61,7 +68,7 @@ app.get('/chat', (req, res) => {
 });
 
 app.get('/video-call', (req, res) => {
-  res.render('pages/video-call', { 
+  res.render('pages/video-call', {
     title: 'Talkie - Video Call',
     user: {
       name: 'John Doe',
@@ -76,7 +83,7 @@ app.get('/video-call', (req, res) => {
 });
 
 app.get('/notifications', (req, res) => {
-  res.render('pages/notifications', { 
+  res.render('pages/notifications', {
     title: 'Talkie - Notifications',
     user: {
       name: 'John Doe',
@@ -95,7 +102,7 @@ app.get('/notifications', (req, res) => {
 });
 
 app.get('/settings', (req, res) => {
-  res.render('pages/settings', { 
+  res.render('pages/settings', {
     title: 'Talkie - Settings',
     user: {
       name: 'John Doe',
