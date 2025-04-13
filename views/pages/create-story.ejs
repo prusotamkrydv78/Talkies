@@ -327,10 +327,24 @@
         
         console.log('Uploading file to server...', selectedFile);
         
-        // Upload the file
-        const mediaUrl = await window.FileUploadService.saveFile(selectedFile, 'stories');
-        if (!mediaUrl) {
+        // Upload the file to the images folder
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        
+        const uploadResponse = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (!uploadResponse.ok) {
           throw new Error('Failed to upload media');
+        }
+        
+        const uploadResult = await uploadResponse.json();
+        const mediaUrl = uploadResult.filePath; // This will be like /images/filename.jpg
+        
+        if (!mediaUrl) {
+          throw new Error('Failed to get media URL');
         }
         
         console.log('File uploaded successfully, URL:', mediaUrl);
@@ -350,16 +364,18 @@
 
         console.log('Creating story with media URL:', mediaUrl);
         
-        const response = await fetch('/stories', {
+        // Save to db.json using JSON Server endpoint
+        const response = await fetch('http://localhost:3001/stories', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            userId: currentUser.id || '1', // Use actual user ID from currentUser
+            id: Date.now().toString(), // Generate a unique ID
+            userId: currentUser.id,
             media: {
               type: selectedFile.type.startsWith('image/') ? 'image' : 'video',
-              url: mediaUrl
+              url: mediaUrl // Use the URL pointing to the images folder
             },
             caption: caption,
             privacy: privacy,
@@ -379,8 +395,10 @@
           throw new Error(errorData.error || 'Failed to create story');
         }
         
+        console.log('Story saved to database successfully');
+        
         // Redirect to stories page
-        window.location.href = '/stories';
+        window.location.href = '/';
       } catch (error) {
         console.error('Error publishing story:', error);
         alert(`Error publishing story: ${error.message}`);

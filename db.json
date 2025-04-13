@@ -610,6 +610,42 @@
       "views": [],
       "createdAt": "2025-04-13T16:09:22.713Z",
       "expiresAt": "2025-04-14T16:09:22.713Z"
+    },
+    {
+      "id": "1744565022932",
+      "userId": "d027",
+      "media": {
+        "type": "image",
+        "url": "/uploads/stories/1744565022885-gu68x79635p.webp"
+      },
+      "caption": "asdfaf",
+      "privacy": "Public",
+      "settings": {
+        "allowReplies": true,
+        "closeFriendsOnly": false,
+        "hideViewCount": false
+      },
+      "views": [],
+      "createdAt": "2025-04-13T17:23:42.932Z",
+      "expiresAt": "2025-04-14T17:23:42.932Z"
+    },
+    {
+      "id": "1744565263377",
+      "userId": "d027",
+      "media": {
+        "type": "image",
+        "url": "/images/1744565263329-iva12iztlvd.webp"
+      },
+      "caption": "sadfasdf",
+      "privacy": "Public",
+      "settings": {
+        "allowReplies": true,
+        "closeFriendsOnly": false,
+        "hideViewCount": false
+      },
+      "views": [],
+      "createdAt": "2025-04-13T17:27:43.376Z",
+      "expiresAt": "2025-04-14T17:27:43.376Z"
     }
   ],
   "notifications": [

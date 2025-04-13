@@ -64,7 +64,6 @@ async function loadStories(currentUser) {
           </div>
           <span class="text-sm font-medium text-dark-700">Add Story</span>
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
       `;
       storiesContainer.appendChild(newAddStoryItem);
     }
@@ -95,23 +94,69 @@ async function loadStories(currentUser) {
       const user = await userResponse.json();
 
       // Create story element
-      const storyElement = document.createElement('div');
-      storyElement.className = 'flex-shrink-0 cursor-pointer story-item';
+      const storyElement = document.createElement('a');
+      storyElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer story-item';
       storyElement.dataset.storyId = story.id;
 
       // Check if story is viewed by current user
       const isViewed = story.views && story.views.includes(currentUser.id);
       const borderClass = isViewed ? 'border-dark-200' : 'border-gradient-primary';
+      const gradientClass = isViewed ? '' : 'bg-gradient-to-r from-primary-500 to-secondary-500';
+
+      // Convert file:// URLs to proper web URLs
+      let mediaUrl = story.media.url;
+      if (mediaUrl.startsWith('file:///')) {
+        // Extract just the filename
+        const parts = mediaUrl.split('/');
+        const filename = parts[parts.length - 1];
+        
+        // Create a proper web URL pointing to the images directory
+        mediaUrl = `/images/${filename}`;
+        
+        // Update the story object in the database with the corrected URL
+        try {
+          await fetch(`http://localhost:3001/stories/${story.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              media: {
+                ...story.media,
+                url: mediaUrl
+              }
+            })
+          });
+          console.log('Updated story media URL in database:', mediaUrl);
+        } catch (err) {
+          console.error('Failed to update story URL in database:', err);
+        }
+      }
 
       storyElement.innerHTML = `
-        <div class="w-20 h-20 rounded-full ${borderClass} p-0.5 bg-white">
-          <img src="${user.avatar}" alt="${user.name}" class="w-full h-full rounded-full object-cover">
+        <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden shadow-md h-48 md:h-64 relative">
+          <img 
+            src="${mediaUrl}" 
+            alt="Story" 
+            class="w-full h-full object-cover" 
+            onerror="this.onerror=null; this.src='/images/placeholder.png'; console.log('Image failed to load, using placeholder');"
+          >
+          <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
+          <div class="absolute top-3 left-3 p-0.5 rounded-full ${gradientClass}">
+            <img src="${user.avatar}" alt="${user.name}" class="w-10 h-10 rounded-full border-2 border-white">
+          </div>
+          <div class="absolute bottom-3 left-3 right-3">
+            <p class="text-white font-medium truncate">${user.name}</p>
+            <p class="text-white/80 text-xs">${getTimeAgo(story.createdAt)}</p>
+          </div>
         </div>
-        <p class="text-xs text-center mt-1 font-medium text-dark-800 truncate w-20">${user.name.split(' ')[0]}</p>
       `;
 
       // Add click event to view story
-      storyElement.addEventListener('click', () => viewStory(story, user));
+      storyElement.addEventListener('click', (e) => {
+        e.preventDefault();
+        viewStory(story, user);
+      });
 
       // Add to container
       storiesContainer.appendChild(storyElement);

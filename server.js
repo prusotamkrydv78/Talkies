@@ -46,183 +46,61 @@ app.use(express.urlencoded({ extended: true }))
 // Serve static files from the public directory
 app.use(express.static('public'));
 
-// Configure multer for file uploads with better error handling
+// Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    try {
-      // Get upload type from request body or default to 'posts'
-      const type = req.body.type || 'posts';
-      console.log(`Upload type: ${type}`);
-      
-      // Create absolute path to upload directory
-      const uploadPath = path.resolve(__dirname, 'public', 'uploads', type);
-      console.log(`Absolute upload path: ${uploadPath}`);
-      
-      // Create directory if it doesn't exist
-      if (!fs.existsSync(uploadPath)) {
-        console.log(`Creating directory: ${uploadPath}`);
-        fs.mkdirSync(uploadPath, { recursive: true, mode: 0o777 });
-      }
-      
-      // Double-check directory exists and is writable
-      if (fs.existsSync(uploadPath)) {
-        try {
-          // Test write permissions by creating and removing a test file
-          const testFile = path.join(uploadPath, '.test-write-' + Date.now());
-          fs.writeFileSync(testFile, 'test');
-          fs.unlinkSync(testFile);
-          console.log(`Directory is writable: ${uploadPath}`);
-          cb(null, uploadPath);
-        } catch (writeErr) {
-          console.error(`Directory exists but is not writable: ${uploadPath}`, writeErr);
-          cb(new Error(`Upload directory is not writable: ${writeErr.message}`));
-        }
-      } else {
-        console.error(`Failed to create directory: ${uploadPath}`);
-        cb(new Error('Failed to create upload directory'));
-      }
-    } catch (error) {
-      console.error('Error setting upload destination:', error);
-      cb(error);
+    // Save all files to public/images folder
+    const uploadDir = path.join(__dirname, 'public', 'images');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
     }
+    
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    try {
-      // Generate unique filename with original extension
-      const originalName = file.originalname || 'unknown';
-      let fileExt = path.extname(originalName);
-      
-      // If no extension, try to get from mimetype
-      if (!fileExt && file.mimetype) {
-        const mimeExt = {
-          'image/jpeg': '.jpg',
-          'image/png': '.png',
-          'image/gif': '.gif',
-          'image/webp': '.webp',
-          'image/avif': '.png', // Convert AVIF to PNG extension
-          'video/mp4': '.mp4',
-          'video/quicktime': '.mov',
-          'video/webm': '.webm'
-        };
-        fileExt = mimeExt[file.mimetype] || '';
-      }
-      
-      // Use timestamp + uuid for unique filename
-      const fileName = `${Date.now()}-${uuidv4()}${fileExt}`;
-      console.log(`Generated filename: ${fileName} from original: ${originalName}`);
-      cb(null, fileName);
-    } catch (error) {
-      console.error('Error generating filename:', error);
-      cb(error);
-    }
+    // Create unique filename with timestamp and original extension
+    const timestamp = Date.now();
+    const randomString = Math.random().toString(36).substring(2, 15);
+    const ext = path.extname(file.originalname);
+    cb(null, `${timestamp}-${randomString}${ext}`);
   }
 });
-
-// Add file filter to ensure only images and videos are uploaded
-const fileFilter = (req, file, cb) => {
-  console.log(`Filtering file: ${file.originalname}, mimetype: ${file.mimetype}`);
-  
-  // Accept images and videos only
-  if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
-    console.log('File accepted');
-    cb(null, true);
-  } else {
-    console.log('File rejected: not an image or video');
-    cb(new Error('Only images and videos are allowed'), false);
-  }
-};
 
 const upload = multer({ 
   storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+  fileFilter: function (req, file, cb) {
+    // Accept images and videos only
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image and video files are allowed'));
+    }
   }
 });
 
-// API endpoint for file uploads with improved error handling
-app.post('/api/upload', (req, res, next) => {
-  console.log('Received upload request');
-  
-  // Create upload directory synchronously before processing the file
+// File upload endpoint
+app.post('/upload', upload.single('file'), (req, res) => {
   try {
-    const type = req.body.type || 'posts';
-    const uploadDir = path.join(__dirname, 'public', 'uploads', type);
-    
-    if (!fs.existsSync(uploadDir)) {
-      console.log(`Creating upload directory on demand: ${uploadDir}`);
-      fs.mkdirSync(uploadDir, { recursive: true, mode: 0o777 });
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
     }
-  } catch (dirErr) {
-    console.error('Error ensuring upload directory exists:', dirErr);
+    
+    // Create a web-accessible URL for the file
+    const filePath = `/images/${req.file.filename}`;
+    
+    // Return the file path
+    res.json({ 
+      success: true, 
+      filePath: filePath,
+      originalName: req.file.originalname,
+      size: req.file.size,
+      mimetype: req.file.mimetype
+    });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: error.message });
   }
-  
-  upload.single('file')(req, res, (err) => {
-    if (err) {
-      console.error('Multer error:', err);
-      return res.status(400).json({ error: err.message });
-    }
-    
-    try {
-      console.log('File processed by multer');
-      
-      if (!req.file) {
-        console.error('No file in request');
-        return res.status(400).json({ error: 'No file uploaded' });
-      }
-      
-      console.log('File details:', {
-        originalname: req.file.originalname,
-        mimetype: req.file.mimetype,
-        size: req.file.size,
-        path: req.file.path,
-        destination: req.file.destination,
-        filename: req.file.filename
-      });
-      
-      // Return the relative path to the file
-      const type = req.body.type || 'posts';
-      const relativePath = `/uploads/${type}/${req.file.filename}`;
-      const fullPath = req.file.path;
-      
-      console.log(`File should be at: ${fullPath}`);
-      console.log(`Checking if file exists...`);
-      
-      // Add a small delay before checking if file exists
-      setTimeout(() => {
-        try {
-          if (fs.existsSync(fullPath)) {
-            console.log(`File exists at: ${fullPath}`);
-            
-            // Get file stats to verify it's a valid file
-            const stats = fs.statSync(fullPath);
-            console.log(`File size: ${stats.size} bytes`);
-            
-            if (stats.size > 0) {
-              return res.json({ 
-                success: true, 
-                filePath: relativePath,
-                originalName: req.file.originalname,
-                size: req.file.size
-              });
-            } else {
-              console.error('File exists but has zero size');
-              return res.status(500).json({ error: 'File was saved but has zero size' });
-            }
-          } else {
-            console.error(`File not found at path: ${fullPath}`);
-            return res.status(500).json({ error: 'File was not saved properly' });
-          }
-        } catch (checkErr) {
-          console.error('Error checking file:', checkErr);
-          return res.status(500).json({ error: 'Error verifying file', details: checkErr.message });
-        }
-      }, 100); // Small delay to ensure file is written
-    } catch (error) {
-      console.error('Error in upload handler:', error);
-      return res.status(500).json({ error: 'Failed to process upload', details: error.message });
-    }
-  });
 });
 
 // Add a fallback upload endpoint using express-fileupload
