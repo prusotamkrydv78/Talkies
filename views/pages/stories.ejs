@@ -32,87 +32,173 @@
   </div>
   
   <!-- Stories Grid -->
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-    <!-- Create Story Card (Desktop) -->
-    <div class="hidden md:block">
-      <a href="/create-story" class="block aspect-[3/4] rounded-2xl bg-white shadow-sm border border-dark-100 overflow-hidden hover:shadow-md transition-all">
-        <div class="w-full h-full flex flex-col items-center justify-center p-4">
-          <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mb-4">
-            <i class="fas fa-plus text-xl"></i>
-          </div>
-          <h3 class="font-semibold text-dark-900 text-center">Create New Story</h3>
-          <p class="text-dark-500 text-sm text-center mt-2">Share a moment with your followers</p>
-        </div>
-      </a>
-    </div>
-    
-    <!-- Story Cards -->
-    <% for(let i = 1; i <= 19; i++) { %>
-      <div class="relative group cursor-pointer">
-        <a href="/view-story" class="block">
-          <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
-            <img src="https://picsum.photos/400/600?random=<%= i + 20 %>" alt="Story" class="w-full h-full object-cover">
-            <div class="absolute rounded-2xl inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            
-            <!-- Story Header -->
-            <div class="absolute top-3 left-3 right-3 flex items-center">
-              <div class="w-10 h-10 rounded-full border-2 border-primary-500 overflow-hidden">
-                <div class="w-full h-full bg-<%= ['primary', 'secondary', 'purple', 'blue', 'green', 'red'][i % 6] %>-500 flex items-center justify-center text-white font-bold text-xs">
-                  U<%= i %>
-                </div>
-              </div>
-              <div class="ml-2">
-                <p class="text-white text-sm font-medium">User <%= i %></p>
-                <p class="text-white/70 text-xs"><%= i % 12 %> hour<%= i % 12 !== 1 ? 's' : '' %> ago</p>
-              </div>
-            </div>
-            
-            <!-- Story Footer -->
-            <div class="absolute bottom-3 left-3 right-3">
-              <div class="flex justify-between items-center">
-                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <p class="text-white text-xs font-medium">#story<%= i %></p>
-                </div>
-                <div class="flex items-center">
-                  <i class="fas fa-eye text-white/80 text-xs mr-1"></i>
-                  <span class="text-white/80 text-xs"><%= Math.floor(Math.random() * 100) + 10 %></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-        
-        <!-- Story Options (Your Stories Only) -->
-        <% if(i % 5 === 0) { %>
-          <div class="absolute top-3 right-3 z-10">
-            <button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors">
-              <i class="fas fa-ellipsis-h"></i>
-            </button>
-            
-            <!-- Dropdown Menu (Hidden by Default) -->
-            <div class="hidden absolute top-full right-0 mt-2 w-40 bg-white rounded-xl shadow-lg overflow-hidden z-20">
-              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
-                <i class="fas fa-download mr-2 text-dark-500"></i>
-                Download
-              </a>
-              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
-                <i class="fas fa-share-alt mr-2 text-dark-500"></i>
-                Share
-              </a>
-              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
-                <i class="fas fa-archive mr-2 text-dark-500"></i>
-                Archive
-              </a>
-              <a href="#" class="block px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
-                <i class="fas fa-trash-alt mr-2"></i>
-                Delete
-              </a>
-            </div>
-          </div>
-        <% } %>
-      </div>
-    <% } %>
+  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6" id="stories-grid">
+    <!-- Stories will be loaded dynamically here -->
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', async function() {
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+      window.location.href = '/login';
+      return;
+    }
+    
+    // Load all stories
+    await loadAllStories(currentUser);
+  });
+
+  /**
+   * Load all stories for the stories page
+   * @param {Object} currentUser - The current user
+   */
+  async function loadAllStories(currentUser) {
+    try {
+      const storiesGrid = document.getElementById('stories-grid');
+      storiesGrid.innerHTML = ''; // Clear existing content
+      
+      // Show loading state
+      storiesGrid.innerHTML = `
+        <div class="col-span-full text-center py-10">
+          <p class="text-lg text-gray-500">Loading stories...</p>
+          <div class="mt-4 inline-block">
+            <i class="fas fa-spinner fa-spin text-primary-500 text-2xl"></i>
+          </div>
+        </div>
+      `;
+      
+      // Fetch stories from db.json
+      const response = await fetch('http://localhost:3001/stories');
+      
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+      }
+      
+      const stories = await response.json();
+      
+      // Clear loading state
+      storiesGrid.innerHTML = '';
+      
+      // Filter active stories (not expired)
+      const now = new Date().toISOString();
+      const activeStories = stories.filter(story => story.expiresAt > now);
+      
+      // Sort stories by creation date (newest first)
+      activeStories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      // Create HTML for each story
+      for (const story of activeStories) {
+        try {
+          // Get user data
+          const userResponse = await fetch(`http://localhost:3001/users/${story.userId}`);
+          
+          // Check if user exists
+          if (!userResponse.ok) {
+            console.warn(`User with ID ${story.userId} not found, skipping story`);
+            continue;
+          }
+          
+          const user = await userResponse.json();
+          
+          // Calculate time ago
+          const timeAgo = getTimeAgo(story.createdAt);
+          
+          // Create story element
+          const storyElement = document.createElement('div');
+          storyElement.className = 'relative group cursor-pointer';
+          storyElement.innerHTML = `
+            <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+              <img src="${story.media.url}" alt="${user.name}'s story" class="w-full h-full object-cover">
+              <div class="absolute rounded-2xl inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+              
+              <!-- Story Header -->
+              <div class="absolute top-3 left-3 right-3">
+                <div class="flex items-center">
+                  <div class="w-8 h-8 rounded-full border-2 border-primary-500 overflow-hidden">
+                    <img src="${user.avatar}" alt="${user.name}" class="w-full h-full object-cover">
+                  </div>
+                  <div class="ml-2">
+                    <p class="text-white text-xs font-medium">${user.name}</p>
+                    <p class="text-white/70 text-xs">${timeAgo}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Story Footer -->
+              <div class="absolute bottom-3 left-3 right-3">
+                <p class="text-white text-sm line-clamp-2">${story.caption || 'No caption'}</p>
+              </div>
+            </div>
+          `;
+          
+          // Add click event to view story
+          storyElement.addEventListener('click', () => {
+            viewStory(story, user, currentUser);
+          });
+          
+          // Add to grid
+          storiesGrid.appendChild(storyElement);
+        } catch (userError) {
+          console.error(`Error processing story ${story.id}:`, userError);
+          // Skip this story and continue with others
+        }
+      }
+      
+      // If no stories, show message
+      if (storiesGrid.children.length === 0) {
+        storiesGrid.innerHTML = `
+          <div class="col-span-full text-center py-10">
+            <p class="text-lg text-gray-500">No stories available</p>
+            <a href="/create-story" class="mt-4 inline-block px-4 py-2 bg-primary-500 text-white rounded-lg">Create a Story</a>
+          </div>
+        `;
+      }
+      
+    } catch (error) {
+      console.error('Error loading all stories:', error);
+      const storiesGrid = document.getElementById('stories-grid');
+      storiesGrid.innerHTML = `
+        <div class="col-span-full text-center py-10">
+          <p class="text-lg text-red-500">Error loading stories: ${error.message}</p>
+          <p class="mt-2 text-dark-500">Make sure your JSON server is running with:</p>
+          <pre class="mt-2 bg-dark-100 p-2 rounded text-sm">npx json-server --watch db.json --port 3001</pre>
+          <button id="retry-load-stories" class="mt-4 px-4 py-2 bg-primary-500 text-white rounded-lg">
+            <i class="fas fa-sync-alt mr-2"></i>Retry
+          </button>
+        </div>
+      `;
+      
+      // Add retry button functionality
+      const retryButton = document.getElementById('retry-load-stories');
+      if (retryButton) {
+        retryButton.addEventListener('click', () => {
+          loadAllStories(currentUser);
+        });
+      }
+    }
+  }
+
+  // Helper function to calculate time ago
+  function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'just now';
+    
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+    
+    return date.toLocaleDateString();
+  }
+  </script>
   
   <!-- Load More Button -->
   <div class="flex justify-center mt-10 mb-10">
