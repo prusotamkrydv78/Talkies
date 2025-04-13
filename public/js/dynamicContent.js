@@ -33,20 +33,19 @@ async function loadDynamicContent(currentUser) {
 }
 
 /**
- * Load and display stories
+ * Load stories for the home page
  * @param {Object} currentUser - The logged-in user
  */
 async function loadStories(currentUser) {
   try {
-    // Get stories container
+    // Get the stories container
     const storiesContainer = document.querySelector('.stories-container');
-
     if (!storiesContainer) return;
 
-    // Save the original "Add Story" item
+    // Save the "Add Story" item if it exists
     const addStoryItem = storiesContainer.querySelector('a[href="/create-story"]');
-
-    // Clear container
+    
+    // Clear the container
     storiesContainer.innerHTML = '';
 
     // Add back the "Add Story" item if it exists
@@ -76,108 +75,110 @@ async function loadStories(currentUser) {
     const now = new Date().toISOString();
     const activeStories = stories.filter(story => story.expiresAt > now);
 
-    // Sort stories - put stories from followed users first
-    activeStories.sort((a, b) => {
-      const aFollowed = currentUser.following && currentUser.following.includes(a.userId);
-      const bFollowed = currentUser.following && currentUser.following.includes(b.userId);
+    // Filter stories to only show those from users the current user follows
+    // Also include the current user's own stories
+    const followedUserIds = currentUser.following || [];
+    const filteredStories = activeStories.filter(story => 
+      story.userId === currentUser.id || // User's own stories
+      followedUserIds.includes(story.userId) // Stories from followed users
+    );
 
-      if (aFollowed && !bFollowed) return -1;
-      if (!aFollowed && bFollowed) return 1;
+    // Sort stories by creation date (newest first)
+    filteredStories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-      // If both are followed or both are not followed, sort by creation date (newest first)
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    // Limit to 5 stories on the home page
+    const homePageStories = filteredStories.slice(0, 5);
 
-    // Get user data for each story
-    for (const story of activeStories) {
+    // Create HTML for each story
+    for (const story of homePageStories) {
+      // Get user data
       const userResponse = await fetch(`http://localhost:3001/users/${story.userId}`);
       const user = await userResponse.json();
 
       // Create story element
-      const storyElement = document.createElement('a');
-      storyElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer story-item';
-      storyElement.dataset.storyId = story.id;
-
-      // Check if story is viewed by current user
-      const isViewed = story.views && story.views.includes(currentUser.id);
-      const borderClass = isViewed ? 'border-dark-200' : 'border-gradient-primary';
-      const gradientClass = isViewed ? '' : 'bg-gradient-to-r from-primary-500 to-secondary-500';
-
-      // Convert file:// URLs to proper web URLs
-      let mediaUrl = story.media.url;
-      if (mediaUrl.startsWith('file:///')) {
-        // Extract just the filename
-        const parts = mediaUrl.split('/');
-        const filename = parts[parts.length - 1];
-        
-        // Create a proper web URL pointing to the images directory
-        mediaUrl = `/images/${filename}`;
-        
-        // Update the story object in the database with the corrected URL
-        try {
-          await fetch(`http://localhost:3001/stories/${story.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              media: {
-                ...story.media,
-                url: mediaUrl
-              }
-            })
-          });
-          console.log('Updated story media URL in database:', mediaUrl);
-        } catch (err) {
-          console.error('Failed to update story URL in database:', err);
-        }
-      }
-
+      const storyElement = document.createElement('div');
+      storyElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer';
       storyElement.innerHTML = `
-        <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden shadow-md h-48 md:h-64 relative">
-          <img 
-            src="${mediaUrl}" 
-            alt="Story" 
-            class="w-full h-full object-cover" 
-            onerror="this.onerror=null; this.src='/images/placeholder.png'; console.log('Image failed to load, using placeholder');"
-          >
-          <div class="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent"></div>
-          <div class="absolute top-3 left-3 p-0.5 rounded-full ${gradientClass}">
-            <img src="${user.avatar}" alt="${user.name}" class="w-10 h-10 rounded-full border-2 border-white">
-          </div>
-          <div class="absolute bottom-3 left-3 right-3">
-            <p class="text-white font-medium truncate">${user.name}</p>
-            <p class="text-white/80 text-xs">${getTimeAgo(story.createdAt)}</p>
+        <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-md h-48 md:h-64">
+          <img src="${story.media}" alt="${user.name}'s story" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          
+          <!-- Story Header -->
+          <div class="absolute top-3 left-3 right-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full border-2 border-primary-500 overflow-hidden">
+                <img src="${user.avatar}" alt="${user.name}" class="w-full h-full object-cover">
+              </div>
+              <div class="ml-2">
+                <p class="text-white text-xs font-medium">${user.name}</p>
+                <p class="text-white/70 text-xs">${timeAgo(story.createdAt)}</p>
+              </div>
+            </div>
           </div>
         </div>
       `;
 
       // Add click event to view story
-      storyElement.addEventListener('click', (e) => {
-        e.preventDefault();
-        viewStory(story, user);
-      });
+      storyElement.addEventListener('click', () => viewStory(story, user, currentUser));
 
       // Add to container
       storiesContainer.appendChild(storyElement);
     }
+
+    // Add "View More" story if there are more stories than shown
+    if (filteredStories.length > homePageStories.length) {
+      const viewMoreElement = document.createElement('a');
+      viewMoreElement.href = '/stories';
+      viewMoreElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer';
+      viewMoreElement.innerHTML = `
+        <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden flex flex-col items-center justify-center shadow-md h-48 md:h-64">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-r from-primary-100 to-secondary-100 flex items-center justify-center text-primary-500 mb-3">
+            <i class="fas fa-ellipsis-h text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-dark-700">View All Stories</span>
+          <span class="text-xs text-dark-500 mt-1">${filteredStories.length - homePageStories.length} more</span>
+        </div>
+      `;
+      storiesContainer.appendChild(viewMoreElement);
+    }
+
   } catch (error) {
     console.error('Error loading stories:', error);
   }
 }
 
 /**
+ * Close the story viewer
+ * @param {HTMLElement} storyViewer - The story viewer element to close
+ */
+function closeStory(storyViewer) {
+  // Add fade-out animation
+  storyViewer.classList.add('fade-out');
+  
+  // Remove after animation completes
+  setTimeout(() => {
+    if (storyViewer && storyViewer.parentNode) {
+      storyViewer.parentNode.removeChild(storyViewer);
+    }
+  }, 300);
+}
+
+/**
  * View a story
  * @param {Object} story - The story object
  * @param {Object} user - The user who created the story
+ * @param {Object} currentUser - The current user
  */
-function viewStory(story, user) {
+function viewStory(story, user, currentUser) {
   // Create story viewer modal
   const storyViewer = document.createElement('div');
   storyViewer.className = 'story-viewer';
 
   // Calculate time ago
   const timeAgo = getTimeAgo(story.createdAt);
+  
+  // Check if current user has liked the story
+  const isLiked = story.likes && story.likes.includes(currentUser.id);
 
   storyViewer.innerHTML = `
     <div class="relative w-full max-w-lg mx-auto">
@@ -199,6 +200,24 @@ function viewStory(story, user) {
       <div class="story-content">
         <img src="${story.media.url}" alt="Story" class="w-full h-full object-contain">
       </div>
+      
+      <!-- Story caption -->
+      <div class="absolute bottom-20 left-4 right-4 bg-black bg-opacity-50 p-3 rounded-lg">
+        <p class="text-white">${story.caption || 'No caption'}</p>
+      </div>
+
+      <!-- Story actions -->
+      <div class="absolute bottom-4 left-4 right-4 flex items-center space-x-2">
+        <button class="like-story-btn flex items-center justify-center bg-black bg-opacity-50 text-white rounded-full w-12 h-12 ${isLiked ? 'text-red-500' : ''}" data-story-id="${story.id}">
+          <i class="fas fa-heart text-xl"></i>
+        </button>
+        <div class="flex-1 relative">
+          <input type="text" placeholder="Send a comment..." class="story-comment-input w-full bg-black bg-opacity-50 text-white border-none rounded-full py-3 pl-4 pr-12 focus:ring-2 focus:ring-primary-500">
+          <button class="send-story-comment-btn absolute right-2 top-1/2 transform -translate-y-1/2 text-white" data-story-id="${story.id}">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
 
       <!-- Story progress -->
       <div class="absolute top-0 left-0 right-0 h-1 bg-dark-500 bg-opacity-50">
@@ -210,35 +229,96 @@ function viewStory(story, user) {
   // Add to body
   document.body.appendChild(storyViewer);
 
-  // Start progress animation
+  // Start progress
   const progressBar = storyViewer.querySelector('.story-progress');
-  const duration = 5000; // 5 seconds
-  const startTime = Date.now();
+  let progress = 0;
+  let isPaused = false;
+  let interval;
+  
+  // Function to start/resume the progress
+  const startProgress = () => {
+    interval = setInterval(() => {
+      if (!isPaused) {
+        progress += 1;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          closeStory(storyViewer);
+        }
+      }
+    }, 50); // 5 seconds total (50ms * 100)
+  };
+  
+  // Start the progress initially
+  startProgress();
 
-  const progressInterval = setInterval(() => {
-    const elapsed = Date.now() - startTime;
-    const progress = (elapsed / duration) * 100;
-
-    if (progress >= 100) {
-      clearInterval(progressInterval);
-      document.body.removeChild(storyViewer);
-
-      // Mark story as viewed
-      markStoryAsViewed(story.id, currentUser.id);
-    } else {
-      progressBar.style.width = `${progress}%`;
-    }
-  }, 50);
-
-  // Close button event
-  const closeButton = storyViewer.querySelector('.close-story');
-  closeButton.addEventListener('click', () => {
-    clearInterval(progressInterval);
-    document.body.removeChild(storyViewer);
-
-    // Mark story as viewed
-    markStoryAsViewed(story.id, currentUser.id);
+  // Pause progress when user focuses on comment input
+  const commentInput = storyViewer.querySelector('.story-comment-input');
+  commentInput.addEventListener('focus', () => {
+    isPaused = true;
+    clearInterval(interval);
   });
+  
+  // Resume progress when user blurs from comment input
+  commentInput.addEventListener('blur', () => {
+    // Only resume if not submitting a comment
+    if (!commentInput.value.trim()) {
+      isPaused = false;
+      startProgress();
+    }
+  });
+
+  // Close button
+  const closeBtn = storyViewer.querySelector('.close-story');
+  closeBtn.addEventListener('click', () => {
+    clearInterval(interval);
+    closeStory(storyViewer);
+  });
+
+  // Like button
+  const likeBtn = storyViewer.querySelector('.like-story-btn');
+  likeBtn.addEventListener('click', () => toggleLikeStory(story.id, currentUser.id, likeBtn));
+
+  // Comment button
+  const sendCommentBtn = storyViewer.querySelector('.send-story-comment-btn');
+  
+  sendCommentBtn.addEventListener('click', () => {
+    if (commentInput.value.trim()) {
+      // Pause the timer while submitting comment
+      isPaused = true;
+      clearInterval(interval);
+      
+      addStoryComment(story.id, currentUser.id, commentInput.value.trim());
+      commentInput.value = '';
+      
+      // Resume the timer after submitting
+      setTimeout(() => {
+        isPaused = false;
+        startProgress();
+      }, 1000); // Give user a moment to see the success message
+    }
+  });
+  
+  commentInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && commentInput.value.trim()) {
+      // Pause the timer while submitting comment
+      isPaused = true;
+      clearInterval(interval);
+      
+      addStoryComment(story.id, currentUser.id, commentInput.value.trim());
+      commentInput.value = '';
+      
+      // Resume the timer after submitting
+      setTimeout(() => {
+        isPaused = false;
+        startProgress();
+      }, 1000); // Give user a moment to see the success message
+    }
+  });
+
+  // Mark story as viewed
+  markStoryAsViewed(story.id, currentUser.id);
 }
 
 /**
@@ -1611,4 +1691,389 @@ function formatNumber(num) {
     return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
   }
   return num.toString();
+}
+
+/**
+ * Toggle like on a story
+ * @param {string} storyId - The story ID
+ * @param {string} userId - The current user ID
+ * @param {HTMLElement} button - The like button element
+ */
+async function toggleLikeStory(storyId, userId, button) {
+  try {
+    // Get current story
+    const response = await fetch(`http://localhost:3001/stories/${storyId}`);
+    const story = await response.json();
+
+    // Check if already liked
+    const isLiked = story.likes && story.likes.includes(userId);
+
+    // Update likes array
+    let likes = story.likes || [];
+
+    if (isLiked) {
+      // Unlike
+      likes = likes.filter(id => id !== userId);
+      button.classList.remove('text-red-500');
+    } else {
+      // Like
+      likes.push(userId);
+      button.classList.add('text-red-500');
+    }
+
+    // Update story in db.json
+    await fetch(`http://localhost:3001/stories/${storyId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ likes })
+    });
+
+    // Update UI
+    const postElement = button.closest('.bg-white');
+
+    // Update like button with animation
+    const icon = button.querySelector('i.fas.fa-heart');
+    if (icon) {
+      if (isLiked) {
+        // Unlike animation
+        icon.classList.remove('text-red-500');
+        icon.classList.add('text-dark-500');
+      } else {
+        // Like animation
+        icon.classList.remove('text-dark-500');
+        icon.classList.add('text-red-500', 'like-animation');
+
+        // Remove animation class after it completes
+        setTimeout(() => {
+          icon.classList.remove('like-animation');
+        }, 400);
+      }
+    }
+
+    // Add a visual feedback on the button
+    button.classList.add('count-update');
+    setTimeout(() => {
+      button.classList.remove('count-update');
+    }, 1000);
+
+    // Update like count with animation
+    const likeCountElement = postElement.querySelector('.flex.items-center:has(div.flex.-space-x-1) span');
+    if (likeCountElement) {
+      // Add animation class
+      likeCountElement.classList.add('animate-pulse', 'text-primary-500');
+
+      // Update count
+      likeCountElement.textContent = `${formatNumber(likes.length)} likes`;
+
+      // Remove animation after a short delay
+      setTimeout(() => {
+        likeCountElement.classList.remove('animate-pulse', 'text-primary-500');
+      }, 1000);
+    }
+
+    // Update like icon color in stats section
+    const likeIconContainer = postElement.querySelector('.flex.-space-x-1 div');
+    if (likeIconContainer) {
+      if (likes.length > 0) {
+        likeIconContainer.classList.remove('bg-dark-300');
+        likeIconContainer.classList.add('bg-red-500');
+      } else {
+        likeIconContainer.classList.remove('bg-red-500');
+        likeIconContainer.classList.add('bg-dark-300');
+      }
+    }
+  } catch (error) {
+    console.error('Error toggling like:', error);
+  }
+}
+
+/**
+ * Load stories for the home page
+ * @param {Object} currentUser - The logged-in user
+ */
+async function loadStories(currentUser) {
+  try {
+    // Get the stories container
+    const storiesContainer = document.querySelector('.stories-container');
+    if (!storiesContainer) return;
+
+    // Save the "Add Story" item if it exists
+    const addStoryItem = storiesContainer.querySelector('a[href="/create-story"]');
+    
+    // Clear the container
+    storiesContainer.innerHTML = '';
+
+    // Add back the "Add Story" item if it exists
+    if (addStoryItem) {
+      storiesContainer.appendChild(addStoryItem);
+    } else {
+      // Create a new "Add Story" item if it doesn't exist
+      const newAddStoryItem = document.createElement('a');
+      newAddStoryItem.href = '/create-story';
+      newAddStoryItem.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer';
+      newAddStoryItem.innerHTML = `
+        <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden flex flex-col items-center justify-center shadow-md h-48 md:h-64">
+          <div class="w-14 h-14 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mb-3">
+            <i class="fas fa-plus text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-dark-700">Add Story</span>
+        </div>
+      `;
+      storiesContainer.appendChild(newAddStoryItem);
+    }
+
+    // Fetch stories from db.json
+    const response = await fetch('http://localhost:3001/stories');
+    const stories = await response.json();
+
+    // Filter active stories (not expired)
+    const now = new Date().toISOString();
+    const activeStories = stories.filter(story => story.expiresAt > now);
+
+    // Filter stories to only show those from users the current user follows
+    // Also include the current user's own stories
+    const followedUserIds = currentUser.following || [];
+    const filteredStories = activeStories.filter(story => 
+      story.userId === currentUser.id || // User's own stories
+      followedUserIds.includes(story.userId) // Stories from followed users
+    );
+
+    // Sort stories by creation date (newest first)
+    filteredStories.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    // Limit to 5 stories on the home page
+    const homePageStories = filteredStories.slice(0, 5);
+
+    // Create HTML for each story
+    for (const story of homePageStories) {
+      // Get user data
+      const userResponse = await fetch(`http://localhost:3001/users/${story.userId}`);
+      const user = await userResponse.json();
+
+      // Create story element
+      const storyElement = document.createElement('div');
+      storyElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer';
+      storyElement.innerHTML = `
+        <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-md h-48 md:h-64">
+          <img src="${story.media.url}" alt="${user.name}'s story" class="w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          
+          <!-- Story Header -->
+          <div class="absolute top-3 left-3 right-3">
+            <div class="flex items-center">
+              <div class="w-8 h-8 rounded-full border-2 border-primary-500 overflow-hidden">
+                <img src="${user.avatar}" alt="${user.name}" class="w-full h-full object-cover">
+              </div>
+              <div class="ml-2">
+                <p class="text-white text-xs font-medium">${user.name}</p>
+                <p class="text-white/70 text-xs">${getTimeAgo(story.createdAt)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Add click event to view story
+      storyElement.addEventListener('click', () => viewStory(story, user, currentUser));
+
+      // Add to container
+      storiesContainer.appendChild(storyElement);
+    }
+
+    // Add "View More" story if there are more stories than shown
+    if (filteredStories.length > homePageStories.length) {
+      const viewMoreElement = document.createElement('a');
+      viewMoreElement.href = '/stories';
+      viewMoreElement.className = 'flex-shrink-0 w-[180px] md:w-[220px] relative group cursor-pointer';
+      viewMoreElement.innerHTML = `
+        <div class="aspect-[3/4] w-full rounded-2xl bg-dark-50 overflow-hidden flex flex-col items-center justify-center shadow-md h-48 md:h-64">
+          <div class="w-14 h-14 rounded-full bg-gradient-to-r from-primary-100 to-secondary-100 flex items-center justify-center text-primary-500 mb-3">
+            <i class="fas fa-ellipsis-h text-xl"></i>
+          </div>
+          <span class="text-sm font-medium text-dark-700">View All Stories</span>
+          <span class="text-xs text-dark-500 mt-1">${filteredStories.length - homePageStories.length} more</span>
+        </div>
+      `;
+      storiesContainer.appendChild(viewMoreElement);
+    }
+
+  } catch (error) {
+    console.error('Error loading stories:', error);
+  }
+}
+
+/**
+ * Close the story viewer
+ * @param {HTMLElement} storyViewer - The story viewer element to close
+ */
+function closeStory(storyViewer) {
+  // Add fade-out animation
+  storyViewer.classList.add('fade-out');
+  
+  // Remove after animation completes
+  setTimeout(() => {
+    if (storyViewer && storyViewer.parentNode) {
+      storyViewer.parentNode.removeChild(storyViewer);
+    }
+  }, 300);
+}
+
+/**
+ * View a story
+ * @param {Object} story - The story object
+ * @param {Object} user - The user who created the story
+ * @param {Object} currentUser - The current user
+ */
+function viewStory(story, user, currentUser) {
+  // Create story viewer modal
+  const storyViewer = document.createElement('div');
+  storyViewer.className = 'story-viewer';
+
+  // Calculate time ago
+  const timeAgo = getTimeAgo(story.createdAt);
+  
+  // Check if current user has liked the story
+  const isLiked = story.likes && story.likes.includes(currentUser.id);
+
+  storyViewer.innerHTML = `
+    <div class="relative w-full max-w-lg mx-auto">
+      <!-- Story header -->
+      <div class="absolute top-4 left-4 right-4 z-10 flex justify-between items-center">
+        <div class="flex items-center">
+          <img src="${user.avatar}" alt="${user.name}" class="w-10 h-10 rounded-full border-2 border-white">
+          <div class="ml-2 text-white">
+            <p class="font-semibold">${user.name}</p>
+            <p class="text-xs opacity-80">${timeAgo}</p>
+          </div>
+        </div>
+        <button class="close-story text-white text-xl">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- Story content -->
+      <div class="story-content">
+        <img src="${story.media.url}" alt="Story" class="w-full h-full object-contain">
+      </div>
+      
+      <!-- Story caption -->
+      <div class="absolute bottom-20 left-4 right-4 bg-black bg-opacity-50 p-3 rounded-lg">
+        <p class="text-white">${story.caption || 'No caption'}</p>
+      </div>
+
+      <!-- Story actions -->
+      <div class="absolute bottom-4 left-4 right-4 flex items-center space-x-2">
+        <button class="like-story-btn flex items-center justify-center bg-black bg-opacity-50 text-white rounded-full w-12 h-12 ${isLiked ? 'text-red-500' : ''}" data-story-id="${story.id}">
+          <i class="fas fa-heart text-xl"></i>
+        </button>
+        <div class="flex-1 relative">
+          <input type="text" placeholder="Send a comment..." class="story-comment-input w-full bg-black bg-opacity-50 text-white border-none rounded-full py-3 pl-4 pr-12 focus:ring-2 focus:ring-primary-500">
+          <button class="send-story-comment-btn absolute right-2 top-1/2 transform -translate-y-1/2 text-white" data-story-id="${story.id}">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Story progress -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-dark-500 bg-opacity-50">
+        <div class="story-progress h-full bg-white" style="width: 0%"></div>
+      </div>
+    </div>
+  `;
+
+  // Add to body
+  document.body.appendChild(storyViewer);
+
+  // Start progress
+  const progressBar = storyViewer.querySelector('.story-progress');
+  let progress = 0;
+  let isPaused = false;
+  let interval;
+  
+  // Function to start/resume the progress
+  const startProgress = () => {
+    interval = setInterval(() => {
+      if (!isPaused) {
+        progress += 1;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress >= 100) {
+          clearInterval(interval);
+          closeStory(storyViewer);
+        }
+      }
+    }, 50); // 5 seconds total (50ms * 100)
+  };
+  
+  // Start the progress initially
+  startProgress();
+
+  // Pause progress when user focuses on comment input
+  const commentInput = storyViewer.querySelector('.story-comment-input');
+  commentInput.addEventListener('focus', () => {
+    isPaused = true;
+    clearInterval(interval);
+  });
+  
+  // Resume progress when user blurs from comment input
+  commentInput.addEventListener('blur', () => {
+    // Only resume if not submitting a comment
+    if (!commentInput.value.trim()) {
+      isPaused = false;
+      startProgress();
+    }
+  });
+
+  // Close button
+  const closeBtn = storyViewer.querySelector('.close-story');
+  closeBtn.addEventListener('click', () => {
+    clearInterval(interval);
+    closeStory(storyViewer);
+  });
+
+  // Like button
+  const likeBtn = storyViewer.querySelector('.like-story-btn');
+  likeBtn.addEventListener('click', () => toggleLikeStory(story.id, currentUser.id, likeBtn));
+
+  // Comment button
+  const sendCommentBtn = storyViewer.querySelector('.send-story-comment-btn');
+  
+  sendCommentBtn.addEventListener('click', () => {
+    if (commentInput.value.trim()) {
+      // Pause the timer while submitting comment
+      isPaused = true;
+      clearInterval(interval);
+      
+      addStoryComment(story.id, currentUser.id, commentInput.value.trim());
+      commentInput.value = '';
+      
+      // Resume the timer after submitting
+      setTimeout(() => {
+        isPaused = false;
+        startProgress();
+      }, 1000); // Give user a moment to see the success message
+    }
+  });
+  
+  commentInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && commentInput.value.trim()) {
+      // Pause the timer while submitting comment
+      isPaused = true;
+      clearInterval(interval);
+      
+      addStoryComment(story.id, currentUser.id, commentInput.value.trim());
+      commentInput.value = '';
+      
+      // Resume the timer after submitting
+      setTimeout(() => {
+        isPaused = false;
+        startProgress();
+      }, 1000); // Give user a moment to see the success message
+    }
+  });
+
+  // Mark story as viewed
+  markStoryAsViewed(story.id)
 }
