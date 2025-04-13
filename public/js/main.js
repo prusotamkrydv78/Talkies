@@ -201,6 +201,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Mobile search toggle
+    const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+    const mobileSearchPanel = document.getElementById('mobileSearchPanel');
+
+    if (mobileSearchToggle && mobileSearchPanel) {
+        mobileSearchToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mobileSearchPanel.classList.toggle('hidden');
+
+            if (!mobileSearchPanel.classList.contains('hidden')) {
+                // Focus the search input when panel is shown
+                const searchInput = mobileSearchPanel.querySelector('input');
+                if (searchInput) {
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 100);
+                }
+            }
+        });
+
+        // Close search panel when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!mobileSearchToggle.contains(event.target) && !mobileSearchPanel.contains(event.target)) {
+                mobileSearchPanel.classList.add('hidden');
+            }
+        });
+    }
+
     // Dark mode toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle');
 

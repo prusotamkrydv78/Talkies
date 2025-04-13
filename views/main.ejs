@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse - Social Media Platform</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/styles.css">
+  
+  <%- style %>
+</head>
+<body class="bg-gray-50 text-dark-900 font-sans">
+  <!-- Main Layout -->
+  <div class="flex min-h-screen">
+    <!-- Left Sidebar -->
+    <%- include('../partials/sidebar') %>
+    
+    <!-- Main Content -->
+    <div class="flex-1 flex">
+      <!-- Feed Area -->
+      <div class="flex-1 max-w-2xl mx-auto px-4 py-6">
+        <!-- Top Header -->
+        <header class="flex items-center justify-between mb-8">
+          <div class="flex items-center">
+            <!-- Mobile Menu Toggle -->
+            <button type="button" class="lg:hidden mr-4 p-2 rounded-full text-gray-500 hover:text-primary-500 hover:bg-gray-100" id="mobile-menu-button">
+              <i class="fas fa-bars"></i>
+            </button>
+            
+            <!-- Logo (Mobile Only) -->
+            <div class="lg:hidden flex items-center">
+              <span class="text-xl font-bold text-primary-600">Pulse</span>
+            </div>
+          </div>
+          
+          <!-- Search Bar -->
+          <div class="hidden md:block relative w-full max-w-xs mx-4">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400"></i>
+            </div>
+            <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200" placeholder="Search...">
+          </div>
+          
+          <!-- User Menu -->
+          <div class="relative">
+            <button type="button" class="flex items-center space-x-2 focus:outline-none" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+              <span class="hidden md:block text-sm font-medium text-gray-700"><%= user.name.split(' ')[0] %></span>
+              <img class="h-8 w-8 rounded-full object-cover border border-gray-200" src="<%= user.avatar %>" alt="<%= user.name %>">
+              <i class="hidden md:block fas fa-chevron-down text-xs text-gray-400"></i>
+            </button>
+            
+            <!-- Dropdown menu -->
+            <div class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-medium py-1 bg-white border border-gray-200 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="user-dropdown">
+              <div class="px-4 py-3 border-b border-gray-100">
+                <p class="text-sm font-medium text-gray-900"><%= user.name %></p>
+                <p class="text-xs text-gray-500">@<%= user.username %></p>
+              </div>
+              <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600" role="menuitem">Your Profile</a>
+              <a href="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600" role="menuitem">Settings</a>
+              <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary-600" role="menuitem">Sign out</a>
+            </div>
+          </div>
+        </header>
+        
+        <%- body %>
+      </div>
+      
+      <!-- Right Sidebar -->
+      <div class="hidden lg:block w-80 border-l border-gray-200 p-6 overflow-y-auto">
+        <!-- Trending Topics -->
+        <div class="mb-8">
+          <h3 class="font-semibold text-lg text-gray-900 mb-4">Trending Topics</h3>
+          
+          <div class="space-y-4">
+            <a href="#" class="block p-4 rounded-xl bg-white border border-gray-200 hover:shadow-card transition duration-200 group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Technology</span>
+                <span class="text-xs text-gray-500">24.5K posts</span>
+              </div>
+              <p class="font-medium text-gray-900 group-hover:text-primary-600 transition duration-200">#AIRevolution</p>
+              <div class="mt-2 w-full bg-gray-100 rounded-full h-1.5">
+                <div class="bg-primary-500 h-1.5 rounded-full" style="width: 75%"></div>
+              </div>
+            </a>
+            
+            <a href="#" class="block p-4 rounded-xl bg-white border border-gray-200 hover:shadow-card transition duration-200 group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Entertainment</span>
+                <span class="text-xs text-gray-500">18.2K posts</span>
+              </div>
+              <p class="font-medium text-gray-900 group-hover:text-primary-600 transition duration-200">#NewMovieRelease</p>
+              <div class="mt-2 w-full bg-gray-100 rounded-full h-1.5">
+                <div class="bg-primary-500 h-1.5 rounded-full" style="width: 60%"></div>
+              </div>
+            </a>
+            
+            <a href="#" class="block p-4 rounded-xl bg-white border border-gray-200 hover:shadow-card transition duration-200 group">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded-full">Sports</span>
+                <span class="text-xs text-gray-500">32.7K posts</span>
+              </div>
+              <p class="font-medium text-gray-900 group-hover:text-primary-600 transition duration-200">#WorldCupFinal</p>
+              <div class="mt-2 w-full bg-gray-100 rounded-full h-1.5">
+                <div class="bg-primary-500 h-1.5 rounded-full" style="width: 90%"></div>
+              </div>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Who to Follow Section -->
+        <div class="mb-8">
+          <h3 class="font-semibold text-lg text-gray-900 mb-4">Who to Follow</h3>
+          
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 rounded-xl bg-white border border-gray-200 hover:shadow-card transition duration-200">
+              <div class="flex items-center space-x-3">
+                <img src="https://i.pravatar.cc/150?img=36" alt="User" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                <div>
+                  <p class="font-medium text-gray-900">Emma Wilson</p>
+                  <p class="text-xs text-gray-500">@emmawilson</p>
+                </div>
+              </div>
+              <button class="px-3 py-1 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition duration-200">Follow</button>
+            </div>
+            
+            <div class="flex items-center justify-between p-4 rounded-xl bg-white border border-gray-200 hover:shadow-card transition duration-200">
+              <div class="flex items-center space-x-3">
+                <img src="https://i.pravatar.cc/150?img=68" alt="User" class="w-10 h-10 rounded-full object-cover border border-gray-200">
+                <div>
+                  <p class="font-medium text-gray-900">Robert Chen</p>
+                  <p class="text-xs text-gray-500">@robertchen</p>
+                </div>
+              </div>
+              <button class="px-3 py-1 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition duration-200">Follow</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript -->
+  <script src="/js/main.js"></script>
+  <%- script %>
+</body>
+</html>
