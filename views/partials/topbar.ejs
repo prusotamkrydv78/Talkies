@@ -1,0 +1,78 @@
+<div class="bg-white shadow-sm sticky top-0 z-10">
+  <div class="container mx-auto px-4 md:px-6 py-3">
+    <div class="flex justify-between items-center">
+      <!-- Mobile Logo & Menu Button -->
+      <div class="flex items-center md:hidden">
+        <button id="openSidebar" class="mr-3 text-dark-600 focus:outline-none">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <a href="/" class="flex items-center">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-lg">P</div>
+          <span class="ml-2 text-lg font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">Pulse</span>
+        </a>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="hidden md:block flex-1 max-w-xl mx-auto">
+        <div class="relative">
+          <input type="text" placeholder="Search..." class="w-full bg-dark-100 border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+          <div class="absolute left-3 top-2.5 text-dark-400">
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Search Button -->
+      <div class="md:hidden">
+        <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+      
+      <!-- Right Actions -->
+      <div class="flex items-center space-x-3">
+        <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500 relative md:hidden">
+          <i class="fas fa-bell"></i>
+          <span class="absolute -top-1 -right-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+        </button>
+        
+        <div class="relative group hidden md:block">
+          <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500 group-hover:bg-primary-100 group-hover:text-primary-500 transition-all">
+            <i class="fas fa-th"></i>
+          </button>
+          
+          <!-- Dropdown Menu (hidden by default) -->
+          <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg py-2 hidden group-hover:block">
+            <a href="/settings" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
+              <i class="fas fa-cog w-5 mr-3"></i>
+              <span>Settings</span>
+            </a>
+            <a href="/help" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
+              <i class="fas fa-question-circle w-5 mr-3"></i>
+              <span>Help Center</span>
+            </a>
+            <a href="/theme" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
+              <i class="fas fa-moon w-5 mr-3"></i>
+              <span>Dark Mode</span>
+            </a>
+            <div class="border-t my-1"></div>
+            <a href="/logout" class="flex items-center px-4 py-2 text-dark-600 hover:bg-primary-50 hover:text-primary-600">
+              <i class="fas fa-sign-out-alt w-5 mr-3"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Mobile Search (hidden by default) -->
+  <div class="md:hidden px-4 pb-3 hidden" id="mobileSearch">
+    <div class="relative">
+      <input type="text" placeholder="Search..." class="w-full bg-dark-100 border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+      <div class="absolute left-3 top-2.5 text-dark-400">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+  </div>
+</div>

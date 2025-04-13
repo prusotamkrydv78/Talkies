@@ -1,254 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= title %></title>
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            200: '#c7d2fe',
-                            300: '#a5b4fc',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            800: '#3730a3',
-                            900: '#312e81',
-                            950: '#1e1b4b',
-                        },
-                        secondary: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                            950: '#042f2e',
-                        },
-                        accent: {
-                            50: '#fdf2f8',
-                            100: '#fce7f3',
-                            200: '#fbcfe8',
-                            300: '#f9a8d4',
-                            400: '#f472b6',
-                            500: '#ec4899',
-                            600: '#db2777',
-                            700: '#be185d',
-                            800: '#9d174d',
-                            900: '#831843',
-                            950: '#500724',
-                        },
-                        surface: {
-                            50: '#fafafa',
-                            100: '#f4f4f5',
-                            200: '#e4e4e7',
-                            300: '#d4d4d8',
-                            400: '#a1a1aa',
-                            500: '#71717a',
-                            600: '#52525b',
-                            700: '#3f3f46',
-                            800: '#27272a',
-                            900: '#18181b',
-                            950: '#09090b',
-                        }
-                    },
-                    borderRadius: {
-                        'xl': '1rem',
-                        '2xl': '1.5rem',
-                        '3xl': '2rem',
-                        '4xl': '3rem',
-                        'pill': '9999px',
-                    },
-                    boxShadow: {
-                        'soft': '0 2px 10px rgba(0, 0, 0, 0.05)',
-                        'medium': '0 4px 20px rgba(0, 0, 0, 0.08)',
-                        'glow': '0 0 15px rgba(99, 102, 241, 0.5)',
-                        'neon': '0 0 10px rgba(99, 102, 241, 0.8), 0 0 20px rgba(99, 102, 241, 0.6), 0 0 30px rgba(99, 102, 241, 0.4)',
-                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
-                    },
-                    backdropBlur: {
-                        'xs': '2px',
-                    },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/styles.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse - Share Your World</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            secondary: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+            },
+            dark: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            },
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          borderRadius: {
+            xl: '1rem',
+            '2xl': '1.5rem',
+            '3xl': '2rem',
+          },
+        },
+      }
+    }
+  </script>
 </head>
-<body class="bg-gradient-to-br from-surface-50 to-surface-100 text-surface-800 min-h-screen flex flex-col">
-    <!-- Background Decoration -->
-    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-gradient-radial from-primary-200/20 to-transparent rounded-full"></div>
-        <div class="absolute top-1/3 -left-24 w-64 h-64 bg-gradient-radial from-secondary-200/20 to-transparent rounded-full"></div>
-        <div class="absolute -bottom-32 right-1/4 w-80 h-80 bg-gradient-radial from-accent-200/20 to-transparent rounded-full"></div>
+<body class="bg-dark-100 min-h-screen font-sans">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <%- include('../partials/sidebar') %>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 overflow-y-auto">
+      <!-- Top Bar -->
+      <%- include('../partials/topbar') %>
+
+      <!-- Main Content -->
+      <main class="<%= path === '/messages' ? '' : 'px-4 py-6 md:px-8 max-w-6xl mx-auto' %>">
+        <%- typeof body === 'function' ? body() : body %>
+      </main>
+
+      <!-- Footer -->
+      <% if (path !== '/messages') { %>
+        <%- include('../partials/footer') %>
+      <% } %>
     </div>
+  </div>
 
-    <!-- Main Content -->
-    <div class="flex flex-1 relative">
-        <!-- Futuristic Sidebar -->
-        <%- include('../partials/sidebar') %>
-
-        <!-- Content Area with Right Sidebar -->
-        <div class="flex flex-1 ml-0 md:ml-20 lg:ml-72 transition-all duration-300">
-            <!-- Main Content -->
-            <main class="flex-1 p-4 md:p-6 overflow-y-auto max-w-3xl">
-                <!-- Top Mini Header -->
-                <div class="mb-6 flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <!-- Mobile Menu Toggle -->
-                        <button type="button" class="md:hidden inline-flex items-center justify-center p-2 rounded-full text-surface-500 hover:text-primary-600 hover:bg-surface-100/70 focus:outline-none" id="mobile-menu-button">
-                            <i class="fas fa-bars text-lg"></i>
-                        </button>
-
-                        <!-- Page Title with Decoration -->
-                        <div class="flex items-center">
-                            <div class="w-1.5 h-6 bg-gradient-to-b from-primary-500 to-accent-500 rounded-full mr-3"></div>
-                            <h1 class="text-xl font-bold text-surface-800 bg-clip-text text-transparent bg-gradient-to-r from-primary-700 to-primary-500">Home</h1>
-                        </div>
-                    </div>
-
-                    <!-- Search Bar -->
-                    <div class="hidden sm:block relative max-w-md">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="fas fa-search text-surface-400"></i>
-                        </div>
-                        <input type="text" class="w-full pl-10 pr-3 py-2 border-0 rounded-full bg-surface-100/70 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:bg-white/90 transition-all duration-200 sm:text-sm" placeholder="Search...">
-                    </div>
-
-                    <!-- User Menu -->
-                    <div class="relative">
-                        <button type="button" class="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500/50 p-0.5 bg-gradient-to-r from-primary-500/20 to-accent-500/20" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                            <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full object-cover" src="<%= user.avatar %>" alt="<%= user.name %>">
-                        </button>
-
-                        <!-- Dropdown menu -->
-                        <div class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-2xl shadow-glass py-1 bg-white/90 backdrop-blur-md border border-surface-200/50 focus:outline-none z-50" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="user-dropdown">
-                            <div class="px-4 py-2 border-b border-surface-200/50">
-                                <p class="text-sm font-medium text-surface-900"><%= user.name %></p>
-                                <p class="text-xs text-surface-500">@<%= user.username %></p>
-                            </div>
-                            <a href="/profile" class="block px-4 py-2 text-sm text-surface-700 hover:bg-surface-100/70 hover:text-primary-600 transition duration-150" role="menuitem">Your Profile</a>
-                            <a href="/settings" class="block px-4 py-2 text-sm text-surface-700 hover:bg-surface-100/70 hover:text-primary-600 transition duration-150" role="menuitem">Settings</a>
-                            <a href="#" class="block px-4 py-2 text-sm text-surface-700 hover:bg-surface-100/70 hover:text-primary-600 transition duration-150" role="menuitem">Sign out</a>
-                        </div>
-                    </div>
-                </div>
-
-                <%- body %>
-            </main>
-
-            <!-- Right Sidebar (Hidden on mobile) -->
-            <div class="hidden lg:block w-80 p-4 md:p-6 overflow-y-auto">
-                <!-- Trending Topics -->
-                <div class="bg-white/80 backdrop-blur-md rounded-3xl shadow-glass overflow-hidden border border-surface-200/50 sticky top-6">
-                    <div class="p-6">
-                        <div class="flex items-center space-x-2 mb-5">
-                            <div class="w-1 h-6 bg-gradient-to-b from-accent-500 to-secondary-500 rounded-full"></div>
-                            <h3 class="font-semibold text-lg text-surface-800">Trending Topics</h3>
-                        </div>
-
-                        <div class="space-y-5">
-                            <a href="#" class="block p-3 rounded-2xl bg-surface-50/70 hover:bg-white/80 backdrop-blur-sm transition duration-200 border border-surface-200/30 hover:shadow-soft group">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-xs text-surface-500 bg-surface-100/80 px-2 py-0.5 rounded-full">Technology</span>
-                                    <span class="text-xs text-surface-500">24.5K posts</span>
-                                </div>
-                                <p class="font-medium text-surface-800 group-hover:text-primary-600 transition duration-200">#AIRevolution</p>
-                                <div class="mt-2 w-full bg-surface-200/50 rounded-full h-1.5">
-                                    <div class="bg-gradient-to-r from-primary-500 to-accent-500 h-1.5 rounded-full" style="width: 75%"></div>
-                                </div>
-                            </a>
-
-                            <a href="#" class="block p-3 rounded-2xl bg-surface-50/70 hover:bg-white/80 backdrop-blur-sm transition duration-200 border border-surface-200/30 hover:shadow-soft group">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-xs text-surface-500 bg-surface-100/80 px-2 py-0.5 rounded-full">Entertainment</span>
-                                    <span class="text-xs text-surface-500">18.2K posts</span>
-                                </div>
-                                <p class="font-medium text-surface-800 group-hover:text-primary-600 transition duration-200">#NewMovieRelease</p>
-                                <div class="mt-2 w-full bg-surface-200/50 rounded-full h-1.5">
-                                    <div class="bg-gradient-to-r from-primary-500 to-accent-500 h-1.5 rounded-full" style="width: 60%"></div>
-                                </div>
-                            </a>
-
-                            <a href="#" class="block p-3 rounded-2xl bg-surface-50/70 hover:bg-white/80 backdrop-blur-sm transition duration-200 border border-surface-200/30 hover:shadow-soft group">
-                                <div class="flex items-center justify-between mb-1">
-                                    <span class="text-xs text-surface-500 bg-surface-100/80 px-2 py-0.5 rounded-full">Sports</span>
-                                    <span class="text-xs text-surface-500">32.7K posts</span>
-                                </div>
-                                <p class="font-medium text-surface-800 group-hover:text-primary-600 transition duration-200">#WorldCupFinal</p>
-                                <div class="mt-2 w-full bg-surface-200/50 rounded-full h-1.5">
-                                    <div class="bg-gradient-to-r from-primary-500 to-accent-500 h-1.5 rounded-full" style="width: 90%"></div>
-                                </div>
-                            </a>
-                        </div>
-
-                        <!-- Who to Follow Section -->
-                        <div class="mt-8 pt-6 border-t border-surface-200/50">
-                            <div class="flex items-center space-x-2 mb-5">
-                                <div class="w-1 h-6 bg-gradient-to-b from-primary-500 to-secondary-500 rounded-full"></div>
-                                <h3 class="font-semibold text-lg text-surface-800">Who to Follow</h3>
-                            </div>
-
-                            <div class="space-y-4">
-                                <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-50/70 transition duration-200">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="relative">
-                                            <div class="absolute inset-0 rounded-full bg-primary-500 blur-sm opacity-10"></div>
-                                            <img src="https://i.pravatar.cc/150?img=36" alt="User" class="relative w-10 h-10 rounded-full object-cover border border-primary-500/20">
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-surface-800">Emma Wilson</p>
-                                            <p class="text-xs text-surface-500">@emmawilson</p>
-                                        </div>
-                                    </div>
-                                    <button class="px-3 py-1 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition duration-200">Follow</button>
-                                </div>
-
-                                <div class="flex items-center justify-between p-3 rounded-2xl hover:bg-surface-50/70 transition duration-200">
-                                    <div class="flex items-center space-x-3">
-                                        <div class="relative">
-                                            <div class="absolute inset-0 rounded-full bg-primary-500 blur-sm opacity-10"></div>
-                                            <img src="https://i.pravatar.cc/150?img=68" alt="User" class="relative w-10 h-10 rounded-full object-cover border border-primary-500/20">
-                                        </div>
-                                        <div>
-                                            <p class="font-medium text-surface-800">Robert Chen</p>
-                                            <p class="text-xs text-surface-500">@robertchen</p>
-                                        </div>
-                                    </div>
-                                    <button class="px-3 py-1 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-full transition duration-200">Follow</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Mobile Menu Backdrop -->
-    <div class="hidden fixed inset-0 bg-surface-900/30 backdrop-blur-xs z-40 transition-opacity duration-300" id="mobile-menu-backdrop"></div>
-
-    <!-- Scripts -->
-    <script src="/js/main.js"></script>
+  <!-- Scripts -->
+  <script src="/js/main.js"></script>
 </body>
 </html>

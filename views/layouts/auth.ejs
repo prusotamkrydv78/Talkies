@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulse - Share Your World</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            },
+            secondary: {
+              50: '#fdf4ff',
+              100: '#fae8ff',
+              200: '#f5d0fe',
+              300: '#f0abfc',
+              400: '#e879f9',
+              500: '#d946ef',
+              600: '#c026d3',
+              700: '#a21caf',
+              800: '#86198f',
+              900: '#701a75',
+            },
+            dark: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+              950: '#020617',
+            },
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          borderRadius: {
+            xl: '1rem',
+            '2xl': '1.5rem',
+            '3xl': '2rem',
+          },
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-dark-50 min-h-screen font-sans">
+  <div class="flex min-h-screen">
+    <!-- Left Side - Decorative Area -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-500 to-secondary-500 p-12 flex-col justify-between relative overflow-hidden">
+      <!-- Background Pattern -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-full h-full">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" class="w-full h-full">
+            <defs>
+              <pattern id="pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="2" fill="white" />
+              </pattern>
+            </defs>
+            <rect x="0" y="0" width="100%" height="100%" fill="url(#pattern)" />
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Content -->
+      <div class="relative z-10">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary-500 font-bold text-xl">P</div>
+          <h1 class="text-3xl font-bold text-white">Pulse</h1>
+        </div>
+        <p class="text-white/80 mt-6 text-xl max-w-md">Connect with friends, share moments, and discover stories from around the world.</p>
+      </div>
+      
+      <!-- Features -->
+      <div class="relative z-10 space-y-8">
+        <div class="flex items-start space-x-4">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+            <i class="fas fa-user-friends"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold text-lg">Connect with Friends</h3>
+            <p class="text-white/70">Stay in touch with the people who matter most to you.</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-4">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+            <i class="fas fa-images"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold text-lg">Share Your Moments</h3>
+            <p class="text-white/70">Post photos and videos to share your experiences.</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start space-x-4">
+          <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white">
+            <i class="fas fa-compass"></i>
+          </div>
+          <div>
+            <h3 class="text-white font-semibold text-lg">Discover Stories</h3>
+            <p class="text-white/70">Explore content from creators around the world.</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="relative z-10 text-white/60 text-sm">
+        <p>&copy; 2023 Pulse. All rights reserved.</p>
+      </div>
+    </div>
+    
+    <!-- Right Side - Auth Forms -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 py-0">
+      <div class="w-full max-w-md">
+        <%- body %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/main.js"></script>
+</body>
+</html>

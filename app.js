@@ -20,20 +20,71 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.get('/', (req, res) => {
   res.render('pages/home', {
-    title: 'Talkie - Home',
+    title: 'Pulse - Home',
+    path: '/',
     user: {
       name: 'John Doe',
       username: 'johndoe',
       avatar: 'https://i.pravatar.cc/150?img=8',
       notifications: 5,
       messages: 3
-    }
+    },
+    stories: [
+      { id: 1, user: { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' }, image: 'https://source.unsplash.com/random/300x500?nature', viewed: false },
+      { id: 2, user: { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' }, image: 'https://source.unsplash.com/random/300x500?city', viewed: true },
+      { id: 3, user: { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' }, image: 'https://source.unsplash.com/random/300x500?people', viewed: false },
+      { id: 4, user: { name: 'Alex Brown', username: 'alexbrown', avatar: 'https://i.pravatar.cc/150?img=33' }, image: 'https://source.unsplash.com/random/300x500?travel', viewed: true }
+    ],
+    posts: [
+      {
+        id: 1,
+        author: { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' },
+        content: 'Just finished my morning hike! The view was absolutely breathtaking. Nature always has a way of putting things into perspective. #MorningHike #Nature #Sunrise',
+        image: 'https://source.unsplash.com/random/600x400?hiking',
+        timeAgo: '15 minutes ago',
+        likes: 42,
+        comments: 8,
+        shares: 3,
+        commentsList: [
+          { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks amazing! Where is this?', timeAgo: '10 min ago' },
+          { author: { name: 'Sarah Williams', avatar: 'https://i.pravatar.cc/150?img=20' }, content: 'The colors are stunning! 😍', timeAgo: '5 min ago' }
+        ]
+      },
+      {
+        id: 2,
+        author: { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' },
+        content: 'Just got my hands on the latest tech gadget! Can\'t wait to try it out and share my thoughts with you all. #TechReview #NewGadget',
+        timeAgo: '2 hours ago',
+        likes: 28,
+        comments: 14,
+        shares: 5,
+        commentsList: [
+          { author: { name: 'Alex Brown', avatar: 'https://i.pravatar.cc/150?img=33' }, content: 'Let me know how it works!', timeAgo: '1 hour ago' },
+          { author: { name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=5' }, content: 'I\'ve been thinking about getting one too!', timeAgo: '45 min ago' }
+        ]
+      },
+      {
+        id: 3,
+        author: { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' },
+        content: 'Just finished reading this amazing book! Highly recommend it to anyone who loves mystery novels with a twist. #BookRecommendation #Reading',
+        image: 'https://source.unsplash.com/random/600x400?book',
+        timeAgo: '5 hours ago',
+        likes: 76,
+        comments: 22,
+        shares: 12,
+        commentsList: [
+          { author: { name: 'John Doe', avatar: 'https://i.pravatar.cc/150?img=8' }, content: 'Thanks for the recommendation! Adding it to my list.', timeAgo: '3 hours ago' },
+          { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'I read this last month, it\'s fantastic!', timeAgo: '2 hours ago' }
+        ]
+      }
+    ]
   });
 });
 
 app.get('/profile', (req, res) => {
   res.render('pages/profile', {
-    title: 'Talkie - Profile',
+    title: 'Pulse - Profile',
+    path: '/profile',
     user: {
       name: 'John Doe',
       username: 'johndoe',
@@ -48,9 +99,10 @@ app.get('/profile', (req, res) => {
   });
 });
 
-app.get('/chat', (req, res) => {
+app.get('/messages', (req, res) => {
   res.render('pages/chat', {
-    title: 'Talkie - Chat',
+    title: 'Pulse - Messages',
+    path: '/messages',
     user: {
       name: 'John Doe',
       username: 'johndoe',
@@ -69,7 +121,8 @@ app.get('/chat', (req, res) => {
 
 app.get('/video-call', (req, res) => {
   res.render('pages/video-call', {
-    title: 'Talkie - Video Call',
+    title: 'Pulse - Video Call',
+    path: '/video-call',
     user: {
       name: 'John Doe',
       username: 'johndoe',
@@ -84,7 +137,8 @@ app.get('/video-call', (req, res) => {
 
 app.get('/notifications', (req, res) => {
   res.render('pages/notifications', {
-    title: 'Talkie - Notifications',
+    title: 'Pulse - Notifications',
+    path: '/notifications',
     user: {
       name: 'John Doe',
       username: 'johndoe',
@@ -103,7 +157,8 @@ app.get('/notifications', (req, res) => {
 
 app.get('/settings', (req, res) => {
   res.render('pages/settings', {
-    title: 'Talkie - Settings',
+    title: 'Pulse - Settings',
+    path: '/settings',
     user: {
       name: 'John Doe',
       username: 'johndoe',
@@ -118,5 +173,5 @@ app.get('/settings', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`Talkie app listening at http://localhost:${port}`);
+  console.log(`Pulse app listening at http://localhost:${port}`);
 });

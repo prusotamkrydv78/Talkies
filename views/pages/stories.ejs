@@ -1,0 +1,124 @@
+<div class="max-w-6xl mx-auto">
+  <!-- Stories Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">Stories</h1>
+    <p class="text-dark-500 mt-2">Discover moments from people you follow</p>
+  </div>
+  
+  <!-- Stories Tabs -->
+  <div class="bg-white rounded-2xl shadow-sm overflow-hidden mb-8">
+    <div class="flex border-b border-dark-100">
+      <button class="flex-1 py-4 px-4 font-medium text-primary-500 border-b-2 border-primary-500 flex items-center justify-center">
+        <i class="fas fa-globe mr-2"></i>
+        <span>All Stories</span>
+      </button>
+      <button class="flex-1 py-4 px-4 font-medium text-dark-500 hover:text-dark-700 transition-colors flex items-center justify-center">
+        <i class="fas fa-user mr-2"></i>
+        <span>Your Stories</span>
+      </button>
+      <button class="flex-1 py-4 px-4 font-medium text-dark-500 hover:text-dark-700 transition-colors flex items-center justify-center">
+        <i class="fas fa-archive mr-2"></i>
+        <span>Archive</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Create Story Button (Mobile) -->
+  <div class="md:hidden mb-6">
+    <a href="/create-story" class="w-full py-3 px-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-xl hover:shadow-lg transition-all duration-200 flex items-center justify-center">
+      <i class="fas fa-plus mr-2"></i>
+      Create New Story
+    </a>
+  </div>
+  
+  <!-- Stories Grid -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
+    <!-- Create Story Card (Desktop) -->
+    <div class="hidden md:block">
+      <a href="/create-story" class="block aspect-[3/4] rounded-2xl bg-white shadow-sm border border-dark-100 overflow-hidden hover:shadow-md transition-all">
+        <div class="w-full h-full flex flex-col items-center justify-center p-4">
+          <div class="w-16 h-16 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mb-4">
+            <i class="fas fa-plus text-xl"></i>
+          </div>
+          <h3 class="font-semibold text-dark-900 text-center">Create New Story</h3>
+          <p class="text-dark-500 text-sm text-center mt-2">Share a moment with your followers</p>
+        </div>
+      </a>
+    </div>
+    
+    <!-- Story Cards -->
+    <% for(let i = 1; i <= 19; i++) { %>
+      <div class="relative group cursor-pointer">
+        <a href="/view-story" class="block">
+          <div class="aspect-[3/4] w-full rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all">
+            <img src="https://picsum.photos/400/600?random=<%= i + 20 %>" alt="Story" class="w-full h-full object-cover">
+            <div class="absolute rounded-2xl inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            
+            <!-- Story Header -->
+            <div class="absolute top-3 left-3 right-3 flex items-center">
+              <div class="w-10 h-10 rounded-full border-2 border-primary-500 overflow-hidden">
+                <div class="w-full h-full bg-<%= ['primary', 'secondary', 'purple', 'blue', 'green', 'red'][i % 6] %>-500 flex items-center justify-center text-white font-bold text-xs">
+                  U<%= i %>
+                </div>
+              </div>
+              <div class="ml-2">
+                <p class="text-white text-sm font-medium">User <%= i %></p>
+                <p class="text-white/70 text-xs"><%= i % 12 %> hour<%= i % 12 !== 1 ? 's' : '' %> ago</p>
+              </div>
+            </div>
+            
+            <!-- Story Footer -->
+            <div class="absolute bottom-3 left-3 right-3">
+              <div class="flex justify-between items-center">
+                <div class="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
+                  <p class="text-white text-xs font-medium">#story<%= i %></p>
+                </div>
+                <div class="flex items-center">
+                  <i class="fas fa-eye text-white/80 text-xs mr-1"></i>
+                  <span class="text-white/80 text-xs"><%= Math.floor(Math.random() * 100) + 10 %></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Story Options (Your Stories Only) -->
+        <% if(i % 5 === 0) { %>
+          <div class="absolute top-3 right-3 z-10">
+            <button class="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+            
+            <!-- Dropdown Menu (Hidden by Default) -->
+            <div class="hidden absolute top-full right-0 mt-2 w-40 bg-white rounded-xl shadow-lg overflow-hidden z-20">
+              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
+                <i class="fas fa-download mr-2 text-dark-500"></i>
+                Download
+              </a>
+              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
+                <i class="fas fa-share-alt mr-2 text-dark-500"></i>
+                Share
+              </a>
+              <a href="#" class="block px-4 py-2 text-dark-700 hover:bg-dark-50 transition-colors">
+                <i class="fas fa-archive mr-2 text-dark-500"></i>
+                Archive
+              </a>
+              <a href="#" class="block px-4 py-2 text-red-600 hover:bg-red-50 transition-colors">
+                <i class="fas fa-trash-alt mr-2"></i>
+                Delete
+              </a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+  
+  <!-- Load More Button -->
+  <div class="flex justify-center mt-10 mb-10">
+    <button class="px-6 py-2.5 border border-dark-200 text-dark-700 rounded-full hover:bg-dark-50 transition-colors flex items-center">
+      <span>Load More</span>
+      <i class="fas fa-spinner ml-2"></i>
+    </button>
+  </div>
+</div>

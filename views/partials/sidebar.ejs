@@ -1,313 +1,194 @@
-<aside class="fixed inset-y-0 left-0 z-30 flex flex-col transition-all duration-300 ease-in-out transform">
-    <!-- Collapsed Sidebar (Always visible on md+) -->
-    <div class="hidden md:flex flex-col items-center w-20 h-full bg-gradient-to-b from-surface-800/95 to-surface-900/95 backdrop-blur-md border-r border-surface-700/30 py-8 overflow-y-auto">
-        <!-- Logo -->
-        <div class="mb-10 relative">
-            <div class="absolute inset-0 rounded-full bg-primary-500 blur-md opacity-40"></div>
-            <div class="relative w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-accent-600 text-white font-bold text-xl shadow-glow">
-                T
-            </div>
+<!-- Sidebar for desktop -->
+<div id="desktopSidebar" class="hidden relative md:flex flex-col bg-white shadow-lg transition-all duration-300 ease-in-out" data-expanded="false">
+  <!-- Toggle Button -->
+  <button id="sidebarToggle" class="absolute -right-4 top-20 bg-white rounded-full w-8 h-8 shadow-md flex items-center justify-center text-primary-500 hover:text-primary-600 transition-colors z-10">
+    <i class="fas fa-chevron-right transition-transform duration-300"></i>
+  </button>
+  <!-- Logo -->
+  <div class="py-6 flex justify-center px-4">
+    <a href="/" class="flex items-center">
+      <div class="w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-xl">P</div>
+      <span class="sidebar-text ml-3 text-xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text opacity-0 w-0 overflow-hidden transition-all duration-300">Pulse</span>
+    </a>
+  </div>
+
+  <!-- Navigation Links -->
+  <div class="flex-1 py-6 flex flex-col items-center justify-between w-full">
+    <div class="space-y-6 flex flex-col items-center w-full">
+      <a href="/" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/' ? 'bg-primary-200 text-primary-600' : '' %>">
+          <i class="fas fa-home text-xl"></i>
         </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Home</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Home</div>
+      </a>
 
-        <!-- Icon Navigation -->
-        <nav class="flex-1 w-full flex flex-col items-center space-y-7">
-            <!-- Home -->
-            <a href="/" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Home">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-home text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Home</span>
-            </a>
+      <a href="/explore" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/explore' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/explore' ? 'bg-primary-200 text-primary-600' : '' %>">
+          <i class="fas fa-compass text-xl"></i>
+        </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/explore' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Explore</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Explore</div>
+      </a>
 
-            <!-- Profile -->
-            <a href="/profile" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Profile">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-user text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Profile</span>
-            </a>
+      <a href="/notifications" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/notifications' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/notifications' ? 'bg-primary-200 text-primary-600' : '' %> relative">
+          <i class="fas fa-bell text-xl"></i>
+          <span class="absolute -top-1 -right-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+        </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/notifications' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Notifications</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Notifications</div>
+      </a>
 
-            <!-- Messages -->
-            <a href="/chat" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Messages">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-comment-alt text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <% if (user.messages > 0) { %>
-                    <span class="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.messages %></span>
-                <% } %>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Messages</span>
-            </a>
+      <a href="/messages" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/messages' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/messages' ? 'bg-primary-200 text-primary-600' : '' %>">
+          <i class="fas fa-envelope text-xl"></i>
+        </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/messages' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Messages</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Messages</div>
+      </a>
 
-            <!-- Video Calls -->
-            <a href="/video-call" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Video Calls">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-video text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Video Calls</span>
-            </a>
+      <a href="/profile" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/profile' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/profile' ? 'bg-primary-200 text-primary-600' : '' %>">
+          <i class="fas fa-user text-xl"></i>
+        </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/profile' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Profile</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Profile</div>
+      </a>
 
-            <!-- Notifications -->
-            <a href="/notifications" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Notifications">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-bell text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <% if (user.notifications > 0) { %>
-                    <span class="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.notifications %></span>
-                <% } %>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Notifications</span>
-            </a>
-
-            <!-- Settings -->
-            <a href="/settings" class="group relative w-12 h-12 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all duration-200" data-tooltip="Settings">
-                <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-20 group-hover:blur-sm transition-all duration-200"></div>
-                <i class="fas fa-cog text-xl text-white group-hover:scale-110 transition-transform duration-200"></i>
-                <span class="absolute left-full ml-3 px-3 py-1.5 rounded-lg bg-surface-800/95 backdrop-blur-md text-white text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none shadow-glass border border-white/10 z-50">Settings</span>
-            </a>
-        </nav>
-
-        <!-- Create Post Button -->
-        <button class="group relative w-14 h-14 flex items-center justify-center rounded-2xl bg-gradient-to-r from-primary-600 to-accent-600 text-white shadow-glow hover:shadow-neon transition-all duration-300 mt-8 hover:scale-105">
-            <div class="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-300"></div>
-            <i class="fas fa-plus text-xl group-hover:scale-110 transition-transform duration-200 relative z-10"></i>
-        </button>
+      <a href="/create" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/create' ? 'active' : '' %>">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white transition-all hover:shadow-lg">
+          <i class="fas fa-plus text-xl"></i>
+        </div>
+        <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/create' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
+        <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Create Post</span>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">Create Post</div>
+      </a>
     </div>
 
-    <!-- Expanded Sidebar (Hidden by default, shown when expanded) -->
-    <div class="hidden lg:flex flex-col w-72 h-full bg-gradient-to-b from-surface-800/95 to-surface-900/95 backdrop-blur-md border-r border-surface-700/30 py-8 px-6 ml-20 overflow-y-auto">
-        <!-- User Profile -->
-        <div class="mb-10">
-            <div class="flex items-center space-x-4 mb-6">
-                <div class="relative">
-                    <div class="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 blur-md opacity-40"></div>
-                    <img src="<%= user.avatar %>" alt="<%= user.name %>" class="relative w-14 h-14 rounded-full object-cover border-2 border-primary-500/30">
-                </div>
-                <div>
-                    <h3 class="font-semibold text-white text-lg"><%= user.name %></h3>
-                    <p class="text-sm text-surface-300 flex items-center">
-                        <span>@<%= user.username %></span>
-                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400 ml-2 mr-1"></span>
-                        <span class="text-xs text-green-400">Online</span>
-                    </p>
-                </div>
-            </div>
-
-            <!-- User Stats -->
-            <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/5 shadow-glass">
-                <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                    <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">86</p>
-                    <p class="text-xs text-surface-300">Posts</p>
-                </div>
-                <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                    <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">1.2K</p>
-                    <p class="text-xs text-surface-300">Followers</p>
-                </div>
-                <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                    <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">420</p>
-                    <p class="text-xs text-surface-300">Following</p>
-                </div>
-            </div>
+    <!-- User Profile -->
+    <div class="mt-auto pt-4 px-4 w-full">
+      <a href="/profile" class="group relative flex items-center">
+        <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-xl border-2 border-primary-200">
+          JD
         </div>
-
-        <!-- Navigation Menu -->
-        <div class="mb-10">
-            <h3 class="font-medium text-sm uppercase tracking-wider text-surface-400 mb-4 px-2">Menu</h3>
-            <nav class="space-y-2">
-                <a href="/" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-white/10 text-white group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-30 blur-sm"></div>
-                        <i class="fas fa-home text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Home</span>
-                </a>
-
-                <a href="/profile" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                        <i class="fas fa-user text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Profile</span>
-                </a>
-
-                <a href="/chat" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                        <i class="fas fa-comment-alt text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Messages</span>
-                    <% if (user.messages > 0) { %>
-                        <span class="ml-auto inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.messages %></span>
-                    <% } %>
-                </a>
-
-                <a href="/video-call" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                        <i class="fas fa-video text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Video Calls</span>
-                </a>
-
-                <a href="/notifications" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                        <i class="fas fa-bell text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Notifications</span>
-                    <% if (user.notifications > 0) { %>
-                        <span class="ml-auto inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.notifications %></span>
-                    <% } %>
-                </a>
-
-                <a href="/settings" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                    <div class="relative w-8 h-8 flex items-center justify-center">
-                        <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                        <i class="fas fa-cog text-lg relative z-10 text-white"></i>
-                    </div>
-                    <span class="font-medium">Settings</span>
-                </a>
-            </nav>
+        <div class="sidebar-text ml-3 opacity-0 w-0 overflow-hidden transition-all duration-300">
+          <p class="font-medium text-dark-800">John Doe</p>
+          <p class="text-dark-500 text-sm">@johndoe</p>
         </div>
+        <div class="tooltip absolute left-20 bg-dark-800 text-white text-sm py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">@johndoe</div>
+      </a>
+    </div>
+  </div>
+</div>
 
-        <!-- Create Post Button -->
-        <button class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary-600 to-accent-600 text-white font-medium shadow-glow hover:shadow-neon transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.02] mb-8">
-            <i class="fas fa-plus"></i>
-            <span>Create Post</span>
-        </button>
+<!-- Mobile Bottom Navigation Bar -->
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-dark-100 z-40 px-2 py-2">
+  <div class="flex justify-between items-center">
+    <a href="/" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors">
+      <i class="fas fa-home text-xl"></i>
+    </a>
 
-        <!-- Premium Upgrade -->
-        <div class="p-4 rounded-2xl bg-gradient-to-br from-primary-900/50 to-accent-900/50 backdrop-blur-sm border border-white/5 shadow-glass relative overflow-hidden">
-            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-            <div class="absolute -right-6 -top-6 w-16 h-16 bg-white/5 rounded-full blur-lg"></div>
+    <a href="/explore" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors">
+      <i class="fas fa-compass text-xl"></i>
+    </a>
 
-            <h4 class="font-semibold text-white mb-2 relative z-10">Upgrade to Premium</h4>
-            <p class="text-sm text-surface-300 mb-4 relative z-10">Get exclusive features and ad-free experience</p>
-            <button class="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors duration-200 relative z-10 border border-white/10">Learn More</button>
-        </div>
+    <a href="/create" class="flex flex-col items-center justify-center w-14 h-14 -mt-5 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 text-white shadow-lg">
+      <i class="fas fa-plus text-xl"></i>
+    </a>
+
+    <a href="/notifications" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors relative">
+      <i class="fas fa-bell text-xl"></i>
+      <span class="absolute top-1 right-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+    </a>
+
+    <a href="/profile" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors">
+      <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="Profile" class="w-8 h-8 rounded-full border-2 border-primary-200">
+    </a>
+  </div>
+</div>
+
+<!-- Mobile Sidebar Menu (hidden by default) -->
+<div id="mobileSidebar" class="fixed inset-0 z-50 hidden">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-dark-900 bg-opacity-50" id="sidebarBackdrop"></div>
+
+  <!-- Sidebar Content -->
+  <div class="absolute left-0 top-0 bottom-0 w-64 bg-white shadow-lg transform -translate-x-full transition-transform duration-300" id="sidebarContent">
+    <!-- Header -->
+    <div class="p-4 border-b flex justify-between items-center">
+      <div class="flex items-center">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white font-bold text-xl">P</div>
+        <span class="ml-3 text-xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">Pulse</span>
+      </div>
+      <button id="closeSidebar" class="w-8 h-8 rounded-full bg-dark-50 flex items-center justify-center text-dark-500 hover:bg-dark-100">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
-    <!-- Mobile Sidebar (Hidden by default, shown when menu button is clicked) -->
-    <div class="fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0 w-80 bg-gradient-to-b from-surface-800/95 to-surface-900/95 backdrop-blur-md z-50 transition-transform duration-300 ease-in-out" id="mobile-sidebar">
-        <div class="flex flex-col h-full p-6 overflow-y-auto">
-            <!-- Close Button -->
-            <button class="md:hidden absolute top-6 right-6 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors duration-200 backdrop-blur-sm border border-white/10" id="close-sidebar-button">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <!-- Logo -->
-            <div class="flex items-center space-x-3 mb-10 mt-4">
-                <div class="relative">
-                    <div class="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 blur-md opacity-40"></div>
-                    <div class="relative w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-primary-600 to-accent-600 text-white font-bold text-xl shadow-glow">
-                        T
-                    </div>
-                </div>
-                <span class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-surface-300">Talkie</span>
-            </div>
-
-            <!-- User Profile -->
-            <div class="mb-8">
-                <div class="flex items-center space-x-4 mb-6">
-                    <div class="relative">
-                        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 blur-md opacity-40"></div>
-                        <img src="<%= user.avatar %>" alt="<%= user.name %>" class="relative w-14 h-14 rounded-full object-cover border-2 border-primary-500/30">
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-white text-lg"><%= user.name %></h3>
-                        <p class="text-sm text-surface-300 flex items-center">
-                            <span>@<%= user.username %></span>
-                            <span class="inline-block w-1.5 h-1.5 rounded-full bg-green-400 ml-2 mr-1"></span>
-                            <span class="text-xs text-green-400">Online</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- User Stats -->
-                <div class="grid grid-cols-3 gap-3 p-4 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/5 shadow-glass">
-                    <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                        <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">86</p>
-                        <p class="text-xs text-surface-300">Posts</p>
-                    </div>
-                    <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                        <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">1.2K</p>
-                        <p class="text-xs text-surface-300">Followers</p>
-                    </div>
-                    <div class="text-center group cursor-pointer hover:bg-white/5 p-2 rounded-xl transition-colors duration-200">
-                        <p class="text-xl font-bold text-white group-hover:text-primary-400 transition-colors duration-200">420</p>
-                        <p class="text-xs text-surface-300">Following</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Navigation Menu -->
-            <div class="mb-8">
-                <h3 class="font-medium text-sm uppercase tracking-wider text-surface-400 mb-4 px-2">Menu</h3>
-                <nav class="space-y-2">
-                    <a href="/" class="flex items-center space-x-3 px-4 py-3 rounded-xl bg-white/10 text-white group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-30 blur-sm"></div>
-                            <i class="fas fa-home text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Home</span>
-                    </a>
-
-                    <a href="/profile" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                            <i class="fas fa-user text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Profile</span>
-                    </a>
-
-                    <a href="/chat" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                            <i class="fas fa-comment-alt text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Messages</span>
-                        <% if (user.messages > 0) { %>
-                            <span class="ml-auto inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.messages %></span>
-                        <% } %>
-                    </a>
-
-                    <a href="/video-call" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                            <i class="fas fa-video text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Video Calls</span>
-                    </a>
-
-                    <a href="/notifications" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                            <i class="fas fa-bell text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Notifications</span>
-                        <% if (user.notifications > 0) { %>
-                            <span class="ml-auto inline-flex items-center justify-center w-6 h-6 text-xs font-medium text-white bg-gradient-to-r from-primary-500 to-accent-500 rounded-full shadow-glow"><%= user.notifications %></span>
-                        <% } %>
-                    </a>
-
-                    <a href="/settings" class="flex items-center space-x-3 px-4 py-3 rounded-xl hover:bg-white/10 text-white transition-colors duration-200 group">
-                        <div class="relative w-8 h-8 flex items-center justify-center">
-                            <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-primary-500 to-accent-500 opacity-0 group-hover:opacity-30 blur-sm transition-opacity duration-200"></div>
-                            <i class="fas fa-cog text-lg relative z-10 text-white"></i>
-                        </div>
-                        <span class="font-medium">Settings</span>
-                    </a>
-                </nav>
-            </div>
-
-            <!-- Create Post Button -->
-            <button class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-primary-600 to-accent-600 text-white font-medium shadow-glow hover:shadow-neon transition-all duration-300 flex items-center justify-center space-x-2 hover:scale-[1.02] mb-8">
-                <i class="fas fa-plus"></i>
-                <span>Create Post</span>
-            </button>
-
-            <!-- Premium Upgrade -->
-            <div class="p-4 rounded-2xl bg-gradient-to-br from-primary-900/50 to-accent-900/50 backdrop-blur-sm border border-white/5 shadow-glass relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
-                <div class="absolute -right-6 -top-6 w-16 h-16 bg-white/5 rounded-full blur-lg"></div>
-
-                <h4 class="font-semibold text-white mb-2 relative z-10">Upgrade to Premium</h4>
-                <p class="text-sm text-surface-300 mb-4 relative z-10">Get exclusive features and ad-free experience</p>
-                <button class="w-full py-2 px-4 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors duration-200 relative z-10 border border-white/10">Learn More</button>
-            </div>
+    <!-- User Profile -->
+    <div class="p-4 border-b">
+      <div class="flex items-center space-x-3">
+        <img src="https://ui-avatars.com/api/?name=John+Doe&background=0D8ABC&color=fff" alt="Profile" class="w-14 h-14 rounded-full border-2 border-primary-200">
+        <div>
+          <h3 class="font-semibold text-dark-800 text-lg">John Doe</h3>
+          <p class="text-dark-500">@johndoe</p>
         </div>
+      </div>
+      <div class="flex mt-4 space-x-4 text-center">
+        <div class="flex-1">
+          <div class="font-semibold text-dark-900">248</div>
+          <div class="text-dark-500 text-sm">Posts</div>
+        </div>
+        <div class="flex-1">
+          <div class="font-semibold text-dark-900">12.4K</div>
+          <div class="text-dark-500 text-sm">Followers</div>
+        </div>
+        <div class="flex-1">
+          <div class="font-semibold text-dark-900">843</div>
+          <div class="text-dark-500 text-sm">Following</div>
+        </div>
+      </div>
     </div>
-</aside>
+
+    <!-- Menu Items -->
+    <div class="py-4 px-4 space-y-2">
+      <a href="/messages" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-envelope w-6 text-center"></i>
+        <span class="font-medium">Messages</span>
+      </a>
+
+      <a href="/bookmarks" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-bookmark w-6 text-center"></i>
+        <span class="font-medium">Saved Posts</span>
+      </a>
+
+      <a href="/friends" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-users w-6 text-center"></i>
+        <span class="font-medium">Friends</span>
+      </a>
+
+      <a href="/settings" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-cog w-6 text-center"></i>
+        <span class="font-medium">Settings</span>
+      </a>
+
+      <div class="border-t my-2"></div>
+
+      <a href="/help" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-question-circle w-6 text-center"></i>
+        <span class="font-medium">Help & Support</span>
+      </a>
+
+      <a href="/logout" class="flex items-center space-x-3 px-4 py-3 rounded-xl text-dark-600 hover:bg-primary-50 hover:text-primary-600 transition-all">
+        <i class="fas fa-sign-out-alt w-6 text-center"></i>
+        <span class="font-medium">Log Out</span>
+      </a>
+    </div>
+  </div>
+</div>

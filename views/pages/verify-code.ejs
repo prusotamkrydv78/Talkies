@@ -1,0 +1,145 @@
+<!-- Verification Code Form -->
+<div class="text-center mb-6">
+  <h1 class="text-2xl font-bold bg-gradient-to-r from-primary-500 to-secondary-500 text-transparent bg-clip-text">Verify Your Email</h1>
+  <p class="text-dark-500 mt-1 text-sm">Enter the 6-digit code sent to your email</p>
+</div>
+
+<form class="space-y-4">
+  <!-- Verification Code Input -->
+  <div>
+    <label for="verificationCode" class="block text-sm font-medium text-dark-700 mb-1">Verification Code</label>
+    <div class="flex justify-between gap-2">
+      <% for(let i = 1; i <= 6; i++) { %>
+        <input 
+          type="text" 
+          id="code<%= i %>" 
+          name="code<%= i %>" 
+          maxlength="1"
+          class="w-full aspect-square py-2.5 text-center text-lg font-semibold border border-dark-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          required
+          onkeyup="moveToNext(this, <%=i%>)"
+        >
+      <% } %>
+    </div>
+  </div>
+  
+  <!-- Timer -->
+  <div class="text-center">
+    <p class="text-dark-500 text-sm">
+      Code expires in <span id="timer" class="font-medium text-primary-500">05:00</span>
+    </p>
+  </div>
+  
+  <!-- Submit Button -->
+  <button 
+    type="submit" 
+    class="w-full py-2.5 px-4 bg-gradient-to-r from-primary-500 to-secondary-500 text-white font-medium rounded-xl hover:shadow-lg transition-all duration-200"
+  >
+    Verify Code
+  </button>
+  
+  <!-- Resend Code -->
+  <div class="text-center">
+    <p class="text-dark-600 text-sm">
+      Didn't receive the code? 
+      <button type="button" id="resendBtn" class="text-primary-500 hover:text-primary-600 font-medium disabled:text-dark-400 disabled:cursor-not-allowed" disabled>
+        Resend code
+      </button>
+    </p>
+  </div>
+  
+  <!-- Back to Login Link -->
+  <div class="text-center mt-2">
+    <p class="text-dark-600 text-sm">
+      <a href="/login" class="text-primary-500 hover:text-primary-600 font-medium">Back to login</a>
+    </p>
+  </div>
+</form>
+
+<!-- Information Box -->
+<div class="mt-8 bg-primary-50 border border-primary-100 rounded-xl p-4">
+  <div class="flex items-start">
+    <div class="flex-shrink-0 pt-0.5">
+      <i class="fas fa-info-circle text-primary-500"></i>
+    </div>
+    <div class="ml-3">
+      <h3 class="text-sm font-medium text-primary-800">Having trouble?</h3>
+      <div class="mt-1 text-sm text-primary-700">
+        <p>Make sure to check your spam folder. If you still don't see the email, you can request a new code after the timer expires.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Function to move to next input field
+  function moveToNext(field, index) {
+    // Get the value of the current field
+    let value = field.value;
+    
+    // If a value is entered and there's a next field, move to it
+    if (value.length === 1 && index < 6) {
+      document.getElementById('code' + (index + 1)).focus();
+    }
+    
+    // If backspace is pressed and there's a previous field, move to it
+    if (value.length === 0 && index > 1) {
+      document.getElementById('code' + (index - 1)).focus();
+    }
+  }
+  
+  // Timer functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    let timerElement = document.getElementById('timer');
+    let resendBtn = document.getElementById('resendBtn');
+    let totalSeconds = 5 * 60; // 5 minutes
+    
+    let timerInterval = setInterval(function() {
+      totalSeconds--;
+      
+      if (totalSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerElement.textContent = '00:00';
+        resendBtn.disabled = false;
+        return;
+      }
+      
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+      
+      timerElement.textContent = 
+        (minutes < 10 ? '0' + minutes : minutes) + ':' + 
+        (seconds < 10 ? '0' + seconds : seconds);
+    }, 1000);
+    
+    // Resend button click handler
+    resendBtn.addEventListener('click', function() {
+      // Reset timer
+      totalSeconds = 5 * 60;
+      resendBtn.disabled = true;
+      
+      // Start timer again
+      timerInterval = setInterval(function() {
+        totalSeconds--;
+        
+        if (totalSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerElement.textContent = '00:00';
+          resendBtn.disabled = false;
+          return;
+        }
+        
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+        
+        timerElement.textContent = 
+          (minutes < 10 ? '0' + minutes : minutes) + ':' + 
+          (seconds < 10 ? '0' + seconds : seconds);
+      }, 1000);
+      
+      // Here you would also make an API call to resend the code
+      // For now, just show a message
+      alert('A new verification code has been sent to your email.');
+    });
+  });
+</script>

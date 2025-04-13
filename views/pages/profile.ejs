@@ -1,226 +1,342 @@
+<div class="max-w-5xl mx-auto">
+  <!-- Profile Header -->
+  <div class="card mb-6 p-0 overflow-hidden">
+    <!-- Cover Photo -->
+    <div class="h-60 bg-gradient-to-r from-primary-400 to-secondary-500 relative overflow-hidden">
+      <!-- Fallback gradient background is already applied -->
+      <div class="absolute inset-0 flex items-center justify-center text-white/20 text-8xl">
+        <i class="fas fa-mountain"></i>
+      </div>
 
-
-<%
-// Sample data for posts
-const posts = [
-    {
-        id: 1,
-        author: { name: user.name, username: user.username, avatar: user.avatar },
-        content: 'Just finished my morning hike! The view was absolutely breathtaking. Nature always has a way of putting things into perspective. #MorningHike #NatureLover',
-        image: 'https://source.unsplash.com/random/800x600?hiking',
-        video: null,
-        timeAgo: '2 days ago',
-        likes: 42,
-        comments: 8,
-        shares: 3,
-        commentsList: [
-            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks amazing! Where is this?', timeAgo: '2 days ago' },
-            { author: { name: 'Sarah Williams', avatar: 'https://i.pravatar.cc/150?img=20' }, content: 'I need to go there! 😍', timeAgo: '2 days ago' }
-        ]
-    },
-    {
-        id: 2,
-        author: { name: user.name, username: user.username, avatar: user.avatar },
-        content: 'Working on a new project! Can\'t wait to share it with everyone. #Coding #NewProject',
-        image: 'https://source.unsplash.com/random/800x600?coding',
-        video: null,
-        timeAgo: '1 week ago',
-        likes: 76,
-        comments: 12,
-        shares: 5,
-        commentsList: [
-            { author: { name: 'Jane Smith', avatar: 'https://i.pravatar.cc/150?img=5' }, content: 'Can\'t wait to see it!', timeAgo: '1 week ago' },
-            { author: { name: 'Mike Johnson', avatar: 'https://i.pravatar.cc/150?img=12' }, content: 'Looks interesting!', timeAgo: '1 week ago' }
-        ]
-    }
-];
-
-// Sample data for photos
-const photos = [
-    'https://source.unsplash.com/random/300x300?nature',
-    'https://source.unsplash.com/random/300x300?city',
-    'https://source.unsplash.com/random/300x300?people',
-    'https://source.unsplash.com/random/300x300?technology',
-    'https://source.unsplash.com/random/300x300?food',
-    'https://source.unsplash.com/random/300x300?travel'
-];
-
-// Sample data for friends
-const friends = [
-    { name: 'Jane Smith', username: 'janesmith', avatar: 'https://i.pravatar.cc/150?img=5' },
-    { name: 'Mike Johnson', username: 'mikejohnson', avatar: 'https://i.pravatar.cc/150?img=12' },
-    { name: 'Sarah Williams', username: 'sarahwilliams', avatar: 'https://i.pravatar.cc/150?img=20' },
-    { name: 'Alex Brown', username: 'alexbrown', avatar: 'https://i.pravatar.cc/150?img=33' },
-    { name: 'Emily Davis', username: 'emilydavis', avatar: 'https://i.pravatar.cc/150?img=25' },
-    { name: 'David Wilson', username: 'davidwilson', avatar: 'https://i.pravatar.cc/150?img=15' }
-];
-%>
-
-<div class="max-w-4xl mx-auto">
-    <!-- Profile Header -->
-    <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden mb-6">
-        <!-- Cover Photo -->
-        <div class="h-48 md:h-64 bg-gradient-to-r from-primary-400 to-secondary-500 relative">
-            <img src="https://source.unsplash.com/random/1200x400?landscape" alt="Cover photo" class="w-full h-full object-cover">
-
-            <!-- Profile Picture -->
-            <div class="absolute -bottom-16 left-6 p-1 rounded-full bg-white dark:bg-dark-800">
-                <div class="p-1 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500">
-                    <img src="<%= user.avatar %>" alt="<%= user.name %>" class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-dark-800">
-                </div>
-            </div>
-
-            <!-- Edit Profile Button -->
-            <div class="absolute bottom-4 right-4">
-                <button class="bg-white dark:bg-dark-800 text-dark-900 dark:text-white hover:bg-gray-100 dark:hover:bg-dark-700 font-medium py-2 px-4 rounded-lg flex items-center space-x-2 shadow-md">
-                    <i class="fas fa-pencil-alt"></i>
-                    <span>Edit Profile</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Profile Info -->
-        <div class="pt-20 pb-6 px-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                <div>
-                    <h1 class="text-2xl font-bold text-dark-900 dark:text-white"><%= user.name %></h1>
-                    <p class="text-gray-500 dark:text-gray-400">@<%= user.username %></p>
-                    <p class="mt-2 text-dark-800 dark:text-gray-200"><%= user.bio %></p>
-                </div>
-
-                <div class="flex items-center space-x-4 mt-4 md:mt-0">
-                    <div class="text-center">
-                        <p class="font-bold text-dark-900 dark:text-white"><%= user.posts %></p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Posts</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="font-bold text-dark-900 dark:text-white"><%= user.followers %></p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Followers</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="font-bold text-dark-900 dark:text-white"><%= user.following %></p>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Following</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Profile Navigation -->
-            <div class="border-t border-gray-200 dark:border-dark-700 pt-4 mt-4">
-                <nav class="flex space-x-4">
-                    <a href="#posts" class="px-3 py-2 text-primary-500 border-b-2 border-primary-500 font-medium">Posts</a>
-                    <a href="#photos" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Photos</a>
-                    <a href="#friends" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">Friends</a>
-                    <a href="#about" class="px-3 py-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 font-medium">About</a>
-                </nav>
-            </div>
-        </div>
+      <div class="absolute bottom-4 right-4 flex space-x-2">
+        <button class="bg-white/80 backdrop-blur-sm text-gray-700 hover:bg-white/90 px-4 py-2 rounded-lg shadow-sm transition-all">
+          <i class="fas fa-camera mr-2"></i>
+          Edit Cover
+        </button>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Left Sidebar -->
-        <div class="md:col-span-1 space-y-6">
-            <!-- About -->
-            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-4 border-b border-gray-200 dark:border-dark-700">
-                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">About</h3>
-                </div>
-                <div class="p-4 space-y-3">
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-briefcase text-gray-500 dark:text-gray-400 w-5"></i>
-                        <p class="text-dark-800 dark:text-gray-200">Digital Creator at Creative Studios</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-graduation-cap text-gray-500 dark:text-gray-400 w-5"></i>
-                        <p class="text-dark-800 dark:text-gray-200">Studied at Design University</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-home text-gray-500 dark:text-gray-400 w-5"></i>
-                        <p class="text-dark-800 dark:text-gray-200">Lives in New York, USA</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-map-marker-alt text-gray-500 dark:text-gray-400 w-5"></i>
-                        <p class="text-dark-800 dark:text-gray-200">From San Francisco, USA</p>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <i class="fas fa-heart text-gray-500 dark:text-gray-400 w-5"></i>
-                        <p class="text-dark-800 dark:text-gray-200">Single</p>
-                    </div>
-                </div>
+    <!-- Profile Info -->
+    <div class="px-6 pb-6 relative">
+      <div class="flex flex-col md:flex-row md:items-end">
+        <!-- Profile Picture -->
+        <div class="relative -mt-16 md:-mt-20 mb-4 md:mb-0">
+          <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white overflow-hidden shadow-md">
+            <!-- Fallback profile image using initials -->
+            <div class="w-full h-full bg-primary-500 flex items-center justify-center text-white text-4xl font-bold">
+              JD
             </div>
-
-            <!-- Photos -->
-            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-4 border-b border-gray-200 dark:border-dark-700 flex justify-between items-center">
-                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">Photos</h3>
-                    <a href="#" class="text-primary-500 hover:text-primary-600 text-sm font-medium">See All</a>
-                </div>
-                <div class="p-4">
-                    <div class="grid grid-cols-3 gap-2">
-                        <% photos.forEach(photo => { %>
-                            <div class="aspect-square rounded-lg overflow-hidden">
-                                <img src="<%= photo %>" alt="Photo" class="w-full h-full object-cover">
-                            </div>
-                        <% }); %>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Friends -->
-            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden">
-                <div class="p-4 border-b border-gray-200 dark:border-dark-700 flex justify-between items-center">
-                    <h3 class="font-semibold text-lg text-dark-900 dark:text-white">Friends</h3>
-                    <a href="#" class="text-primary-500 hover:text-primary-600 text-sm font-medium">See All</a>
-                </div>
-                <div class="p-4">
-                    <div class="grid grid-cols-3 gap-3">
-                        <% friends.forEach(friend => { %>
-                            <div class="text-center">
-                                <div class="aspect-square rounded-lg overflow-hidden mb-1">
-                                    <img src="<%= friend.avatar %>" alt="<%= friend.name %>" class="w-full h-full object-cover">
-                                </div>
-                                <p class="text-dark-800 dark:text-gray-200 text-sm truncate"><%= friend.name.split(' ')[0] %></p>
-                            </div>
-                        <% }); %>
-                    </div>
-                </div>
-            </div>
+          </div>
+          <button class="absolute bottom-2 right-2 bg-white rounded-full p-2 shadow-md text-gray-700 hover:text-primary-500 transition-all">
+            <i class="fas fa-camera"></i>
+          </button>
         </div>
 
-        <!-- Main Content -->
-        <div class="md:col-span-2">
-            <!-- Create Post -->
-            <div class="bg-white dark:bg-dark-800 rounded-xl shadow-md overflow-hidden mb-6">
-                <div class="p-4">
-                    <div class="flex items-center space-x-3">
-                        <img src="<%= user.avatar %>" alt="<%= user.name %>" class="w-10 h-10 rounded-full object-cover border-2 border-primary-300">
-                        <div class="flex-1 bg-gray-100 dark:bg-dark-700 rounded-full px-4 py-2 cursor-pointer hover:bg-gray-200 dark:hover:bg-dark-600 transition duration-200">
-                            <p class="text-gray-500 dark:text-gray-400">What's on your mind, <%= user.name.split(' ')[0] %>?</p>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between mt-4 pt-3 border-t border-gray-100 dark:border-dark-700">
-                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
-                            <i class="fas fa-image text-accent-500"></i>
-                            <span>Photo</span>
-                        </button>
-                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
-                            <i class="fas fa-video text-secondary-500"></i>
-                            <span>Video</span>
-                        </button>
-                        <button class="flex items-center space-x-2 text-gray-500 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 p-2 rounded-md hover:bg-gray-100 dark:hover:bg-dark-700">
-                            <i class="far fa-smile text-primary-500"></i>
-                            <span>Feeling</span>
-                        </button>
-                    </div>
-                </div>
+        <div class="md:ml-6 flex-1">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+              <h1 class="text-2xl font-bold">John Doe</h1>
+              <div class="flex items-center">
+                <p class="text-gray-500">@johndoe</p>
+                <span class="ml-2 bg-primary-100 text-primary-600 text-xs px-2 py-0.5 rounded-full font-medium">Pro</span>
+              </div>
             </div>
 
-            <!-- Posts -->
-            <div class="space-y-6">
-                <% posts.forEach(post => { %>
-                    <%- include('../partials/post', { post, user }) %>
-                <% }); %>
+            <div class="mt-4 md:mt-0 flex space-x-2">
+              <button class="bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg shadow-sm transition-all">
+                <i class="fas fa-user-plus mr-2"></i>
+                Follow
+              </button>
+              <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 px-4 py-2 rounded-lg shadow-sm transition-all">
+                <i class="fas fa-envelope mr-2"></i>
+                Message
+              </button>
+              <button class="bg-gray-100 text-gray-700 hover:bg-gray-200 p-2 rounded-lg shadow-sm transition-all">
+                <i class="fas fa-ellipsis-h"></i>
+              </button>
             </div>
+          </div>
+
+          <div class="mt-4">
+            <p class="text-gray-700">Digital creator and tech enthusiast. Sharing my journey through photography, coding, and everyday adventures. ✨</p>
+          </div>
+
+          <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            <div class="flex items-center text-gray-500">
+              <i class="fas fa-map-marker-alt mr-2 text-primary-500"></i>
+              <span>San Francisco, CA</span>
+            </div>
+
+            <div class="flex items-center text-gray-500">
+              <i class="fas fa-link mr-2 text-primary-500"></i>
+              <a href="#" class="text-primary-500 hover:underline">johndoe.com</a>
+            </div>
+
+            <div class="flex items-center text-gray-500">
+              <i class="fas fa-calendar-alt mr-2 text-primary-500"></i>
+              <span>Joined June 2020</span>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div class="mt-6 flex border-b">
+        <button class="px-4 py-3 font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all flex items-center">
+          <i class="fas fa-th-large mr-2"></i>
+          <span>Posts</span>
+        </button>
+        <button class="px-4 py-3 font-medium text-gray-900 border-b-2 border-primary-500 transition-all flex items-center">
+          <i class="fas fa-image mr-2 text-primary-500"></i>
+          <span>Photos</span>
+        </button>
+        <button class="px-4 py-3 font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all flex items-center">
+          <i class="fas fa-video mr-2"></i>
+          <span>Videos</span>
+        </button>
+        <button class="px-4 py-3 font-medium text-gray-500 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 transition-all flex items-center">
+          <i class="fas fa-info-circle mr-2"></i>
+          <span>About</span>
+        </button>
+      </div>
     </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 mr-3">
+            <i class="fas fa-file-alt text-lg"></i>
+          </div>
+          <h3 class="font-semibold text-lg">Posts</h3>
+        </div>
+        <span class="text-2xl font-bold text-primary-500">248</span>
+      </div>
+      <p class="text-gray-500 text-sm mt-3 ml-13">12 new posts this week</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-500 mr-3">
+            <i class="fas fa-users text-lg"></i>
+          </div>
+          <h3 class="font-semibold text-lg">Followers</h3>
+        </div>
+        <span class="text-2xl font-bold text-secondary-500">12.4K</span>
+      </div>
+      <p class="text-gray-500 text-sm mt-3 ml-13">+248 followers this month</p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm p-5 hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mr-3">
+            <i class="fas fa-user-plus text-lg"></i>
+          </div>
+          <h3 class="font-semibold text-lg">Following</h3>
+        </div>
+        <span class="text-2xl font-bold text-purple-500">843</span>
+      </div>
+      <p class="text-gray-500 text-sm mt-3 ml-13">Followed 18 new accounts</p>
+    </div>
+  </div>
+
+  <!-- Photo Grid -->
+  <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="flex justify-between items-center mb-4">
+      <div class="flex items-center">
+        <i class="fas fa-images text-primary-500 mr-3 text-xl"></i>
+        <h3 class="font-semibold text-lg">Photos</h3>
+      </div>
+      <a href="#" class="text-primary-500 text-sm hover:underline flex items-center">
+        View All
+        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <% for (let i = 1; i <= 8; i++) { %>
+        <div class="relative group rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+          <!-- Fallback gradient background with icon -->
+          <div class="w-full h-48 bg-gradient-to-br from-<%= ['primary', 'secondary', 'purple', 'blue', 'green', 'yellow', 'red', 'indigo'][i % 8] %>-100 to-<%= ['primary', 'secondary', 'purple', 'blue', 'green', 'yellow', 'red', 'indigo'][i % 8] %>-200 flex items-center justify-center">
+            <i class="fas fa-<%= ['mountain', 'tree', 'water', 'leaf', 'sun', 'cloud', 'fire', 'star'][i % 8] %> text-<%= ['primary', 'secondary', 'purple', 'blue', 'green', 'yellow', 'red', 'indigo'][i % 8] %>-400 text-4xl group-hover:scale-110 transition-transform"></i>
+          </div>
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
+            <div class="text-white flex space-x-3">
+              <button class="hover:text-primary-400 bg-black/30 p-2 rounded-full">
+                <i class="fas fa-heart"></i>
+              </button>
+              <button class="hover:text-primary-400 bg-black/30 p-2 rounded-full">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Recent Posts -->
+  <div class="mt-6">
+    <div class="flex items-center mb-4">
+      <i class="fas fa-file-alt text-primary-500 mr-3 text-xl"></i>
+      <h3 class="font-semibold text-lg">Recent Posts</h3>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Post 1 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center space-x-3">
+            <!-- Profile picture with initials fallback -->
+            <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+              JD
+            </div>
+            <div>
+              <h4 class="font-semibold">John Doe</h4>
+              <p class="text-gray-500 text-sm">Yesterday at 3:45 PM</p>
+            </div>
+          </div>
+
+          <button class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <p class="mb-3">Just got back from an amazing weekend trip to the mountains. The views were incredible and the air was so fresh. Can't wait to go back! 🏔️ #WeekendGetaway #MountainVibes</p>
+          <div class="grid grid-cols-2 gap-2 rounded-xl overflow-hidden">
+            <!-- Fallback image placeholders with gradients -->
+            <div class="w-full h-48 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+              <i class="fas fa-mountain text-blue-400 text-4xl"></i>
+            </div>
+            <div class="w-full h-48 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+              <i class="fas fa-tree text-green-400 text-4xl"></i>
+            </div>
+            <div class="w-full h-48 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+              <i class="fas fa-cloud text-purple-400 text-4xl"></i>
+            </div>
+            <div class="relative">
+              <div class="w-full h-48 bg-gradient-to-br from-indigo-100 to-indigo-200 flex items-center justify-center">
+                <i class="fas fa-sun text-indigo-400 text-4xl"></i>
+              </div>
+              <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold">
+                +3 more
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-4 text-sm">
+          <div class="flex items-center space-x-2">
+            <div class="flex -space-x-1">
+              <div class="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-thumbs-up text-xs"></i>
+              </div>
+              <div class="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-heart text-xs"></i>
+              </div>
+              <div class="w-6 h-6 rounded-full bg-yellow-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-star text-xs"></i>
+              </div>
+            </div>
+            <span class="text-gray-500">186 likes</span>
+          </div>
+
+          <div class="text-gray-500 flex items-center space-x-3">
+            <div class="flex items-center">
+              <i class="far fa-comment text-gray-400 mr-1.5"></i>
+              <span>32</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-share text-gray-400 mr-1.5"></i>
+              <span>8</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3 flex justify-between">
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="far fa-thumbs-up mr-2"></i>
+            <span>Like</span>
+          </button>
+
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="far fa-comment mr-2"></i>
+            <span>Comment</span>
+          </button>
+
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="fas fa-share mr-2"></i>
+            <span>Share</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Post 2 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+        <div class="flex justify-between items-start mb-4">
+          <div class="flex items-center space-x-3">
+            <!-- Profile picture with initials fallback -->
+            <div class="w-10 h-10 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold">
+              JD
+            </div>
+            <div>
+              <h4 class="font-semibold">John Doe</h4>
+              <p class="text-gray-500 text-sm">Last week</p>
+            </div>
+          </div>
+
+          <button class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors">
+            <i class="fas fa-ellipsis-h"></i>
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <p>Just finished reading this amazing book! It's definitely going on my list of favorites. Has anyone else read it? Would love to hear your thoughts! 📚 #BookLovers #MustRead</p>
+        </div>
+
+        <div class="flex justify-between items-center mb-4 text-sm">
+          <div class="flex items-center space-x-2">
+            <div class="flex -space-x-1">
+              <div class="w-6 h-6 rounded-full bg-primary-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fas fa-thumbs-up text-xs"></i>
+              </div>
+            </div>
+            <span class="text-gray-500">73 likes</span>
+          </div>
+
+          <div class="text-gray-500 flex items-center space-x-3">
+            <div class="flex items-center">
+              <i class="far fa-comment text-gray-400 mr-1.5"></i>
+              <span>18</span>
+            </div>
+            <div class="flex items-center">
+              <i class="fas fa-share text-gray-400 mr-1.5"></i>
+              <span>2</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-100 pt-3 flex justify-between">
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="far fa-thumbs-up mr-2"></i>
+            <span>Like</span>
+          </button>
+
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="far fa-comment mr-2"></i>
+            <span>Comment</span>
+          </button>
+
+          <button class="flex items-center text-gray-500 hover:text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <i class="fas fa-share mr-2"></i>
+            <span>Share</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

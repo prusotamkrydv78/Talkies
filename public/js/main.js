@@ -1,5 +1,77 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize UI based on screen size
+    function initializeUI() {
+        const desktopSidebar = document.getElementById('desktopSidebar');
+        const mobileSidebar = document.getElementById('mobileSidebar');
+
+        if (desktopSidebar) {
+            if (window.innerWidth >= 1024) { // lg breakpoint
+                desktopSidebar.classList.remove('hidden');
+                desktopSidebar.classList.add('flex');
+            } else {
+                desktopSidebar.classList.remove('flex');
+                desktopSidebar.classList.add('hidden');
+            }
+        }
+
+        if (mobileSidebar) {
+            mobileSidebar.classList.add('hidden');
+        }
+    }
+
+    // Initialize UI on page load
+    initializeUI();
+
+    // Initialize UI on window resize
+    window.addEventListener('resize', initializeUI);
+    // Desktop sidebar toggle
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const desktopSidebar = document.getElementById('desktopSidebar');
+    const sidebarTexts = document.querySelectorAll('.sidebar-text');
+    const tooltips = document.querySelectorAll('.tooltip');
+
+    if (sidebarToggle && desktopSidebar) {
+        // Initialize sidebar state
+        if (window.innerWidth >= 1024) { // lg breakpoint
+            desktopSidebar.classList.remove('hidden');
+            desktopSidebar.classList.add('flex');
+        }
+
+        sidebarToggle.addEventListener('click', function() {
+            const isExpanded = desktopSidebar.getAttribute('data-expanded') === 'true';
+
+            if (isExpanded) {
+                // Collapse sidebar
+                desktopSidebar.setAttribute('data-expanded', 'false');
+                sidebarToggle.querySelector('i').classList.remove('rotate-180');
+
+                // Hide text elements
+                sidebarTexts.forEach(text => {
+                    text.classList.add('opacity-0', 'w-0');
+                });
+
+                // Show tooltips
+                tooltips.forEach(tooltip => {
+                    tooltip.classList.remove('hidden');
+                });
+            } else {
+                // Expand sidebar
+                desktopSidebar.setAttribute('data-expanded', 'true');
+                sidebarToggle.querySelector('i').classList.add('rotate-180');
+
+                // Show text elements
+                sidebarTexts.forEach(text => {
+                    text.classList.remove('opacity-0', 'w-0');
+                });
+
+                // Hide tooltips
+                tooltips.forEach(tooltip => {
+                    tooltip.classList.add('hidden');
+                });
+            }
+        });
+    }
     // Toggle user dropdown
     const userMenuButton = document.getElementById('user-menu-button');
     const userDropdown = document.getElementById('user-dropdown');
@@ -20,44 +92,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Mobile sidebar toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-    const closeSidebarButton = document.getElementById('close-sidebar-button');
-    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const openSidebarButton = document.getElementById('openSidebar');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const sidebarContent = document.getElementById('sidebarContent');
+    const closeSidebarButton = document.getElementById('closeSidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
     const body = document.body;
 
-    if (mobileMenuButton && mobileSidebar && mobileMenuBackdrop) {
+    if ((mobileMenuButton || openSidebarButton) && mobileSidebar && sidebarContent) {
         // Toggle mobile sidebar
         const toggleMobileSidebar = (show) => {
-            if (show === undefined) {
-                // Toggle current state
-                show = mobileSidebar.classList.contains('-translate-x-full');
-            }
-
             if (show) {
                 // Show sidebar
-                mobileSidebar.classList.remove('-translate-x-full');
-                mobileSidebar.classList.add('translate-x-0');
-                mobileMenuBackdrop.classList.remove('hidden');
-                body.classList.add('overflow-hidden'); // Prevent scrolling
-
-                // Add animation
-                mobileMenuBackdrop.classList.add('animate-fade-in');
+                mobileSidebar.classList.remove('hidden');
                 setTimeout(() => {
-                    mobileMenuBackdrop.classList.remove('animate-fade-in');
-                }, 300);
+                    sidebarContent.classList.remove('-translate-x-full');
+                    sidebarContent.classList.add('translate-x-0');
+                }, 10); // Small delay to ensure transition works
+                body.classList.add('overflow-hidden'); // Prevent scrolling
             } else {
                 // Hide sidebar
-                mobileSidebar.classList.remove('translate-x-0');
-                mobileSidebar.classList.add('-translate-x-full');
-                mobileMenuBackdrop.classList.add('hidden');
+                sidebarContent.classList.remove('translate-x-0');
+                sidebarContent.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    mobileSidebar.classList.add('hidden');
+                }, 300); // Wait for transition to complete
                 body.classList.remove('overflow-hidden'); // Allow scrolling
             }
         };
 
         // Toggle sidebar on button click
-        mobileMenuButton.addEventListener('click', function() {
-            toggleMobileSidebar(true);
-        });
+        if (mobileMenuButton) {
+            mobileMenuButton.addEventListener('click', function() {
+                toggleMobileSidebar(true);
+            });
+        }
+
+        if (openSidebarButton) {
+            openSidebarButton.addEventListener('click', function() {
+                toggleMobileSidebar(true);
+            });
+        }
 
         // Close sidebar when clicking close button
         if (closeSidebarButton) {
@@ -67,21 +142,61 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Close sidebar when clicking on backdrop
-        mobileMenuBackdrop.addEventListener('click', function() {
-            toggleMobileSidebar(false);
-        });
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', function() {
+                toggleMobileSidebar(false);
+            });
+        }
 
         // Close mobile sidebar when window is resized to desktop size
         window.addEventListener('resize', function() {
-            if (window.innerWidth >= 768) { // md breakpoint
+            if (window.innerWidth >= 1024) { // lg breakpoint
                 toggleMobileSidebar(false);
+
+                // Show desktop sidebar
+                if (desktopSidebar) {
+                    desktopSidebar.classList.remove('hidden');
+                    desktopSidebar.classList.add('flex');
+                }
+            } else if (window.innerWidth < 1024 && desktopSidebar) {
+                // Hide desktop sidebar on mobile
+                desktopSidebar.classList.remove('flex');
+                desktopSidebar.classList.add('hidden');
             }
         });
 
         // Close sidebar on escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mobileSidebar.classList.contains('translate-x-0')) {
+            if (e.key === 'Escape' && mobileSidebar && !mobileSidebar.classList.contains('hidden')) {
                 toggleMobileSidebar(false);
+            }
+        });
+    }
+
+    // Mobile search toggle
+    const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+    const mobileSearchPanel = document.getElementById('mobileSearchPanel');
+
+    if (mobileSearchToggle && mobileSearchPanel) {
+        mobileSearchToggle.addEventListener('click', function(e) {
+            e.stopPropagation();
+            mobileSearchPanel.classList.toggle('hidden');
+
+            if (!mobileSearchPanel.classList.contains('hidden')) {
+                // Focus the search input when panel is shown
+                const searchInput = mobileSearchPanel.querySelector('input');
+                if (searchInput) {
+                    setTimeout(() => {
+                        searchInput.focus();
+                    }, 100);
+                }
+            }
+        });
+
+        // Close search panel when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!mobileSearchToggle.contains(event.target) && !mobileSearchPanel.contains(event.target)) {
+                mobileSearchPanel.classList.add('hidden');
             }
         });
     }
