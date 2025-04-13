@@ -13,15 +13,17 @@
       </div>
       
       <!-- Search Bar -->
-      <div class="hidden md:block flex-1 max-w-xl mx-auto">
-        <div class="relative">
-          <input type="text" placeholder="Search..." class="w-full bg-dark-100 border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
-          <div class="absolute left-3 top-2.5 text-dark-400">
-            <i class="fas fa-search"></i>
+
+         <div class="hidden md:block flex-1 max-w-xl mx-auto">
+           <div class="relative">
+             <input type="text" placeholder="Search..." class="w-full bg-dark-100 border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all">
+             <div class="absolute left-3 top-2.5 text-dark-400">
+               <i class="fas fa-search"></i>
           </div>
         </div>
       </div>
       
+      <div class="flex gap-2">
       <!-- Mobile Search Button -->
       <div class="md:hidden">
         <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500">
@@ -31,10 +33,10 @@
       
       <!-- Right Actions -->
       <div class="flex items-center space-x-3">
-        <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500 relative md:hidden">
+        <a href="/notifications" class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500 relative md:hidden">
           <i class="fas fa-bell"></i>
           <span class="absolute -top-1 -right-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
-        </button>
+        </a>
         
         <div class="relative group hidden md:block">
           <button class="w-10 h-10 rounded-full bg-dark-100 flex items-center justify-center text-dark-500 group-hover:bg-primary-100 group-hover:text-primary-500 transition-all">
@@ -63,6 +65,8 @@
           </div>
         </div>
       </div>
+
+    </div>
     </div>
   </div>
   

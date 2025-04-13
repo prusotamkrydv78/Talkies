@@ -13,8 +13,8 @@
   </div>
 
   <!-- Navigation Links -->
-  <div class="flex-1 py-6 flex flex-col items-center justify-between w-full">
-    <div class="space-y-6 flex flex-col items-center w-full">
+  <div class="flex-1  flex flex-col items-center justify-between w-full">
+    <div class="space-y- flex flex-col items-center w-full">
       <a href="/" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/' ? 'active' : '' %>">
         <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/' ? 'bg-primary-200 text-primary-600' : '' %>">
           <i class="fas fa-home text-xl"></i>
@@ -45,7 +45,7 @@
 
       <a href="/messages" class="nav-link group relative w-full flex items-center px-4 py-2 <%= path === '/messages' ? 'active' : '' %>">
         <div class="min-w-[48px] w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-500 group-hover:bg-primary-200 group-hover:text-primary-600 transition-all <%= path === '/messages' ? 'bg-primary-200 text-primary-600' : '' %>">
-          <i class="fas fa-envelope text-xl"></i>
+          <i class="fas fa-message text-xl"></i>
         </div>
         <div class="absolute left-0 h-full w-1 bg-primary-500 rounded-r-lg opacity-0 <%= path === '/messages' ? 'opacity-100' : 'group-hover:opacity-100' %> transition-opacity"></div>
         <span class="sidebar-text ml-4 font-medium text-dark-800 opacity-0 w-0 overflow-hidden transition-all duration-300">Messages</span>
@@ -102,8 +102,8 @@
       <i class="fas fa-plus text-xl"></i>
     </a>
 
-    <a href="/notifications" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors relative">
-      <i class="fas fa-bell text-xl"></i>
+    <a href="/message" class="flex flex-col items-center justify-center w-12 h-12 rounded-full text-dark-600 hover:text-primary-500 transition-colors relative">
+      <i class="fas fa-message text-xl"></i>
       <span class="absolute top-1 right-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
     </a>
 
