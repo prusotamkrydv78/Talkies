@@ -1,5 +1,6 @@
 {
   "users": [
+
     {
       "id": "1",
       "username": "johndoe",
@@ -10,10 +11,12 @@
       "bio": "Software developer and tech enthusiast",
       "followers": [
         2,
-        3
+        3,
+        4
       ],
       "following": [
-        2
+        2,
+        4
       ],
       "createdAt": "2023-01-15T10:30:00Z",
       "notifications": 3,
@@ -93,16 +96,91 @@
       "username": "prusotam",
       "email": "prusotam@gmail.com",
       "password": "prusotam",
-      "bio": "",
-      "avatar": "https://ui-avatars.com/api/?name=Prusotam%20Yadav&background=0D8ABC&color=fff",
-      "followers": [],
-      "following": [],
-      "createdAt": "2025-04-13T10:07:38.711Z",
-      "notifications": 0,
-      "messages": 0
+      "bio": "Full-stack developer and tech enthusiast. Love to create innovative solutions.",
+      "avatar": "https://ui-avatars.com/api/?name=Prusotam%20Yadav&background=4F46E5&color=fff",
+      "followers": [1, 2, 3],
+      "following": [1, 2],
+      "createdAt": "2023-04-15T08:30:00Z",
+      "notifications": 5,
+      "messages": 3
     }
   ],
   "posts": [
+    {
+      "id": "p001",
+      "userId": "d027",
+      "content": "Just finished building a real-time chat application using Socket.io and React! The power of WebSockets is amazing. #webdev #javascript #reactjs",
+      "media": [
+        {
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+        }
+      ],
+      "likes": [
+        "1",
+        "2",
+        "3"
+      ],
+      "commentsCount": 4,
+      "sharesCount": 2,
+      "createdAt": "2023-04-14T15:30:00Z"
+    },
+    {
+      "id": "p002",
+      "userId": "d027",
+      "content": "Learning AI and machine learning has been an incredible journey. Just completed my first neural network model! #AI #MachineLearning #DataScience",
+      "media": [
+        {
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+        }
+      ],
+      "likes": [
+        "1",
+        "3"
+      ],
+      "commentsCount": 2,
+      "sharesCount": 1,
+      "createdAt": "2023-04-13T10:15:00Z"
+    },
+    {
+      "id": "p003",
+      "userId": "d027",
+      "content": "Just deployed my new portfolio website using Next.js and Tailwind CSS. The developer experience is amazing! Check it out and let me know what you think. #webdev #nextjs #tailwindcss",
+      "media": [
+        {
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80"
+        }
+      ],
+      "likes": [
+        "1",
+        "2",
+        "3",
+        "5"
+      ],
+      "commentsCount": 5,
+      "sharesCount": 3,
+      "createdAt": "2023-04-12T14:45:00Z"
+    },
+    {
+      "id": "p004",
+      "userId": "d027",
+      "content": "Beautiful morning hike today! Nature always helps me clear my mind and find inspiration for coding. #nature #hiking #mindfulness",
+      "media": [
+        {
+          "type": "image",
+          "url": "https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80"
+        }
+      ],
+      "likes": [
+        "2",
+        "3"
+      ],
+      "commentsCount": 3,
+      "sharesCount": 1,
+      "createdAt": "2023-04-11T08:30:00Z"
+    },
     {
       "id": "1",
       "userId": 1,
@@ -115,7 +193,8 @@
       ],
       "likes": [
         2,
-        3
+        3,
+        "d027"
       ],
       "commentsCount": 2,
       "sharesCount": 1,
@@ -193,6 +272,90 @@
     }
   ],
   "comments": [
+    {
+      "id": "c001",
+      "postId": "p001",
+      "userId": "1",
+      "content": "This is awesome! I've been wanting to learn Socket.io. Any resources you'd recommend?",
+      "createdAt": "2023-04-14T16:00:00Z",
+      "likes": [
+        "d027",
+        "2"
+      ]
+    },
+    {
+      "id": "c002",
+      "postId": "p001",
+      "userId": "2",
+      "content": "The real-time capabilities are impressive. Would love to see a demo sometime!",
+      "createdAt": "2023-04-14T16:30:00Z",
+      "likes": [
+        "d027",
+        "1"
+      ]
+    },
+    {
+      "id": "c003",
+      "postId": "p001",
+      "userId": "d027",
+      "content": "@johndoe Definitely! I'd recommend the official Socket.io docs and also check out some YouTube tutorials by Traversy Media.",
+      "createdAt": "2023-04-14T17:00:00Z",
+      "likes": [
+        "1"
+      ]
+    },
+    {
+      "id": "c004",
+      "postId": "p002",
+      "userId": "1",
+      "content": "That's impressive! What kind of model did you build?",
+      "createdAt": "2023-04-13T10:45:00Z",
+      "likes": [
+        "d027"
+      ]
+    },
+    {
+      "id": "c005",
+      "postId": "p002",
+      "userId": "d027",
+      "content": "@johndoe It's an image classification model using TensorFlow. Still learning but it's fascinating!",
+      "createdAt": "2023-04-13T11:00:00Z",
+      "likes": [
+        "1",
+        "3"
+      ]
+    },
+    {
+      "id": "c006",
+      "postId": "p003",
+      "userId": "3",
+      "content": "Your portfolio looks amazing! The animations are so smooth.",
+      "createdAt": "2023-04-12T15:00:00Z",
+      "likes": [
+        "d027"
+      ]
+    },
+    {
+      "id": "c007",
+      "postId": "p003",
+      "userId": "2",
+      "content": "I've been thinking about switching to Next.js. Would you recommend it over Create React App?",
+      "createdAt": "2023-04-12T15:30:00Z",
+      "likes": [
+        "d027",
+        "1"
+      ]
+    },
+    {
+      "id": "c008",
+      "postId": "p003",
+      "userId": "d027",
+      "content": "@sarahjohnson Absolutely! The built-in routing, SSR capabilities, and overall developer experience are much better. Happy to chat more about it!",
+      "createdAt": "2023-04-12T16:00:00Z",
+      "likes": [
+        "2"
+      ]
+    },
     {
       "id": "1",
       "postId": 1,
