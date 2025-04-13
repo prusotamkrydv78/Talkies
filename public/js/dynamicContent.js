@@ -280,9 +280,13 @@ async function loadPosts(currentUser) {
       const userResponse = await fetch(`http://localhost:3001/users/${post.userId}`);
       const user = await userResponse.json();
 
-      // Get comments for the post
+      // Get all comments for the post (including replies)
       const commentsResponse = await fetch(`http://localhost:3001/comments?postId=${post.id}&_sort=createdAt&_order=asc`);
-      const comments = await commentsResponse.json();
+      const allComments = await commentsResponse.json();
+
+      // Separate parent comments and replies
+      const comments = allComments.filter(comment => !comment.parentId);
+      const replies = allComments.filter(comment => comment.parentId);
 
       // Check if current user has liked the post
       const isLiked = post.likes && post.likes.includes(currentUser.id);
@@ -380,7 +384,7 @@ async function loadPosts(currentUser) {
       const displayComments = comments.slice(0, 2);
       const hiddenComments = comments.length > 2 ? comments.slice(2) : [];
 
-      // Add visible comments
+      // Process all comments first
       for (const comment of displayComments) {
         // Get comment user data
         const commentUserResponse = await fetch(`http://localhost:3001/users/${comment.userId}`);
@@ -391,6 +395,8 @@ async function loadPosts(currentUser) {
 
         // Check if current user has liked the comment
         const isCommentLiked = comment.likes && comment.likes.includes(currentUser.id);
+
+        // We'll load replies after generating the HTML
 
         postHTML += `
           <div class="flex space-x-3 comment-item" data-comment-id="${comment.id}">
@@ -413,7 +419,9 @@ async function loadPosts(currentUser) {
               </div>
 
               <!-- Replies container -->
-              <div class="replies-container ml-6 mt-2 space-y-2 hidden"></div>
+              <div class="replies-container ml-6 mt-2 space-y-2 hidden" data-comment-id="${comment.id}">
+                <!-- Replies will be loaded dynamically -->
+              </div>
 
               <!-- Reply input (hidden by default) -->
               <div class="reply-input-container ml-6 mt-2 hidden">
@@ -530,6 +538,21 @@ async function loadPosts(currentUser) {
 
       // Add to container
       postsContainer.appendChild(postElement);
+
+      // Load replies for visible comments
+      for (const comment of displayComments) {
+        const commentReplies = replies.filter(reply => reply.parentId === comment.id);
+        if (commentReplies.length > 0) {
+          const repliesContainer = postElement.querySelector(`.replies-container[data-comment-id="${comment.id}"]`);
+          if (repliesContainer) {
+            // Show container
+            repliesContainer.classList.remove('hidden');
+
+            // Load replies
+            loadRepliesForComment(comment.id, commentReplies, currentUser, repliesContainer);
+          }
+        }
+      }
     }
   } catch (error) {
     console.error('Error loading posts:', error);
@@ -1077,6 +1100,19 @@ async function loadMoreComments(postId, hiddenComments, currentUser, postElement
 
           // Add to container
           hiddenCommentsContainer.appendChild(commentElement);
+
+          // Load replies for this comment if any
+          const commentReplies = replies.filter(reply => reply.parentId === comment.id);
+          if (commentReplies.length > 0) {
+            const repliesContainer = commentElement.querySelector('.replies-container');
+            if (repliesContainer) {
+              // Show container
+              repliesContainer.classList.remove('hidden');
+
+              // Load replies
+              loadRepliesForComment(comment.id, commentReplies, currentUser, repliesContainer);
+            }
+          }
         }
       }
     } else {
@@ -1220,13 +1256,18 @@ async function addReply(commentId, postId, userId, postElement) {
     };
 
     // Save reply to db.json
-    await fetch('http://localhost:3001/comments', {
+    const replyResponse = await fetch('http://localhost:3001/comments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(newReply)
     });
+
+    // Verify the reply was saved successfully
+    if (!replyResponse.ok) {
+      throw new Error('Failed to save reply');
+    }
 
     // Update post comments count
     const postResponse = await fetch(`http://localhost:3001/posts/${postId}`);
@@ -1255,7 +1296,9 @@ async function addReply(commentId, postId, userId, postElement) {
 
       // Create reply element
       const replyElement = document.createElement('div');
-      replyElement.className = 'flex space-x-2 items-start';
+      replyElement.className = 'flex space-x-2 items-start reply-item';
+      replyElement.dataset.replyId = newReply.id;
+      replyElement.dataset.parentId = commentId; // Add parent comment ID as data attribute
 
       replyElement.innerHTML = `
         <img src="${user.avatar}" alt="${user.name}" class="w-6 h-6 rounded-full">
@@ -1265,7 +1308,7 @@ async function addReply(commentId, postId, userId, postElement) {
             <p class="text-dark-700 text-sm">${newReply.content}</p>
           </div>
           <div class="flex items-center mt-1 text-xs text-dark-500">
-            <button class="font-medium mr-3">
+            <button class="like-reply-btn font-medium mr-3" data-reply-id="${newReply.id}">
               <i class="fas fa-heart mr-1"></i>
               <span>Like</span>
             </button>
@@ -1274,8 +1317,21 @@ async function addReply(commentId, postId, userId, postElement) {
         </div>
       `;
 
-      // Add to container
+      // Add event listener for like button
+      const likeReplyBtn = replyElement.querySelector('.like-reply-btn');
+      if (likeReplyBtn) {
+        likeReplyBtn.addEventListener('click', () => toggleLikeReply(newReply.id, userId, likeReplyBtn));
+      }
+
+      // Add to container with animation
+      replyElement.style.opacity = '0';
       repliesContainer.appendChild(replyElement);
+
+      // Animate in
+      setTimeout(() => {
+        replyElement.style.transition = 'opacity 0.3s';
+        replyElement.style.opacity = '1';
+      }, 10);
 
       // Update comments count in UI with animation
       const commentsCountElement = postElement.querySelector('.flex.items-center:has(i.fas.fa-comment) span');
@@ -1316,6 +1372,184 @@ async function addReply(commentId, postId, userId, postElement) {
     }
   } catch (error) {
     console.error('Error adding reply:', error);
+  }
+}
+
+/**
+ * Render replies for a comment
+ * @param {Array} replies - The replies to render
+ * @param {Object} currentUser - The current user
+ * @returns {string} - HTML for the replies
+ */
+async function renderReplies(replies, currentUser) {
+  if (!replies || replies.length === 0) return '';
+
+  let repliesHTML = '';
+
+  for (const reply of replies) {
+    // Get reply user data
+    const userResponse = await fetch(`http://localhost:3001/users/${reply.userId}`);
+    const user = await userResponse.json();
+
+    // Calculate reply time ago
+    const timeAgo = getTimeAgo(reply.createdAt);
+
+    // Check if current user has liked the reply
+    const isLiked = reply.likes && reply.likes.includes(currentUser.id);
+
+    repliesHTML += `
+      <div class="flex space-x-2 items-start reply-item" data-reply-id="${reply.id}">
+        <img src="${user.avatar}" alt="${user.name}" class="w-6 h-6 rounded-full">
+        <div class="flex-1">
+          <div class="bg-dark-50 rounded-xl px-3 py-1.5">
+            <h5 class="font-semibold text-dark-800 text-sm">${user.name}</h5>
+            <p class="text-dark-700 text-sm">${reply.content}</p>
+          </div>
+          <div class="flex items-center mt-1 text-xs text-dark-500">
+            <button class="like-reply-btn font-medium mr-3 ${isLiked ? 'text-primary-500' : ''}" data-reply-id="${reply.id}">
+              <i class="fas fa-heart mr-1 ${isLiked ? 'text-primary-500' : ''}"></i>
+              <span>Like</span>
+            </button>
+            <span>${timeAgo}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return repliesHTML;
+}
+
+/**
+ * Load replies for a comment
+ * @param {string} commentId - The comment ID
+ * @param {Array} replies - The replies to load
+ * @param {Object} currentUser - The current user
+ * @param {HTMLElement} container - The container to append replies to
+ */
+async function loadRepliesForComment(commentId, replies, currentUser, container) {
+  try {
+    // Clear container
+    container.innerHTML = '';
+
+    // Sort replies by creation date (oldest first)
+    const sortedReplies = [...replies].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    // Process each reply
+    for (const reply of sortedReplies) {
+      // Get user data
+      const userResponse = await fetch(`http://localhost:3001/users/${reply.userId}`);
+      const user = await userResponse.json();
+
+      // Calculate time ago
+      const timeAgo = getTimeAgo(reply.createdAt);
+
+      // Check if current user has liked the reply
+      const isLiked = reply.likes && reply.likes.includes(currentUser.id);
+
+      // Create reply element
+      const replyElement = document.createElement('div');
+      replyElement.className = 'flex space-x-2 items-start reply-item';
+      replyElement.dataset.replyId = reply.id;
+      replyElement.dataset.parentId = commentId;
+
+      replyElement.innerHTML = `
+        <img src="${user.avatar}" alt="${user.name}" class="w-6 h-6 rounded-full">
+        <div class="flex-1">
+          <div class="bg-dark-50 rounded-xl px-3 py-1.5">
+            <h5 class="font-semibold text-dark-800 text-sm">${user.name}</h5>
+            <p class="text-dark-700 text-sm">${reply.content}</p>
+          </div>
+          <div class="flex items-center mt-1 text-xs text-dark-500">
+            <button class="like-reply-btn font-medium mr-3 ${isLiked ? 'text-primary-500' : ''}" data-reply-id="${reply.id}">
+              <i class="fas fa-heart mr-1 ${isLiked ? 'text-primary-500' : ''}"></i>
+              <span>Like</span>
+            </button>
+            <span>${timeAgo}</span>
+          </div>
+        </div>
+      `;
+
+      // Add event listener for like button
+      const likeReplyBtn = replyElement.querySelector('.like-reply-btn');
+      if (likeReplyBtn) {
+        likeReplyBtn.addEventListener('click', () => toggleLikeReply(reply.id, currentUser.id, likeReplyBtn));
+      }
+
+      // Add to container with animation
+      replyElement.style.opacity = '0';
+      container.appendChild(replyElement);
+
+      // Animate in
+      setTimeout(() => {
+        replyElement.style.transition = 'opacity 0.3s';
+        replyElement.style.opacity = '1';
+      }, 10);
+    }
+  } catch (error) {
+    console.error('Error loading replies for comment:', error);
+  }
+}
+
+/**
+ * Toggle like on a reply
+ * @param {string} replyId - The reply ID
+ * @param {string} userId - The current user ID
+ * @param {HTMLElement} button - The like button element
+ */
+async function toggleLikeReply(replyId, userId, button) {
+  try {
+    // Get current reply
+    const response = await fetch(`http://localhost:3001/comments/${replyId}`);
+    const reply = await response.json();
+
+    // Check if already liked
+    const isLiked = reply.likes && reply.likes.includes(userId);
+
+    // Update likes array
+    let likes = reply.likes || [];
+
+    if (isLiked) {
+      // Unlike
+      likes = likes.filter(id => id !== userId);
+    } else {
+      // Like
+      likes.push(userId);
+    }
+
+    // Update reply
+    await fetch(`http://localhost:3001/comments/${replyId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ likes })
+    });
+
+    // Update UI
+    const icon = button.querySelector('i.fas.fa-heart');
+    if (icon) {
+      if (isLiked) {
+        icon.classList.remove('text-primary-500');
+        button.classList.remove('text-primary-500');
+      } else {
+        icon.classList.add('text-primary-500', 'like-animation');
+        button.classList.add('text-primary-500');
+
+        // Remove animation class after it completes
+        setTimeout(() => {
+          icon.classList.remove('like-animation');
+        }, 400);
+      }
+    }
+
+    // Add a visual feedback on the button
+    button.classList.add('count-update');
+    setTimeout(() => {
+      button.classList.remove('count-update');
+    }, 1000);
+  } catch (error) {
+    console.error('Error toggling reply like:', error);
   }
 }
 

@@ -538,7 +538,9 @@
       "parentId": "1",
       "content": "nice",
       "createdAt": "2025-04-13T11:21:02.028Z",
-      "likes": []
+      "likes": [
+        "d027"
+      ]
     }
   ],
   "stories": [
