@@ -121,6 +121,36 @@
       "createdAt": "2023-04-15T08:30:00Z",
       "notifications": 5,
       "messages": 3
+    },
+    {
+      "id": "e628",
+      "name": "Prusotam Yadav",
+      "username": "prusotams",
+      "email": "prusotams@gmail.com",
+      "password": "prusotam@3P",
+      "bio": "",
+      "avatar": "https://ui-avatars.com/api/?name=Prusotam%20Yadav&background=EF4444&color=fff",
+      "followers": [],
+      "following": [],
+      "createdAt": "2025-04-14T06:09:26.335Z",
+      "updatedAt": "2025-04-14T06:09:26.335Z",
+      "notifications": 0,
+      "messages": 0
+    },
+    {
+      "id": "6",
+      "name": "test",
+      "username": "test",
+      "email": "test@gmail.com",
+      "password": "test",
+      "bio": "",
+      "avatar": "https://ui-avatars.com/api/?name=test&background=10B981&color=fff",
+      "followers": [],
+      "following": [],
+      "createdAt": "2025-04-14T06:20:43.494Z",
+      "updatedAt": "2025-04-14T06:20:43.494Z",
+      "notifications": 0,
+      "messages": 0
     }
   ],
   "posts": [
@@ -959,7 +989,14 @@
       "updatedAt": "2023-04-13T15:05:00Z"
     }
   ],
-  "sessions": [],
+  "sessions": [
+    {
+      "id": "acc4",
+      "userId": "6",
+      "token": "653e4jnqd8cyhdch1xnjk",
+      "createdAt": "2025-04-14T06:20:43.494Z"
+    }
+  ],
   "categories": [
     {
       "id": "1",
