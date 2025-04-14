@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/stories.css">
   <link rel="stylesheet" href="/css/animations.css">
-  <link rel="stylesheet" href="/css/carousel.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -94,7 +93,6 @@
   <!-- Common scripts -->
   <script src="/js/updateSidebar.js"></script>
   <script src="/js/updateHomeAndHeader.js"></script>
-  <script src="/js/carousel.js"></script>
 
   <!-- Conditional loading of dynamicContent.js -->
   <% if (!isProfilePage) { %>
@@ -129,13 +127,5 @@
   <!-- Add this before your closing </body> tag -->
   <script src="/js/fileUploadService.js"></script>
   <script src="/js/updateHomeAndHeader.js"></script>
-
-  <!-- Page-specific post creation scripts -->
-  <% if (path === '/') { %>
-    <script src="/js/homePostCreation.js"></script>
-  <% } %>
-  <% if (path === '/create') { %>
-    <script src="/js/createPostPage.js"></script>
-  <% } %>
 </body>
 </html>

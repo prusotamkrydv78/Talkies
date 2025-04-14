@@ -324,18 +324,10 @@ async function loadUserPosts(currentUser) {
 
     // Filter posts to only include those by the current user
     // This is a strict equality check that ensures we only get the current user's posts
-    let posts = allPosts.filter(post => {
+    const posts = allPosts.filter(post => {
       return post.userId && post.userId.toString() === currentUserId;
     });
-
-    // Explicitly sort posts by createdAt timestamp (newest first)
-    posts = posts.sort((a, b) => {
-      const dateA = new Date(a.createdAt);
-      const dateB = new Date(b.createdAt);
-      return dateB - dateA; // Sort in descending order (newest first)
-    });
-
-    console.log('Sorted posts by timestamp (newest first):', posts);
+    console.log(posts)
 
     if (posts.length === 0) {
       // No posts - always show the current user's message since we're only showing their posts
@@ -379,48 +371,42 @@ async function loadUserPosts(currentUser) {
       // Get post media
       let mediaHTML = '';
       if (post.media && post.media.length > 0) {
-        // Use the carousel for media display
-        if (window.createCarouselFromMedia) {
-          mediaHTML = window.createCarouselFromMedia(post.media);
+        if (post.media.length === 1) {
+          // Single image - with reduced height and object-cover
+          mediaHTML = `
+            <div class="rounded-xl overflow-hidden mb-4 max-h-80">
+              <img src="${post.media[0].url}" alt="Post image" class="w-full h-64 object-cover">
+            </div>
+          `;
         } else {
-          // Fallback if carousel function is not available
-          if (post.media.length === 1) {
-            // Single image - with reduced height and object-cover
-            mediaHTML = `
-              <div class="rounded-xl overflow-hidden mb-4 max-h-80">
-                <img src="${post.media[0].url}" alt="Post image" class="w-full h-64 object-cover">
-              </div>
-            `;
-          } else {
-            // Multiple images - with reduced height
-            mediaHTML = `
-              <div class="grid grid-cols-2 gap-2 rounded-xl overflow-hidden mb-4">
-            `;
+          // Multiple images - with reduced height
+          mediaHTML = `
+            <div class="grid grid-cols-2 gap-2 rounded-xl overflow-hidden mb-4">
+          `;
 
-            const displayMedia = post.media.slice(0, 4);
-            const remainingCount = post.media.length - 4;
+          const displayMedia = post.media.slice(0, 4);
+          const remainingCount = post.media.length - 4;
 
-            displayMedia.forEach((media, index) => {
-              if (index === 3 && remainingCount > 0) {
-                // Last visible image with overlay
-                mediaHTML += `
-                  <div class="relative">
-                    <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
-                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold">
-                      +${remainingCount} more
-                    </div>
-                  </div>
-                `;
-              } else {
-                // Regular image - reduced height
-                mediaHTML += `
+          displayMedia.forEach((media, index) => {
+            if (index === 3 && remainingCount > 0) {
+              // Last visible image with overlay
+              mediaHTML += `
+                <div class="relative">
                   <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
-                `;
-              }
-            });
+                  <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold">
+                    +${remainingCount} more
+                  </div>
+                </div>
+              `;
+            } else {
+              // Regular image - reduced height
+              mediaHTML += `
+                <img src="${media.url}" alt="Post image" class="w-full h-32 object-cover">
+              `;
+            }
+          });
 
-            mediaHTML += `</div>`;
-          }
+          mediaHTML += `</div>`;
         }
       }
 
@@ -497,11 +483,6 @@ async function loadUserPosts(currentUser) {
 
       // Add to container
       postsContainer.appendChild(postElement);
-    }
-
-    // Initialize carousels in the posts
-    if (window.initCarousels) {
-      window.initCarousels();
     }
   } catch (error) {
     console.error('Error loading user posts:', error);
