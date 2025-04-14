@@ -1,3 +1,5 @@
 /node_modules
- ./public/upload
+./public/upload
 ./public/sounds
+/db.json
+/

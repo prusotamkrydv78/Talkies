@@ -43,8 +43,8 @@ app.use(layoutMiddleware);
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// Serve static files from the public directory
-app.use(express.static('public'));
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({

@@ -375,7 +375,7 @@
             userId: currentUser.id,
             media: {
               type: selectedFile.type.startsWith('image/') ? 'image' : 'video',
-              url: mediaUrl // Use the URL pointing to the images folder
+              url: mediaUrl.startsWith('/') ? mediaUrl : `/${mediaUrl}` // Ensure URL has leading slash
             },
             caption: caption,
             privacy: privacy,
