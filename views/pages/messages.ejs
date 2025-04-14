@@ -1,7 +1,7 @@
 <div class="bg-white overflow-hidden h-[90vh] px-2 w-full">
   <div class="flex h-full">
     <!-- Conversations List -->
-    <div class="w-full md:w-96 border-r border-dark-100 flex flex-col">
+    <div class="w-full md:w-96 border-r border-dark-100 flex flex-col conversations-list-container">
       <!-- Search Bar -->
       <div class="p-2 border-b border-dark-100">
         <div class="relative">
@@ -14,78 +14,39 @@
 
       <!-- Tabs -->
       <div class="flex p-2 border-b border-dark-100 bg-dark-50">
-        <button class="flex-1 py-3 px-4 font-medium text-white bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl shadow-sm transition-all">
+        <button class="primary-tab flex-1 py-2 px-2 font-medium text-white bg-gradient-to-r from-primary-500 to-secondary-500 rounded-xl shadow-sm transition-all">
           <div class="flex items-center justify-center">
-            <i class="fas fa-inbox mr-2"></i>
-            <span>Primary</span>
+            <i class="fas fa-inbox mr-1"></i>
+            <span>Chats</span>
           </div>
         </button>
-        <button class="flex-1 py-3 px-4 font-medium text-dark-600 hover:bg-white rounded-xl transition-all ml-2">
+        <button class="followed-tab flex-1 py-2 px-2 font-medium text-dark-600 hover:bg-white rounded-xl transition-all ml-1">
           <div class="flex items-center justify-center">
-            <i class="fas fa-user-plus mr-2"></i>
+            <i class="fas fa-user-friends mr-1"></i>
+            <span>Following</span>
+          </div>
+        </button>
+        <button class="requests-tab flex-1 py-2 px-2 font-medium text-dark-600 hover:bg-white rounded-xl transition-all ml-1">
+          <div class="flex items-center justify-center">
+            <i class="fas fa-user-plus mr-1"></i>
             <span>Requests</span>
-            <span class="ml-2 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+            <span class="ml-1 bg-secondary-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
           </div>
         </button>
       </div>
 
       <!-- Conversations -->
-      <div class="flex-1 overflow-y-auto custom-scrollbar">
-        <!-- Active Conversation -->
-        <div class="p-2 bg-primary-50 border-l-4 border-primary-500 hover:bg-primary-100 transition-all cursor-pointer">
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-14 w-14 border-2 border-primary-200 shadow-sm">
-              <div class="absolute bottom-0 rounded-full right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex justify-between items-center">
-                <h4 class="font-bold text-dark-900 truncate">Sarah Johnson</h4>
-                <span class="text-xs bg-dark-100 text-dark-600 px-2 py-1 rounded-full">2m</span>
-              </div>
-              <div class="flex justify-between items-center mt-1">
-                <p class="text-sm text-dark-600 truncate">That sounds great! When should we meet?</p>
-                <span class="w-6 h-6 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 text-white text-xs flex items-center justify-center shadow-sm ml-2">2</span>
-              </div>
-            </div>
-          </div>
+      <div class="flex-1 overflow-y-auto custom-scrollbar conversations-list">
+        <!-- Conversations will be loaded dynamically -->
+        <div class="p-4 text-center">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500 mx-auto mb-4"></div>
+          <p class="text-dark-500">Loading conversations...</p>
         </div>
-
-        <!-- Other Conversations -->
-        <% for (let i = 1; i <= 10; i++) { %>
-          <div class="p-2 hover:bg-dark-50 transition-all cursor-pointer border-b border-dark-50">
-            <div class="flex items-center space-x-4">
-              <div class="relative">
-                <img src="https://ui-avatars.com/api/?name=User+<%= i %>&background=<%= ['0D8ABC', '8B5CF6', '10B981', 'F59E0B', 'EF4444', '6366F1'][i % 6] %>&color=fff" alt="Profile" class="avatar h-14 w-14  rounded-full border-2 border-dark-100 shadow-sm">
-                <% if (i % 3 === 0) { %>
-                  <div class="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
-                <% } %>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex justify-between items-center">
-                  <h4 class="font-semibold text-dark-900 truncate">User <%= i %></h4>
-                  <span class="text-xs bg-dark-50 text-dark-500 px-2 py-1 rounded-full"><%= i %>h</span>
-                </div>
-                <div class="flex justify-between items-center mt-1">
-                  <p class="text-sm text-dark-500 truncate">
-                    <% if (i % 4 === 0) { %>
-                      <i class="fas fa-check-double text-xs text-primary-500 mr-1"></i>
-                    <% } %>
-                    <%= ['Hey there!', 'How are you doing?', 'Did you see that post?', 'Let\'s catch up soon!', 'Thanks for the info'][i % 5] %>
-                  </p>
-                  <% if (i % 5 === 0) { %>
-                    <span class="w-3 h-3 rounded-full bg-primary-500 animate-pulse"></span>
-                  <% } %>
-                </div>
-              </div>
-            </div>
-          </div>
-        <% } %>
       </div>
 
       <!-- New Message Button -->
       <div class="p-2 border-t border-dark-100">
-        <button class="btn bg-gradient-to-r from-primary-500 to-secondary-500 text-white w-full py-3 rounded-xl shadow-sm hover:shadow-md transition-all">
+        <button class="new-message-button btn bg-gradient-to-r from-primary-500 to-secondary-500 text-white w-full py-3 rounded-xl shadow-sm hover:shadow-md transition-all">
           <i class="fas fa-pen-to-square mr-2"></i>
           New Message
         </button>
@@ -93,103 +54,35 @@
     </div>
 
     <!-- Chat Area -->
-    <div class="hidden md:flex flex-col flex-1 h-full">
+    <div class="hidden md:flex flex-col flex-1 h-full chat-area">
       <!-- Chat Header -->
-      <div class="p-2 border-b border-dark-100 flex justify-between items-center bg-white shadow-sm">
+      <div class="p-2 border-b border-dark-100 flex justify-between items-center bg-white shadow-sm chat-header">
+        <!-- Chat header will be loaded dynamically -->
         <div class="flex items-center space-x-4">
-          <div class="relative">
-            <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-12 w-12 border-2 border-primary-100 shadow-sm rouned-full">
-            <div class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm"></div>
-          </div>
+          <button class="md:hidden back-button w-10 h-10 rounded-xl bg-dark-50 flex items-center justify-center text-dark-500 hover:bg-dark-100 transition-all shadow-sm hover:shadow mr-2">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <div class="animate-pulse rounded-full h-12 w-12 bg-dark-100"></div>
           <div>
-            <h4 class="font-bold text-dark-900">Sarah Johnson</h4>
-            <p class="text-xs text-green-500 flex items-center">
-              <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
-              Online
-            </p>
+            <div class="animate-pulse h-5 w-32 bg-dark-100 rounded mb-2"></div>
+            <div class="animate-pulse h-3 w-16 bg-dark-100 rounded"></div>
           </div>
         </div>
 
         <div class="flex items-center space-x-3">
-          <button class="w-10 h-10 rounded-xl bg-dark-50 flex items-center justify-center text-dark-500 hover:bg-dark-100 transition-all shadow-sm hover:shadow">
-            <i class="fas fa-phone"></i>
-          </button>
-          <button class="w-10 h-10 rounded-xl bg-dark-50 flex items-center justify-center text-dark-500 hover:bg-dark-100 transition-all shadow-sm hover:shadow">
-            <i class="fas fa-video"></i>
-          </button>
-          <button class="w-10 h-10 rounded-xl bg-dark-50 flex items-center justify-center text-dark-500 hover:bg-dark-100 transition-all shadow-sm hover:shadow">
-            <i class="fas fa-info-circle"></i>
-          </button>
+          <div class="animate-pulse rounded-xl h-10 w-10 bg-dark-100"></div>
+          <div class="animate-pulse rounded-xl h-10 w-10 bg-dark-100"></div>
+          <div class="animate-pulse rounded-xl h-10 w-10 bg-dark-100"></div>
         </div>
       </div>
 
       <!-- Messages -->
-      <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-dark-50 custom-scrollbar">
-        <!-- Date Separator -->
-        <div class="flex items-center justify-center">
-          <div class="bg-white text-dark-600 text-xs px-4 py-1.5 rounded-full shadow-sm font-medium">
-            Today
-          </div>
-        </div>
-
-        <!-- Received Message -->
-        <div class="flex items-end space-x-3 max-w-[80%]">
-          <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-9 w-9 border-2 border-primary-100 shadow-sm">
-          <div class="bg-white rounded-2xl rounded-bl-none p-4 shadow-sm">
-            <p class="text-dark-800">Hey there! How's your day going?</p>
-            <p class="text-xs text-dark-400 mt-1.5 text-right">10:30 AM</p>
-          </div>
-        </div>
-
-        <!-- Sent Message -->
-        <div class="flex items-end justify-end space-x-3 max-w-[80%] ml-auto">
-          <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-2xl rounded-br-none p-4 shadow-sm">
-            <p>Pretty good! Just working on some design projects. How about you?</p>
-            <div class="flex items-center justify-end mt-1.5 space-x-1.5">
-              <p class="text-xs text-white/70">10:32 AM</p>
-              <i class="fas fa-check-double text-xs"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Received Message -->
-        <div class="flex items-end space-x-3 max-w-[80%]">
-          <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-9 w-9 border-2 border-primary-100 shadow-sm">
-          <div class="bg-white rounded-2xl rounded-bl-none p-4 shadow-sm">
-            <p class="text-dark-800">I'm just finishing up a presentation for tomorrow. Been quite busy lately!</p>
-            <p class="text-xs text-dark-400 mt-1.5 text-right">10:35 AM</p>
-          </div>
-        </div>
-
-        <!-- Received Message -->
-        <div class="flex items-end space-x-3 max-w-[80%]">
-          <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-9 w-9 border-2 border-primary-100 shadow-sm">
-          <div class="bg-white rounded-2xl rounded-bl-none p-4 shadow-sm">
-            <p class="text-dark-800">Would you like to grab coffee sometime this week?</p>
-            <p class="text-xs text-dark-400 mt-1.5 text-right">10:36 AM</p>
-          </div>
-        </div>
-
-        <!-- Sent Message -->
-        <div class="flex items-end justify-end space-x-3 max-w-[80%] ml-auto">
-          <div class="bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-2xl rounded-br-none p-4 shadow-sm">
-            <p>That sounds great! When should we meet?</p>
-            <div class="flex items-center justify-end mt-1.5 space-x-1.5">
-              <p class="text-xs text-white/70">10:38 AM</p>
-              <i class="fas fa-check-double text-xs"></i>
-            </div>
-          </div>
-        </div>
-
-        <!-- Typing Indicator -->
-        <div class="flex items-end space-x-3 max-w-[80%]">
-          <img src="https://ui-avatars.com/api/?name=Sarah+Johnson&background=0D8ABC&color=fff" alt="Profile" class="avatar h-9 w-9 border-2 border-primary-100 shadow-sm">
-          <div class="bg-white rounded-2xl rounded-bl-none p-4 shadow-sm">
-            <div class="flex space-x-1.5">
-              <div class="w-2.5 h-2.5 rounded-full bg-primary-300 animate-bounce"></div>
-              <div class="w-2.5 h-2.5 rounded-full bg-primary-400 animate-bounce" style="animation-delay: 0.2s"></div>
-              <div class="w-2.5 h-2.5 rounded-full bg-primary-500 animate-bounce" style="animation-delay: 0.4s"></div>
-            </div>
+      <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-dark-50 custom-scrollbar messages-container">
+        <!-- Messages will be loaded dynamically -->
+        <div class="flex items-center justify-center h-full">
+          <div class="text-center p-8">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-6"></div>
+            <p class="text-dark-500">Loading messages...</p>
           </div>
         </div>
       </div>
@@ -211,7 +104,7 @@
               </button>
             </div>
           </div>
-          <button class="w-12 h-12 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white hover:shadow-md transition-all shadow-sm">
+          <button class="send-button w-12 h-12 rounded-xl bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white hover:shadow-md transition-all shadow-sm">
             <i class="fas fa-paper-plane"></i>
           </button>
         </div>
@@ -219,14 +112,14 @@
     </div>
 
     <!-- Empty State (for mobile) -->
-    <div class="flex-1 flex items-center justify-center bg-dark-50 md:hidden">
+    <div class="flex-1 flex items-center justify-center bg-dark-50 md:hidden mobile-empty-state">
       <div class="text-center p-8 bg-white rounded-2xl shadow-sm max-w-xs mx-auto">
         <div class="w-20 h-20 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center text-white mx-auto mb-6 shadow-md">
           <i class="fas fa-comments text-3xl"></i>
         </div>
         <h3 class="font-bold text-dark-900 text-xl mb-3">Your Messages</h3>
         <p class="text-dark-500 mb-6">Select a conversation to start chatting</p>
-        <button class="btn bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-3 px-6 rounded-xl shadow-sm hover:shadow-md transition-all w-full">
+        <button class="new-message-button btn bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-3 px-6 rounded-xl shadow-sm hover:shadow-md transition-all w-full">
           <i class="fas fa-pen-to-square mr-2"></i>
           New Message
         </button>
@@ -234,3 +127,6 @@
     </div>
   </div>
 </div>
+
+<!-- Include the messages page script -->
+<script src="/js/messagesPage.js"></script>

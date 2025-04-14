@@ -601,20 +601,23 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <div class="border-t border-dark-100 px-4 py-2 flex justify-between">
-          <button class="flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2">
-            <i class="far fa-thumbs-up mr-2"></i>
+          <button class="like-button flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2" data-post-id="${post.id}">
+            <i class="${post.likes && post.likes.includes(currentUser?.id) ? 'fas text-primary-500' : 'far text-dark-500'} fa-thumbs-up mr-2"></i>
             <span>Like</span>
           </button>
-          <button class="flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2">
+          <button class="comment-button flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2" data-post-id="${post.id}">
             <i class="far fa-comment mr-2"></i>
             <span>Comment</span>
           </button>
-          <button class="flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2">
+          <button class="share-button flex-1 flex items-center justify-center text-dark-500 hover:text-primary-500 transition-colors py-2" data-post-id="${post.id}">
             <i class="far fa-share-square mr-2"></i>
             <span>Share</span>
           </button>
         </div>
       `;
+
+      // Add event listeners for post interactions
+      addPostInteractionListeners(postElement, post);
 
       return postElement;
     } catch (error) {
@@ -626,6 +629,143 @@ document.addEventListener('DOMContentLoaded', function() {
       errorElement.textContent = 'Error loading post';
 
       return errorElement;
+    }
+  }
+  /**
+   * Add event listeners for post interactions
+   * @param {HTMLElement} postElement - The post element
+   * @param {Object} post - The post data
+   */
+  function addPostInteractionListeners(postElement, post) {
+    if (!postElement) return;
+
+    // Get current user
+    const currentUser = window.AuthService?.getCurrentUser();
+    if (!currentUser) return;
+
+    // Like button
+    const likeButton = postElement.querySelector('.like-button');
+    if (likeButton) {
+      likeButton.addEventListener('click', async function() {
+        try {
+          const postId = this.getAttribute('data-post-id');
+          const icon = this.querySelector('i');
+          const isLiked = icon.classList.contains('fas');
+
+          if (isLiked) {
+            // Unlike post
+            const result = await window.PostService.unlikePost(postId, currentUser.id);
+
+            if (result.success) {
+              // Update UI
+              icon.classList.remove('fas', 'text-primary-500');
+              icon.classList.add('far', 'text-dark-500');
+
+              // Update like count
+              const likeCountElement = postElement.querySelector('.flex.justify-between.items-center.text-dark-500 div:first-child span');
+              if (likeCountElement) {
+                const currentLikes = parseInt(likeCountElement.textContent) || 0;
+                likeCountElement.textContent = Math.max(0, currentLikes - 1) + ' likes';
+              }
+            }
+          } else {
+            // Like post
+            const result = await window.PostService.likePost(postId, currentUser.id);
+
+            if (result.success) {
+              // Update UI
+              icon.classList.remove('far', 'text-dark-500');
+              icon.classList.add('fas', 'text-primary-500');
+
+              // Update like count
+              const likeCountElement = postElement.querySelector('.flex.justify-between.items-center.text-dark-500 div:first-child span');
+              if (likeCountElement) {
+                const currentLikes = parseInt(likeCountElement.textContent) || 0;
+                likeCountElement.textContent = (currentLikes + 1) + ' likes';
+              }
+
+              // Dispatch event for notification
+              if (!result.alreadyLiked) {
+                document.dispatchEvent(new CustomEvent('postLiked', {
+                  detail: {
+                    postId,
+                    userId: currentUser.id,
+                    postOwnerId: post.userId
+                  }
+                }));
+              }
+            }
+          }
+        } catch (error) {
+          console.error('Error toggling like:', error);
+        }
+      });
+    }
+
+    // Comment button
+    const commentButton = postElement.querySelector('.comment-button');
+    if (commentButton) {
+      commentButton.addEventListener('click', async function() {
+        const postId = this.getAttribute('data-post-id');
+
+        // Create a simple comment input
+        const commentText = prompt('Enter your comment:');
+
+        if (commentText && commentText.trim()) {
+          try {
+            // Create the comment
+            const commentData = {
+              postId: postId,
+              userId: currentUser.id,
+              content: commentText.trim(),
+              createdAt: new Date().toISOString()
+            };
+
+            // Save the comment
+            const response = await fetch('http://localhost:3001/comments', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(commentData)
+            });
+
+            if (!response.ok) {
+              throw new Error('Failed to create comment');
+            }
+
+            const comment = await response.json();
+            console.log('Comment created:', comment);
+
+            // Dispatch event for notification
+            document.dispatchEvent(new CustomEvent('postCommented', {
+              detail: {
+                postId: postId,
+                userId: currentUser.id,
+                postOwnerId: post.userId,
+                commentId: comment.id
+              }
+            }));
+
+            // Refresh the page to show the new comment
+            // In a real implementation, you would update the UI without refreshing
+            alert('Comment added successfully!');
+            location.reload();
+          } catch (error) {
+            console.error('Error creating comment:', error);
+            alert('Failed to add comment. Please try again.');
+          }
+        }
+      });
+    }
+
+    // Share button
+    const shareButton = postElement.querySelector('.share-button');
+    if (shareButton) {
+      shareButton.addEventListener('click', function() {
+        // For now, just show an alert
+        alert('Share functionality would be implemented here');
+      });
     }
   }
 });

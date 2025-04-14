@@ -17,7 +17,8 @@
       "following": [
         4,
         "5",
-        "4"
+        "4",
+        "d027"
       ],
       "createdAt": "2023-01-15T10:30:00Z",
       "notifications": 3,
@@ -107,15 +108,15 @@
       "followers": [
         2,
         3,
-        "d027"
+        "d027",
+        "1"
       ],
       "following": [
-        1,
         2,
-        "1",
         "2",
         "3",
-        "d027"
+        "d027",
+        "1"
       ],
       "createdAt": "2023-04-15T08:30:00Z",
       "notifications": 5,
@@ -193,9 +194,10 @@
       "likes": [
         "2",
         "3",
-        "d027"
+        "d027",
+        "1"
       ],
-      "commentsCount": 4,
+      "commentsCount": 7,
       "sharesCount": 1,
       "createdAt": "2023-04-11T08:30:00Z"
     },
@@ -212,9 +214,9 @@
       "likes": [
         2,
         3,
-        "d027"
+        "1"
       ],
-      "commentsCount": 6,
+      "commentsCount": 7,
       "sharesCount": 1,
       "createdAt": "2023-04-10T09:30:00Z"
     },
@@ -265,7 +267,8 @@
       "media": [],
       "likes": [
         2,
-        3
+        3,
+        "1"
       ],
       "commentsCount": 1,
       "sharesCount": 0,
@@ -289,6 +292,50 @@
       "commentsCount": 2,
       "sharesCount": 1,
       "createdAt": "2023-04-14T08:00:00Z"
+    },
+    {
+      "id": "6b7b",
+      "userId": "d027",
+      "content": "what is your name guys",
+      "media": [
+        {
+          "type": "image",
+          "url": "/uploads/posts/1744600628965-a216ea3e-815d-433c-9db6-d8cd38a21adb.webp"
+        }
+      ],
+      "privacy": "Public",
+      "likes": [
+        "d027"
+      ],
+      "commentsCount": 0,
+      "sharesCount": 0,
+      "createdAt": "2025-04-14T03:17:08.981Z"
+    },
+    {
+      "id": "a1b7",
+      "userId": "d027",
+      "content": "asdfasf",
+      "media": [
+        {
+          "type": "image",
+          "url": "/uploads/posts/1744601645960-a1035a07-c131-4f00-9748-0507e69febd8.webp"
+        },
+        {
+          "type": "image",
+          "url": "/uploads/posts/1744601646019-25c7c5c2-649e-4f4b-9f6b-caf59fcd9dfa.png"
+        }
+      ],
+      "privacy": "Public",
+      "settings": {
+        "allowComments": true,
+        "showLikeCount": true
+      },
+      "likes": [
+        "1"
+      ],
+      "commentsCount": 1,
+      "sharesCount": 0,
+      "createdAt": "2025-04-14T03:34:06.031Z"
     }
   ],
   "comments": [
@@ -547,6 +594,46 @@
       "likes": [
         "d027"
       ]
+    },
+    {
+      "id": "c1744605920275",
+      "postId": "p004",
+      "userId": "1",
+      "content": "nice",
+      "createdAt": "2025-04-14T04:45:20.275Z",
+      "likes": []
+    },
+    {
+      "id": "c1744606204123",
+      "postId": "1",
+      "userId": "d027",
+      "content": "asdfasdf",
+      "createdAt": "2025-04-14T04:50:04.123Z",
+      "likes": []
+    },
+    {
+      "id": "c1744606231691",
+      "postId": "p004",
+      "userId": "1",
+      "content": "asdfasf",
+      "createdAt": "2025-04-14T04:50:31.691Z",
+      "likes": []
+    },
+    {
+      "id": "c1744606576701",
+      "postId": "p004",
+      "userId": "1",
+      "content": "sdfgadf",
+      "createdAt": "2025-04-14T04:56:16.701Z",
+      "likes": []
+    },
+    {
+      "id": "c1744606676792",
+      "postId": "a1b7",
+      "userId": "1",
+      "content": "wow",
+      "createdAt": "2025-04-14T04:57:56.792Z",
+      "likes": []
     }
   ],
   "stories": [
@@ -607,7 +694,9 @@
         "closeFriendsOnly": false,
         "hideViewCount": false
       },
-      "views": [],
+      "views": [
+        null
+      ],
       "createdAt": "2025-04-13T16:09:22.713Z",
       "expiresAt": "2025-04-14T16:09:22.713Z"
     },
@@ -627,7 +716,8 @@
       },
       "views": [],
       "createdAt": "2025-04-13T17:23:42.932Z",
-      "expiresAt": "2025-04-14T17:23:42.932Z"
+      "expiresAt": "2025-04-14T17:23:42.932Z",
+      "archived": false
     },
     {
       "id": "1744565263377",
@@ -643,9 +733,36 @@
         "closeFriendsOnly": false,
         "hideViewCount": false
       },
-      "views": [],
+      "views": [
+        null
+      ],
       "createdAt": "2025-04-13T17:27:43.376Z",
-      "expiresAt": "2025-04-14T17:27:43.376Z"
+      "expiresAt": "2025-04-14T17:27:43.376Z",
+      "archived": true
+    },
+    {
+      "id": "1744568106231",
+      "userId": "d027",
+      "media": {
+        "type": "image",
+        "url": "/images/1744568106171-8c6yxoy1n2c.avif"
+      },
+      "caption": "code is mind",
+      "privacy": "Public",
+      "settings": {
+        "allowReplies": true,
+        "closeFriendsOnly": false,
+        "hideViewCount": false
+      },
+      "views": [
+        null,
+        null
+      ],
+      "createdAt": "2025-04-13T18:15:06.231Z",
+      "expiresAt": "2025-04-14T18:15:06.231Z",
+      "likes": [
+        "1"
+      ]
     }
   ],
   "notifications": [
@@ -656,7 +773,7 @@
       "actorId": 2,
       "targetId": 1,
       "targetType": "post",
-      "read": false,
+      "read": true,
       "createdAt": "2023-04-10T10:00:00Z"
     },
     {
@@ -666,7 +783,7 @@
       "actorId": 2,
       "targetId": 1,
       "targetType": "post",
-      "read": false,
+      "read": true,
       "createdAt": "2023-04-10T10:15:00Z"
     },
     {
@@ -676,7 +793,7 @@
       "actorId": 3,
       "targetId": null,
       "targetType": null,
-      "read": false,
+      "read": true,
       "createdAt": "2023-04-10T11:00:00Z"
     },
     {
@@ -756,6 +873,70 @@
       "content": "Yes, I did! It looks amazing. Great work!",
       "read": false,
       "createdAt": "2023-04-13T15:05:00Z"
+    },
+    {
+      "id": "667b",
+      "senderId": "d027",
+      "receiverId": "1",
+      "content": "hlo",
+      "read": false,
+      "createdAt": "2025-04-14T05:06:20.575Z"
+    },
+    {
+      "id": "ab4c",
+      "senderId": "1",
+      "receiverId": "d027",
+      "content": "hi",
+      "read": true,
+      "createdAt": "2025-04-14T05:14:23.146Z"
+    },
+    {
+      "id": "ea89",
+      "senderId": "1",
+      "receiverId": "4",
+      "content": "hlo",
+      "read": false,
+      "createdAt": "2025-04-14T05:19:13.251Z"
+    },
+    {
+      "id": "37cb",
+      "senderId": "1",
+      "receiverId": "4",
+      "content": "hlo",
+      "read": false,
+      "createdAt": "2025-04-14T05:22:40.411Z"
+    },
+    {
+      "id": "8d3c",
+      "senderId": "1",
+      "receiverId": "d027",
+      "content": "hlo",
+      "read": true,
+      "createdAt": "2025-04-14T05:22:48.244Z"
+    },
+    {
+      "id": "2f8f",
+      "senderId": "1",
+      "receiverId": "d027",
+      "content": "hlo",
+      "read": true,
+      "createdAt": "2025-04-14T05:44:48.045Z"
+    },
+    {
+      "id": "2b2d",
+      "senderId": "d027",
+      "receiverId": "1",
+      "content": "hlo",
+      "read": false,
+      "createdAt": "2025-04-14T05:45:19.668Z"
+    },
+    {
+      "id": "7fa8",
+      "senderId": "d027",
+      "receiverId": "1",
+      "content": "hlo",
+      "read": false,
+      "createdAt": "2025-04-14T05:45:25.875Z"
     }
   ],
   "conversations": [
@@ -765,8 +946,8 @@
         1,
         2
       ],
-      "lastMessageId": 5,
-      "updatedAt": "2023-04-13T14:50:00Z"
+      "lastMessageId": "7fa8",
+      "updatedAt": "2025-04-14T05:45:25.875Z"
     },
     {
       "id": "2",
